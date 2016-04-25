@@ -16,21 +16,24 @@ end
 
 function write_files(file_name, N, genes, Data, Label)
 
-    write_data_file(file_name, N, genes, Data, Label);
+    write_data_files(file_name, N, genes, Data, Label);
     write_meta_file(file_name, N, genes, Data, Label);
     
 end
 
-function write_data_file(file_name, N, genes, Data, Label)
+function write_data_files(file_name, N, genes, Data, Label)
 
-    fileid = fopen([file_name '.txt'], 'w');
+    data_file = fopen([file_name '.dat'], 'w');
+    label_file = fopen([file_name '.lab'], 'w');
     
     for person = N;
-        fprintf(fileid, '%u,' ,Data(person, genes));
-
-        fprintf(fileid, '%u\r\n' , Label(person));
+        fprintf(label_file, '%u\r\n' , Label(person));
+        fprintf(data_file, '%.4f,' ,Data(person, genes));
+        fprintf(data_file, '%.4f' ,Data(person, genes(end:end)));
+        fprintf(data_file, '\r\n');
     end
-    fclose(fileid);
+    fclose(data_file);
+    fclose(label_file);
 
 end
 
