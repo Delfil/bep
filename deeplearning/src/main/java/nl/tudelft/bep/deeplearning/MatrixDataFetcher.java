@@ -7,16 +7,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
 
 import org.deeplearning4j.util.MathUtils;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.fetcher.BaseDataFetcher;
 import org.nd4j.linalg.factory.Nd4j;
-
-import ch.qos.logback.core.net.SyslogOutputStream;
 
 public class MatrixDataFetcher extends BaseDataFetcher {
 	private int[] order;
@@ -48,6 +44,7 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 	}
 
 	private void readData(String images, String labels, String meta) throws IOException {
+		final String splitter = ","; //"   "
 		BufferedReader reader = new BufferedReader(new FileReader(meta));
 		reader.readLine(); // Random text
 		totalExamples = Integer.parseInt(reader.readLine());
@@ -58,18 +55,23 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 
 		int imageSize = (int) Math.ceil(Math.sqrt(dataSize));
 		imageSize *= imageSize;
+		System.out.println("imagesize: "+imageSize);
+		
 		data = new double[totalExamples][imageSize];
+		System.out.println(data[1].length);
+		System.out.println("aesfrdtgryuhtrewdfrtgytr");
 		label = new int[totalExamples];
 
 		reader.close();
 		reader = new BufferedReader(new FileReader(images));
 		for (int i = 0; i < totalExamples; i++) {
-			data[i] = Arrays.stream(reader.readLine().split(",")).mapToDouble(val -> Double.parseDouble(val)).toArray();
+//			System.out.println(reader.readLine().split("   ").length);
+			data[i] = (Arrays.stream(reader.readLine().substring(3).split(splitter)).mapToDouble(val -> (Double.parseDouble(val.split("e")[0])+1)/2).toArray());
 		}
 		reader.close();
 		reader = new BufferedReader(new FileReader(labels));
 		for (int i = 0; i < totalExamples; i++) {
-			label[i] = Integer.parseInt(reader.readLine());
+			label[i] = (int)Double.parseDouble(reader.readLine().split("e")[0]) - 1;
 		}
 	}
 
@@ -88,16 +90,28 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 				break;
 			}
 
-			double[] img = data[order[cursor]];
-			INDArray in = Nd4j.create(1, img.length);
-			for (int j = 0; j < img.length; j++) {
-				in.putScalar(j, img[order[cursor]]);
+//			double[] img = data[order[cursor]];
+			INDArray in = Nd4j.create(1, data[order[cursor]].length);
+//			System.out.println(data[order[cursor]].length);
+			for (int j = 0; j < data[order[cursor]].length; j++) {
+//				System.out.println(data[order[cursor]][j]);
+				in.putScalar(j, data[order[cursor]][j]);
 				// byte is loaded as signed -> convert to unsigned
+//				if(j%28==0) System.out.println();
+//				if(data[order[cursor]][j] == 1.0)
+//					System.out.print("O");
+//				else
+//					System.out.print(" ");
 			}
+//			System.out.println();
 
-			in.divi(255);
+//			in.divi(255.0);
 			INDArray out = createOutputVector(label[order[cursor]]);
+//			System.out.println(out);
+//			System.out.println(in);
 			toConvert.add(new DataSet(in, out));
+			System.out.println(in);
+			System.out.println(out);
 		}
 		initializeCurrFromList(toConvert);
 	}

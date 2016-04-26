@@ -35,11 +35,16 @@ public class CNNetwork {
 		int seed = 123;
 
 		log.info("Load data....");
+		// /home/sam/bepDL/src/main/resources/datasets/mnist2500_
 		DataSetIterator mnistTrain = new MatrixDatasetIterator(batchSize,
-				new MatrixDataFetcher("/home/sam/bep/deeplearning/src/main/matlab/64x12750_sampledata", true, seed));
+				new MatrixDataFetcher("/home/sam/bep/deeplearning/src/main/matlab/100data", false, seed));
 		DataSetIterator mnistTest = new MatrixDatasetIterator(batchSize,
-				new MatrixDataFetcher("/home/sam/bep/deeplearning/src/main/matlab/64x12750_sampledata", true, seed));
+				new MatrixDataFetcher("/home/sam/bep/deeplearning/src/main/matlab/100data", false, seed));
 
+//		DataSetIterator mnistTrain = new MnistDataSetIteratorClone(batchSize, true, seed);
+//        DataSetIterator mnistTest = new MnistDataSetIteratorClone(batchSize, false, seed);
+
+		
 		log.info("Build model....");
 		MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder().seed(seed).iterations(iterations)
 				.regularization(true).l2(0.0005).learningRate(0.01).weightInit(WeightInit.XAVIER)

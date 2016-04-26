@@ -138,6 +138,11 @@ public class DataFetcherClone extends BaseDataFetcher {
 	            INDArray in = Nd4j.create(1, img.length);
 	            for( int j=0; j<img.length; j++ ){
 	                in.putScalar(j, ((int)img[j]) & 0xFF);  //byte is loaded as signed -> convert to unsigned
+	                if(j%28==0) System.out.println();
+					if(img[j] > 0.5)
+						System.out.print("O");
+					else
+						System.out.print(" ");
 	            }
 
 	            if(binarize) {
@@ -157,7 +162,7 @@ public class DataFetcherClone extends BaseDataFetcher {
 
 	            toConvert.add(new DataSet(in,out));
 	        }
-	        System.out.println(toConvert.toString());
+//	        System.out.println(toConvert.toString());
 	        initializeCurrFromList(toConvert);
 	    }
 
