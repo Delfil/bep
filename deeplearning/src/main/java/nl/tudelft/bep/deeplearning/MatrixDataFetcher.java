@@ -55,17 +55,12 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 
 		int imageSize = (int) Math.ceil(Math.sqrt(dataSize));
 		imageSize *= imageSize;
-		System.out.println("imagesize: "+imageSize);
-		
 		data = new double[totalExamples][imageSize];
-		System.out.println(data[1].length);
-		System.out.println("aesfrdtgryuhtrewdfrtgytr");
 		label = new int[totalExamples];
 
 		reader.close();
 		reader = new BufferedReader(new FileReader(images));
 		for (int i = 0; i < totalExamples; i++) {
-//			System.out.println(reader.readLine().split("   ").length);
 			data[i] = (Arrays.stream(reader.readLine().substring(3).split(splitter)).mapToDouble(val -> (Double.parseDouble(val.split("e")[0])+1)/2).toArray());
 		}
 		reader.close();
@@ -90,11 +85,8 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 				break;
 			}
 
-//			double[] img = data[order[cursor]];
 			INDArray in = Nd4j.create(1, data[order[cursor]].length);
-//			System.out.println(data[order[cursor]].length);
 			for (int j = 0; j < data[order[cursor]].length; j++) {
-//				System.out.println(data[order[cursor]][j]);
 				in.putScalar(j, data[order[cursor]][j]);
 				// byte is loaded as signed -> convert to unsigned
 //				if(j%28==0) System.out.println();
@@ -107,8 +99,6 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 
 //			in.divi(255.0);
 			INDArray out = createOutputVector(label[order[cursor]]);
-//			System.out.println(out);
-//			System.out.println(in);
 			toConvert.add(new DataSet(in, out));
 			System.out.println(in);
 			System.out.println(out);

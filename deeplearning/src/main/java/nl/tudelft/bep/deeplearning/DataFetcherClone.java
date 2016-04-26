@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.deeplearning4j.base.MnistFetcher;
 import org.deeplearning4j.datasets.fetchers.BaseDataFetcher;
 import org.deeplearning4j.datasets.mnist.MnistManager;
@@ -138,11 +137,6 @@ public class DataFetcherClone extends BaseDataFetcher {
 	            INDArray in = Nd4j.create(1, img.length);
 	            for( int j=0; j<img.length; j++ ){
 	                in.putScalar(j, ((int)img[j]) & 0xFF);  //byte is loaded as signed -> convert to unsigned
-	                if(j%28==0) System.out.println();
-					if(img[j] > 0.5)
-						System.out.print("O");
-					else
-						System.out.print(" ");
 	            }
 
 	            if(binarize) {
@@ -162,7 +156,6 @@ public class DataFetcherClone extends BaseDataFetcher {
 
 	            toConvert.add(new DataSet(in,out));
 	        }
-//	        System.out.println(toConvert.toString());
 	        initializeCurrFromList(toConvert);
 	    }
 
