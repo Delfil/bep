@@ -25,14 +25,13 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class nnIris {
-	private static Logger log = LoggerFactory.getLogger(nnIris.class);
+public class NNetwork {
+	private static Logger log = LoggerFactory.getLogger(NNetwork.class);
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
 		  final int numInputs = 12750;
 	        int outputNum = 5;
 	        int iterations = 1000;
-	        long seed = 6;
 
 	        DataSetIterator data = getData("alldata.meta");
 	        DataSet next = data.next();
@@ -72,7 +71,8 @@ public class nnIris {
 	        model.fit(trainingData);
 
 	        //evaluate the model on the test set
-	        Evaluation eval = new Evaluation(5);
+	        @SuppressWarnings("rawtypes")
+			Evaluation eval = new Evaluation(5);
 	        DataSet test = testAndTrain.getTest();
 	        INDArray output = model.output(test.getFeatureMatrix());
 	        eval.eval(test.getLabels(), output);
