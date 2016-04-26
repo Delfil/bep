@@ -96,8 +96,7 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 			}
 
 			in.divi(255);
-			INDArray out = createOutputVector(label[order[cursor]] - 1);
-
+			INDArray out = createOutputVector(label[order[cursor]]);
 			toConvert.add(new DataSet(in, out));
 		}
 		initializeCurrFromList(toConvert);
