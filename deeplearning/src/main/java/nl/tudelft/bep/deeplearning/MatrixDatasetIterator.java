@@ -1,4 +1,4 @@
-package nl.tudelft.bep;
+package nl.tudelft.bep.deeplearning;
 
 import org.nd4j.linalg.dataset.api.iterator.BaseDatasetIterator;
 
