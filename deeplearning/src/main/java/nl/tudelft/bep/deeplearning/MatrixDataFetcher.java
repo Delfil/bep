@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 import org.deeplearning4j.util.MathUtils;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -14,12 +16,13 @@ import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.fetcher.BaseDataFetcher;
 import org.nd4j.linalg.factory.Nd4j;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+
 public class MatrixDataFetcher extends BaseDataFetcher {
 	private int[] order;
 	private Random rng;
 	private boolean shuffle;
 
-	private int exampleNumber;
 	private int[] label;
 	private double[][] data;
 
@@ -30,12 +33,13 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 
 		numOutcomes = 5;
 		cursor = 0;
-		
+		inputColumns = 113 * 113;
+
 		readData(images, labels, meta);
-		
+
 		this.shuffle = shuffle;
 
-		order = new int[exampleNumber];
+		order = new int[totalExamples];
 
 		for (int i = 0; i < order.length; i++)
 			order[i] = i;
@@ -45,15 +49,26 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 
 	private void readData(String images, String labels, String meta) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(meta));
-		//TODO: meta file load
+		reader.readLine(); // Random text
+		totalExamples = Integer.parseInt(reader.readLine());
+		totalExamples -= totalExamples % 64;
+		int dataSize = Integer.parseInt(reader.readLine()); // Number of
+															// elements
+		this.numOutcomes = Integer.parseInt(reader.readLine());
+
+		int imageSize = (int) Math.ceil(Math.sqrt(dataSize));
+		imageSize *= imageSize;
+		data = new double[totalExamples][imageSize];
+		label = new int[totalExamples];
+
 		reader.close();
 		reader = new BufferedReader(new FileReader(images));
-		for(int i = 0; i < exampleNumber; i++) {
+		for (int i = 0; i < totalExamples; i++) {
 			data[i] = Arrays.stream(reader.readLine().split(",")).mapToDouble(val -> Double.parseDouble(val)).toArray();
 		}
 		reader.close();
-		reader = new BufferedReader(new FileReader(images));
-		for(int i = 0; i < exampleNumber; i++) {
+		reader = new BufferedReader(new FileReader(labels));
+		for (int i = 0; i < totalExamples; i++) {
 			label[i] = Integer.parseInt(reader.readLine());
 		}
 	}
@@ -67,6 +82,7 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 		// we need to ensure that we don't overshoot the number of examples
 		// total
 		List<DataSet> toConvert = new ArrayList<>(numExamples);
+		
 		for (int i = 0; i < numExamples; i++, cursor++) {
 			if (!hasMore()) {
 				break;
@@ -80,8 +96,7 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 			}
 
 			in.divi(255);
-
-			INDArray out = createOutputVector(label[order[cursor]]);
+			INDArray out = createOutputVector(label[order[cursor]] - 1);
 
 			toConvert.add(new DataSet(in, out));
 		}
@@ -97,6 +112,6 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 	}
 
 	public int getNumberExamples() {
-		return this.exampleNumber;
+		return this.totalExamples;
 	}
 }
