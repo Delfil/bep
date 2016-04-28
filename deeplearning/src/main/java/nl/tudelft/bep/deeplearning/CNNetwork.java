@@ -36,16 +36,17 @@ public class CNNetwork {
 		int height = width;
 		
 		log.info("Load data....");
-		MatrixDataFetcher fetcher = new MatrixDataFetcher("", false, seed, width, height);
+		
+		String fileName = "/100data";
+		MatrixDataFetcher fetcher = new MatrixDataFetcher(fileName, false, seed, width, height);
 		DataSetIterator mnistTrain = new MatrixDatasetIterator(batchSize,
 				fetcher);
 		DataSetIterator mnistTest = new MatrixDatasetIterator(batchSize,
-				new MatrixDataFetcher("", false, seed, width, height));
+				new MatrixDataFetcher(fileName, false, seed, width, height));
 
 		int outputNum = fetcher.getOutputNum();
 		
 
-		
 		
 		
 		

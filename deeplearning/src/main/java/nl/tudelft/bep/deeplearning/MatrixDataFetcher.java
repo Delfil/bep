@@ -1,7 +1,6 @@
 package nl.tudelft.bep.deeplearning;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 
 	private void readData(String images, String labels, String meta) throws IOException {
 		final String splitter = ","; //"   "
-		BufferedReader reader = new BufferedReader(new FileReader(meta));
+		BufferedReader reader = new BufferedReader(new FileReader(MatrixDataFetcher.class.getResource(meta).getFile()));
 		reader.readLine(); // Random text
 		totalExamples = Integer.parseInt(reader.readLine());
 		
@@ -58,14 +57,13 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 		label = new int[totalExamples];
 
 		reader.close();
-		System.out.println(new File(images));
-		reader = new BufferedReader(new FileReader(images));
+		reader = new BufferedReader(new FileReader(MatrixDataFetcher.class.getResource(images).getFile()));
 		System.out.println(totalExamples);
 		for (int i = 0; i < totalExamples; i++) {
 			data[i] = (Arrays.stream(reader.readLine().split(splitter)).mapToDouble(val -> Math.min(1, Math.max(0, (Double.parseDouble(val)+1)/2))).toArray());
 		}
 		reader.close();
-		reader = new BufferedReader(new FileReader(labels));
+		reader = new BufferedReader(new FileReader(MatrixDataFetcher.class.getResource(labels).getFile()));
 		for (int i = 0; i < totalExamples; i++) {
 			label[i] = (int)Double.parseDouble(reader.readLine().split("e")[0]) -1; //-1
 		}
