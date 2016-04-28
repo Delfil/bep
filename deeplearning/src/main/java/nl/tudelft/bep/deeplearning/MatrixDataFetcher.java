@@ -1,6 +1,7 @@
 package nl.tudelft.bep.deeplearning;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,14 +23,13 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 	private int[] label;
 	private double[][] data;
 
-	public MatrixDataFetcher(String filename, boolean shuffle, long rngSeed) throws IOException {
+	public MatrixDataFetcher(String filename, boolean shuffle, long rngSeed, int width, int height) throws IOException {
 		String images = filename + ".dat";
 		String labels = filename + ".lab";
 		String meta = filename + ".meta";
 
-		numOutcomes = 5;
 		cursor = 0;
-		inputColumns = 113 * 113;
+		inputColumns = width * height;
 
 		readData(images, labels, meta);
 
@@ -48,10 +48,10 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 		BufferedReader reader = new BufferedReader(new FileReader(meta));
 		reader.readLine(); // Random text
 		totalExamples = Integer.parseInt(reader.readLine());
-		totalExamples -= totalExamples % 64;
+		
 		int dataSize = Integer.parseInt(reader.readLine()); // Number of
 															// elements
-		this.numOutcomes = Integer.parseInt(reader.readLine());
+		numOutcomes = Integer.parseInt(reader.readLine());
 
 		int imageSize = (int) Math.ceil(Math.sqrt(dataSize));
 		imageSize *= imageSize;
@@ -59,14 +59,19 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 		label = new int[totalExamples];
 
 		reader.close();
+		System.out.println(new File(images));
 		reader = new BufferedReader(new FileReader(images));
+		System.out.println(totalExamples);
 		for (int i = 0; i < totalExamples; i++) {
-			data[i] = (Arrays.stream(reader.readLine().substring(3).split(splitter)).mapToDouble(val -> (Double.parseDouble(val.split("e")[0])+1)/2).toArray());
+			data[i] = (Arrays.stream(reader.readLine()/*.substring(3)*/.split(splitter)).mapToDouble(val -> Math.min(1, Math.max(0, (Double.parseDouble(val.split("e")[0])+1)/2))).toArray());
+//			System.out.print(data[i][0]);
+//			System.out.print(" ");
+//			System.out.println(data[i][1]);
 		}
 		reader.close();
 		reader = new BufferedReader(new FileReader(labels));
 		for (int i = 0; i < totalExamples; i++) {
-			label[i] = (int)Double.parseDouble(reader.readLine().split("e")[0]) - 1;
+			label[i] = (int)Double.parseDouble(reader.readLine().split("e")[0]) -1; //-1
 		}
 	}
 
@@ -100,8 +105,8 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 //			in.divi(255.0);
 			INDArray out = createOutputVector(label[order[cursor]]);
 			toConvert.add(new DataSet(in, out));
-			System.out.println(in);
-			System.out.println(out);
+//			System.out.println(in);
+//			System.out.println(out);
 		}
 		initializeCurrFromList(toConvert);
 	}

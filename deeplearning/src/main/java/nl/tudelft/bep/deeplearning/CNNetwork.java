@@ -29,69 +29,76 @@ public class CNNetwork {
 	 */
 	public static void main(String[] args) throws Exception {
 		int outputNum = 5;
-		int batchSize = 64;
+		int batchSize = 100;
 		int nEpochs = 10;
 		int iterations = 1;
 		int seed = 123;
 
+		int width = 113;
+		int height = width;
+		
 		log.info("Load data....");
-		// /home/sam/bepDL/src/main/resources/datasets/mnist2500_
+		// "/home/sam/bep/deeplearning/src/main/matlab/mnist250"
 		DataSetIterator mnistTrain = new MatrixDatasetIterator(batchSize,
-				new MatrixDataFetcher("/home/sam/bep/deeplearning/src/main/matlab/100data", false, seed));
+				new MatrixDataFetcher("/home/sam/bep/deeplearning/src/main/matlab/100data", false, seed, width, height));
 		DataSetIterator mnistTest = new MatrixDatasetIterator(batchSize,
-				new MatrixDataFetcher("/home/sam/bep/deeplearning/src/main/matlab/100data", false, seed));
+				new MatrixDataFetcher("/home/sam/bep/deeplearning/src/main/matlab/100data", false, seed, width, height));
 
 //		DataSetIterator mnistTrain = new MnistDataSetIteratorClone(batchSize, true, seed);
 //        DataSetIterator mnistTest = new MnistDataSetIteratorClone(batchSize, false, seed);
 
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		log.info("Build model....");
-		MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder().seed(seed).iterations(iterations)
-				.regularization(true).l2(0.0005).learningRate(0.01).weightInit(WeightInit.XAVIER)
-				.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT).updater(Updater.NESTEROVS)
-				.momentum(0.9).list(6)
-				.layer(0,
-					new ConvolutionLayer.Builder(5, 5)
-						.nIn(1)
-						.stride(1, 1)
-						.nOut(20)
-						.activation("identity")
-						.build()
-				)
-				.layer(1,
-					new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
-						.kernelSize(4, 4)
-						.stride(2, 2)
-						.build()
-				)
-				.layer(2,
-					new ConvolutionLayer.Builder(5, 5)
-						.nIn(1)
-						.stride(1, 1)
-						.nOut(50)
-						.activation("identity")
-						.build()
-				)
-				.layer(3,
-					new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
-						.kernelSize(2, 2)
-						.stride(2, 2)
-						.build()
-				)
-				.layer(4,
-					new DenseLayer.Builder()
-						.activation("relu")
-						.nOut(50)
-						.build()
-				)
-				.layer(5, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-					.nOut(outputNum)
-					.activation("softmax")
-					.build()
-				)
-				.backprop(true)
-				.pretrain(false);
-		new ConvolutionLayerSetup(builder, 113, 113, 1);
+		MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
+                .seed(seed)
+                .iterations(iterations)
+                .regularization(true).l2(0.0005)
+                .learningRate(0.01)//.biasLearningRate(0.02)
+                //.learningRateDecayPolicy(LearningRatePolicy.Inverse).lrPolicyDecayRate(0.001).lrPolicyPower(0.75)
+                .weightInit(WeightInit.XAVIER)
+                .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
+                .updater(Updater.NESTEROVS).momentum(0.9)
+                .list(6)
+                .layer(0, new ConvolutionLayer.Builder(5, 5)
+                        .nIn(1)
+                        .stride(1, 1)
+                        .nOut(20)
+                        .activation("identity")
+                        .build())
+                .layer(1, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
+                        .kernelSize(2,2)
+                        .stride(2,2)
+                        .build())
+                .layer(2, new ConvolutionLayer.Builder(5, 5)
+                        .nIn(1)
+                        .stride(1, 1)
+                        .nOut(50)
+                        .activation("identity")
+                        .build())
+                .layer(3, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
+                        .kernelSize(2,2)
+                        .stride(2,2)
+                        .build())
+                .layer(4, new DenseLayer.Builder()
+                		.activation("relu")
+                        .nOut(50).build())
+                .layer(5, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                        .nOut(outputNum)
+                        .activation("softmax")
+                        .build())
+                .backprop(true).pretrain(false);
+        new ConvolutionLayerSetup(builder,width,height,1);
 
 		MultiLayerConfiguration conf = builder.build();
 		MultiLayerNetwork model = new MultiLayerNetwork(conf);
