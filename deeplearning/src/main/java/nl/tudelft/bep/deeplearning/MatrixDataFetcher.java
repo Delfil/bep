@@ -49,8 +49,7 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 		reader.readLine(); // Random text
 		totalExamples = Integer.parseInt(reader.readLine());
 		
-		int dataSize = Integer.parseInt(reader.readLine()); // Number of
-															// elements
+		int dataSize = Integer.parseInt(reader.readLine());
 		numOutcomes = Integer.parseInt(reader.readLine());
 
 		int imageSize = (int) Math.ceil(Math.sqrt(dataSize));
@@ -63,10 +62,7 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 		reader = new BufferedReader(new FileReader(images));
 		System.out.println(totalExamples);
 		for (int i = 0; i < totalExamples; i++) {
-			data[i] = (Arrays.stream(reader.readLine()/*.substring(3)*/.split(splitter)).mapToDouble(val -> Math.min(1, Math.max(0, (Double.parseDouble(val.split("e")[0])+1)/2))).toArray());
-//			System.out.print(data[i][0]);
-//			System.out.print(" ");
-//			System.out.println(data[i][1]);
+			data[i] = (Arrays.stream(reader.readLine().split(splitter)).mapToDouble(val -> Math.min(1, Math.max(0, (Double.parseDouble(val)+1)/2))).toArray());
 		}
 		reader.close();
 		reader = new BufferedReader(new FileReader(labels));
@@ -81,8 +77,6 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 			throw new IllegalStateException("Unable to getFromOrigin more; there are no more images");
 		}
 
-		// we need to ensure that we don't overshoot the number of examples
-		// total
 		List<DataSet> toConvert = new ArrayList<>(numExamples);
 		
 		for (int i = 0; i < numExamples; i++, cursor++) {
@@ -93,20 +87,10 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 			INDArray in = Nd4j.create(1, data[order[cursor]].length);
 			for (int j = 0; j < data[order[cursor]].length; j++) {
 				in.putScalar(j, data[order[cursor]][j]);
-				// byte is loaded as signed -> convert to unsigned
-//				if(j%28==0) System.out.println();
-//				if(data[order[cursor]][j] == 1.0)
-//					System.out.print("O");
-//				else
-//					System.out.print(" ");
 			}
-//			System.out.println();
 
-//			in.divi(255.0);
 			INDArray out = createOutputVector(label[order[cursor]]);
 			toConvert.add(new DataSet(in, out));
-//			System.out.println(in);
-//			System.out.println(out);
 		}
 		initializeCurrFromList(toConvert);
 	}
@@ -121,5 +105,9 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 
 	public int getNumberExamples() {
 		return this.totalExamples;
+	}
+
+	public int getOutputNum() {
+		return numOutcomes;
 	}
 }

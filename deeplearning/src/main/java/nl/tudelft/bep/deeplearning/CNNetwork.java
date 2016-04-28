@@ -28,24 +28,22 @@ public class CNNetwork {
 	 * Based on LenetMnistExample by agibsonccc on 9/16/15.
 	 */
 	public static void main(String[] args) throws Exception {
-		int outputNum = 5;
 		int batchSize = 100;
 		int nEpochs = 10;
-		int iterations = 1;
 		int seed = 123;
 
 		int width = 113;
 		int height = width;
 		
 		log.info("Load data....");
-		// "/home/sam/bep/deeplearning/src/main/matlab/mnist250"
+		MatrixDataFetcher fetcher = new MatrixDataFetcher("", false, seed, width, height);
 		DataSetIterator mnistTrain = new MatrixDatasetIterator(batchSize,
-				new MatrixDataFetcher("/home/sam/bep/deeplearning/src/main/matlab/100data", false, seed, width, height));
+				fetcher);
 		DataSetIterator mnistTest = new MatrixDatasetIterator(batchSize,
-				new MatrixDataFetcher("/home/sam/bep/deeplearning/src/main/matlab/100data", false, seed, width, height));
+				new MatrixDataFetcher("", false, seed, width, height));
 
-//		DataSetIterator mnistTrain = new MnistDataSetIteratorClone(batchSize, true, seed);
-//        DataSetIterator mnistTest = new MnistDataSetIteratorClone(batchSize, false, seed);
+		int outputNum = fetcher.getOutputNum();
+		
 
 		
 		
@@ -62,10 +60,9 @@ public class CNNetwork {
 		log.info("Build model....");
 		MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
                 .seed(seed)
-                .iterations(iterations)
+                .iterations(1)
                 .regularization(true).l2(0.0005)
-                .learningRate(0.01)//.biasLearningRate(0.02)
-                //.learningRateDecayPolicy(LearningRatePolicy.Inverse).lrPolicyDecayRate(0.001).lrPolicyPower(0.75)
+                .learningRate(0.01)
                 .weightInit(WeightInit.XAVIER)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .updater(Updater.NESTEROVS).momentum(0.9)
