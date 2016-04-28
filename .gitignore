@@ -2,6 +2,7 @@
 */.classpath
 *.class
 */target/*
+*/bin/*
 
 #Ignore for Eclipse
 */.settings/*
