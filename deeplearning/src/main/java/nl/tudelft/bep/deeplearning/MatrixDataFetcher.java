@@ -22,7 +22,8 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 	private int[] label;
 	private double[][] data;
 
-	public MatrixDataFetcher(String filename, boolean shuffle, long rngSeed, int width, int height) throws IOException {
+	public MatrixDataFetcher(String filename, boolean shuffle, long rngSeed, int width, int height, boolean train,
+			double trainSize) throws IOException {
 		String images = filename + ".dat";
 		String labels = filename + ".lab";
 		String meta = filename + ".meta";
@@ -30,7 +31,7 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 		cursor = 0;
 		inputColumns = width * height;
 
-		readData(images, labels, meta);
+		readData(images, labels, meta, train, trainSize);
 
 		this.shuffle = shuffle;
 
@@ -42,12 +43,21 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 		reset(); // Shuffle order
 	}
 
-	private void readData(String images, String labels, String meta) throws IOException {
-		final String splitter = ","; //"   "
+	private void readData(String images, String labels, String meta, boolean train, double trainSize)
+			throws IOException {
+		final String splitter = ","; // " "
 		BufferedReader reader = new BufferedReader(new FileReader(MatrixDataFetcher.class.getResource(meta).getFile()));
 		reader.readLine(); // Random text
 		totalExamples = Integer.parseInt(reader.readLine());
-		
+		int skip;
+		if (train) {
+			skip = 0;
+			totalExamples *= trainSize;
+		} else {
+			skip = (int) (trainSize * totalExamples);
+			totalExamples *= (1 - trainSize);
+		}
+
 		int dataSize = Integer.parseInt(reader.readLine());
 		numOutcomes = Integer.parseInt(reader.readLine());
 
@@ -59,13 +69,20 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 		reader.close();
 		reader = new BufferedReader(new FileReader(MatrixDataFetcher.class.getResource(images).getFile()));
 		System.out.println(totalExamples);
+		for (int i = 0; i < skip; i++) {
+			reader.readLine();
+		}
 		for (int i = 0; i < totalExamples; i++) {
-			data[i] = (Arrays.stream(reader.readLine().split(splitter)).mapToDouble(val -> Math.min(1, Math.max(0, (Double.parseDouble(val)+1)/2))).toArray());
+			data[i] = (Arrays.stream(reader.readLine().split(splitter))
+					.mapToDouble(val -> Math.min(1, Math.max(0, (Double.parseDouble(val) + 1) / 2))).toArray());
 		}
 		reader.close();
 		reader = new BufferedReader(new FileReader(MatrixDataFetcher.class.getResource(labels).getFile()));
+		for (int i = 0; i < skip; i++) {
+			reader.readLine();
+		}
 		for (int i = 0; i < totalExamples; i++) {
-			label[i] = (int)Double.parseDouble(reader.readLine().split("e")[0]) -1; //-1
+			label[i] = (int) Double.parseDouble(reader.readLine()); // -1
 		}
 	}
 
@@ -76,7 +93,7 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 		}
 
 		List<DataSet> toConvert = new ArrayList<>(numExamples);
-		
+
 		for (int i = 0; i < numExamples; i++, cursor++) {
 			if (!hasMore()) {
 				break;
