@@ -1,4 +1,4 @@
-package nl.tudelft.bep.deeplearning;
+package nl.tudelft.bep.deeplearning.cnn;
 
 import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
@@ -19,6 +19,9 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import nl.tudelft.bep.deeplearning.datafetcher.MatrixDataFetcher;
+import nl.tudelft.bep.deeplearning.datafetcher.MatrixDatasetIterator;
 
 public class CNNetwork {
 
