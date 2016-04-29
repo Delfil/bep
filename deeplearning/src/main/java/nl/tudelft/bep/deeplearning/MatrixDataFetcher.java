@@ -68,7 +68,6 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 
 		reader.close();
 		reader = new BufferedReader(new FileReader(MatrixDataFetcher.class.getResource(images).getFile()));
-		System.out.println(totalExamples);
 		for (int i = 0; i < skip; i++) {
 			reader.readLine();
 		}
