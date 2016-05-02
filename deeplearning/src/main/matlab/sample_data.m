@@ -1,14 +1,41 @@
 function sample_data(N, NGenes, Data, Labels, file_name)
+% SAMPLE_DATA constructs a random subset from the data
+% (or all of it, if N=0 and NGenes=0) and writes it to files
+%
+% SAMPLE_DATA() will write the GE data to file
+%
+% N = the amount of rows you want
+% NGenes = the amount of columns you want
+% Data = the observed gene activations
+% Labels = the labels corresponding to the row in Data
+% file_name = the name of the .dat, .lab and .meta files
+
+    if ~exist('Data', 'var') || ~exist('Labels', 'var')
+        if ~exist('Gene_Expression', 'var') || ~exist('CancerTypeIndex', 'var')
+            load('GE.mat');
+            Data = Gene_Expression;
+            Labels = CancerTypeIndex;
+        end
+    end
 
     if ~exist('file_name', 'var')
         file_name = 'Sample_data';
     end
 
-    people = randperm(size(Data,1));
-    genes = randperm(size(Data,2));
-    selection_genes = genes(1:NGenes);
+    if exist('N', 'var') && N~=0
+        people = randperm(size(Data,1));
+        data_selection = people(1:N);
+    else
+        data_selection = 1:size(Data,1);
+    end
     
-    data_selection = people(1:N);
+    if exist('N', 'var') && NGenes ~= 0 
+        genes = randperm(size(Data,2));
+        selection_genes = genes(1:NGenes);
+    else
+        selection_genes = 1:size(Data,2);
+    end
+    
         
     write_files(file_name , data_selection, selection_genes, Data, Labels);
         
