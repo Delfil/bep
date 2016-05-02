@@ -30,16 +30,16 @@ public class CNNetwork {
 	 * Based on LenetMnistExample by agibsonccc on 9/16/15.
 	 */
 	public static void main(String[] args) throws Exception {
-		int batchSize = 100;
+		int batchSize = 16;
 		int nEpochs = 10;
 		int seed = 123;
 
-		int width = 113;
+		int width = 11;
 		int height = width;
 		
 		log.info("Load data....");
 		
-		String fileName = "/allData";
+		String fileName = "/Sample_data";
 		MatrixDataFetcher fetcher = new MatrixDataFetcher(fileName, false, seed, width, height, true, 0.6);
 		DataSetIterator mnistTrain = new MatrixDatasetIterator(batchSize,
 				fetcher);
@@ -71,7 +71,7 @@ public class CNNetwork {
 						.activation("softmax")
 						.build())
 				.backprop(true).pretrain(false);
-		new ConvolutionLayerSetup(builder,width,height,1);
+		new ConvolutionLayerSetup(builder, width, height,1);
 
 		MultiLayerConfiguration conf = builder.build();
 		MultiLayerNetwork model = new MultiLayerNetwork(conf);
