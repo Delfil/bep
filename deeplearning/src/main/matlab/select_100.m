@@ -10,4 +10,10 @@ end
     select = ges >1.2982;
     GE = Gene_Expression(:,select);
     corrs = corr(GE);
-    tsne_p(corrs);
+    P = tsne_p(corrs);
+    
+    M = map_d(P);
+    genes = M(:)';
+    t = [zeros(size(GE,1),1), GE];
+    data = GE(:,t(genes+1));
+    clear t, genes, ges;

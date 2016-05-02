@@ -3,8 +3,8 @@ function M = map_d(P)
 % that point.
 
 %M, the raster containing P indices
-M = zeros(ceil(sqrt(size(P,1))));
-% M = [0];
+% M = zeros(ceil(sqrt(size(P,1))));
+M = [0];
 
 %outer borders of the raster
 ma = max(P);

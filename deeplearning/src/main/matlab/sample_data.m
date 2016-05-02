@@ -3,10 +3,17 @@ function sample_data(N, NGenes, Data, Labels, file_name)
     if ~exist('file_name', 'var')
         file_name = 'Sample_data';
     end
+        
 
     people = randperm(size(Data,1));
-    genes = randperm(size(Data,2));
-    selection_genes = genes(1:NGenes);
+    
+    
+    if NGenes ~= 0
+        genes = randperm(size(Data,2));
+        selection_genes = genes(1:NGenes);
+    else
+        selection_genes = 1:size(Data,2);
+    end
     
     data_selection = people(1:N);
         
