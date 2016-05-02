@@ -14,7 +14,7 @@ function sample_data(N, NGenes, Data, Labels, file_name)
         if ~exist('Gene_Expression', 'var') || ~exist('CancerTypeIndex', 'var')
             load('GE.mat');
             Data = Gene_Expression;
-            Labels = CancerTypeIndex;
+            Labels = CancerTypeIndex-1;
         end
     end
 
