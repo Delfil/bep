@@ -16,10 +16,48 @@ public class Mapping {
 
 	public static void main(String[] args) throws IOException {
 
-		int[] test = neighbour(read(new FileInputStream(new ClassPathResource("decimal-points.in").getFile())));
-		for (int i = 0; i < test.length; i++) {
-			System.out.print(test[i] + ", ");
+		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource("decimal-points.in").getFile()));
+		int[] result1 = neighbour(layer1);
+		ArrayList<Boolean> inCluster = new ArrayList<Boolean>(layer1.length);
+		for(int i = 0; i < layer1.length; i++) {
+			inCluster.add(i, false);
 		}
+		Cluster[] layer2 = new Cluster[layer1.length];
+		int index = 0;
+		int id = 0;
+		Cluster cluster = new Cluster(id);
+		while(inCluster.contains(false)) {
+			if(!inCluster.get(index)) {
+				layer2[id] = cluster;
+				cluster.addCluster(layer1[index]);
+				inCluster.set(index, true);
+				int neighbor = result1[index];
+				for(int i = 0; i < layer1.length; i++) {
+					if(layer1[i].getID() == neighbor) {
+						index = i;
+						break;
+					}
+				}
+			}
+			else {
+				id++;
+				index = id;
+				cluster.calculateMean();
+				cluster = new Cluster(id);
+				
+			}
+		}
+		cluster.calculateMean();
+		int numClusters = 0;
+		for(int i = 0; i < layer2.length; i++) {
+			if(layer2[i] != null) {
+				numClusters++;
+			}
+		}
+		System.out.print(numClusters);
+		
+				
+
 	}
 
 	public static Cluster[] read(InputStream in) {
