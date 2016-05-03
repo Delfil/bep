@@ -16,55 +16,91 @@ public class Mapping {
 
 	public static void main(String[] args) throws IOException {
 
+		// Reading file containing points
 		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource("decimal-points.in").getFile()));
+		// Initialize the temporary array representing a layer and run the
+		// createCluster for the first time on the input.
 		Cluster[] layer2 = new Cluster[layer1.length];
 		layer2 = createClusters(layer1);
 
-		while(layer2.length != 1) {
+		// Keep looping until one cluster is left.
+		while (layer2.length != 1) {
 			layer2 = createClusters(layer2);
 		}
 		System.out.println(layer2[0].toString());
-	}	
-		
+	}
+
+	/**
+	 * Function which uses the all nearest neighbors algorithm to cluster
+	 * clusters together into a higher level cluster. Clusters can also
+	 * represent points by having an empty set of clusters.
+	 * 
+	 * @param layer1
+	 *            Array of clusters which we would like to cluster
+	 * @return Array containing the newly created higher level clusters.
+	 */
 	public static Cluster[] createClusters(Cluster[] layer1) {
+		// Run nearest neighbor algorithm.
 		int[] result1 = neighbour(layer1);
+		// ArrayList for keeping track which cluster is already clustered.
 		ArrayList<Boolean> inCluster = new ArrayList<Boolean>(layer1.length);
-		for(int i = 0; i < layer1.length; i++) {
+		for (int i = 0; i < layer1.length; i++) {
 			inCluster.add(i, false);
 		}
+		// Temporary ArrayList for the newly created higher level clusters.
 		ArrayList<Cluster> layer2 = new ArrayList<Cluster>();
+		// Initialize the index for keeping track of where the cluster at hand
+		// is located in layer1
 		int index = 0;
+		// Keeping track of the id of the new high level clusters.
 		int id = 0;
+		// Temporary cluster.
 		Cluster cluster = new Cluster(id);
-		while(inCluster.contains(false)) {
-			if(!inCluster.get(index)) {
+		// We keep looping until each cluster is clustered
+		while (inCluster.contains(false)) {
+			// Case if the cluster isn't in a high level cluster
+			if (!inCluster.get(index)) {
 				cluster.addCluster(layer1[index]);
 				inCluster.set(index, true);
+				// Get closest neighbor and find the index in layer1.
 				int neighbor = result1[index];
-				for(int i = 0; i < layer1.length; i++) {
-					if(layer1[i].getID() == neighbor) {
+				for (int i = 0; i < layer1.length; i++) {
+					if (layer1[i].getID() == neighbor) {
 						index = i;
 						break;
 					}
 				}
+
 			}
+			// Case if the closest neighbor is already in a high level cluster.
 			else {
 				cluster.calculateMean();
 				layer2.add(cluster);
 				id++;
+				// Create new high level cluster and find the next cluster not
+				// in a high level cluster.
 				cluster = new Cluster(id);
-				index = inCluster.indexOf(false);		
+				index = inCluster.indexOf(false);
 			}
 		}
+		// Make from the ArrayList an Array.
 		Cluster[] res = new Cluster[layer2.size()];
 		int i = 0;
-		for(Cluster c : layer2) {
+		for (Cluster c : layer2) {
 			res[i] = c;
 			i++;
 		}
 		return res;
-	}	
+	}
 
+	/**
+	 * Reads an .in file with the number of points followed by the coordinates
+	 * of these points.
+	 * 
+	 * @param in
+	 *            Inputstream of the file
+	 * @return Array with the points represented by Cluster.class.
+	 */
 	public static Cluster[] read(InputStream in) {
 		Scanner scanner = new Scanner(new InputStreamReader(in));
 		int n = scanner.nextInt();
@@ -80,9 +116,17 @@ public class Mapping {
 
 	}
 
+	/**
+	 * Returns the nearest neighbor for each cluster or point as an array.
+	 * 
+	 * @param clusters
+	 *            The clusters we would like to know the nearest neighbors of.
+	 * @return Array of nearest neighbors
+	 */
 	public static int[] neighbour(Cluster[] clusters) {
 		int[] result = new int[clusters.length];
-		;
+		// Distances is used to keep track of the closest distance found for
+		// each point.
 		double[] distances = new double[clusters.length];
 		for (int i = 0; i < clusters.length; i++) {
 			distances[i] = Double.MAX_VALUE;
@@ -91,6 +135,19 @@ public class Mapping {
 		return result;
 	}
 
+	/**
+	 * Recursive function for finding the nearest neighbor for each
+	 * cluster/point.
+	 * 
+	 * @param Clusters
+	 *            Array containing the cluster we would like to know the nearest
+	 *            neighbor of.
+	 * @param result
+	 *            Array where we would like to keep track of the nearest
+	 *            neighbor found yet.
+	 * @param distances
+	 *            Array for keeping track of the distances of the result array.
+	 */
 	public static void closestClusters(Cluster[] Clusters, int[] result, double[] distances) {
 
 		int n = Clusters.length;
