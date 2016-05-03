@@ -17,10 +17,13 @@ public class Mapping {
 	public static void main(String[] args) throws IOException {
 
 		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource("decimal-points.in").getFile()));
-		Cluster[] layer2 = createClusters(layer1);
-		for(Cluster c : layer2) {
-			System.out.println(c.toString());
+		Cluster[] layer2 = new Cluster[layer1.length];
+		layer2 = createClusters(layer1);
+
+		while(layer2.length != 1) {
+			layer2 = createClusters(layer2);
 		}
+		System.out.println(layer2[0].toString());
 	}	
 		
 	public static Cluster[] createClusters(Cluster[] layer1) {
