@@ -1,5 +1,6 @@
 package nl.tudelft.bep.deeplearning;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ public class Cluster implements Comparable<Cluster> {
 		this.x = x;
 		this.y = y;
 		this.id = id;
+		this.set = new HashSet<Cluster>();
 	}
 
 	public Cluster(double x, double y, int id, Set<Cluster> clusters) {
@@ -20,6 +22,13 @@ public class Cluster implements Comparable<Cluster> {
 		this.y = y;
 		this.id = id;
 		this.set = clusters;
+	}
+	
+	public Cluster(int cluster) {
+		this.x = 0;
+		this.y = 0;
+		this.id = cluster;
+		this.set = new HashSet<Cluster>();
 	}
 
 	@Override
@@ -73,7 +82,13 @@ public class Cluster implements Comparable<Cluster> {
 
 	@Override
 	public String toString() {
-		return id + " = (" + x + "," + y + ")";
+		StringBuilder builder = new StringBuilder();
+		builder.append("[mean: "+id + " = (" + x + "," + y + ") set: {");
+		for(Cluster c : this.set) {
+			builder.append(c.toString() + ", ");
+		}
+		builder.append("}]");
+		return builder.toString();
 	}
 
 	@Override
