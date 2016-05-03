@@ -1,5 +1,7 @@
 package nl.tudelft.bep.deeplearning;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -8,38 +10,44 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
 
+import org.nd4j.linalg.io.ClassPathResource;
+
 public class Mapping {
 
 	static int[] result;
 	static double[] distances;
-	static Cluster[] Clusters;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 
-		read(null);
-		neighbour();
+		int[] test = neighbour(read(new FileInputStream(new ClassPathResource("decimal-points.in").getFile())));
+		for (int i = 0; i < test.length; i++) {
+			System.out.print(test[i] + ", ");
+		}
 	}
 
-	public static void read(InputStream in) {
+	public static Cluster[] read(InputStream in) {
 		Scanner scanner = new Scanner(new InputStreamReader(in));
-
 		int n = scanner.nextInt();
-		result = new int[n];
-		distances = new double[n];
-		for (int i = 0; i < n; i++) {
-			distances[i] = Double.MAX_VALUE;
-		}
 
-		Clusters = new Cluster[n];
+		Cluster[] clusters = new Cluster[n];
 
 		for (int i = 0; i < n; i++) {
-			Clusters[i] = new Cluster(scanner.nextFloat(), scanner.nextFloat(), i);
+			clusters[i] = (new Cluster(scanner.nextFloat(), scanner.nextFloat(), i));
 		}
 		scanner.close();
+
+		return clusters;
+
 	}
 
-	public static int[] neighbour() {
-		closestClusters(Clusters, result, distances);
+	public static int[] neighbour(Cluster[] clusters) {
+		int[] result = new int[clusters.length];
+		;
+		double[] distances = new double[clusters.length];
+		for (int i = 0; i < clusters.length; i++) {
+			distances[i] = Double.MAX_VALUE;
+		}
+		closestClusters(clusters, result, distances);
 		return result;
 	}
 
