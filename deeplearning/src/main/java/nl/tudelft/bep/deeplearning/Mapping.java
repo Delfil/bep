@@ -14,9 +14,6 @@ import org.nd4j.linalg.io.ClassPathResource;
 
 public class Mapping {
 
-	static int[] result;
-	static double[] distances;
-
 	public static void main(String[] args) throws IOException {
 
 		int[] test = neighbour(read(new FileInputStream(new ClassPathResource("decimal-points.in").getFile())));
