@@ -28,7 +28,6 @@ public class Mapping {
 		Cluster cluster = new Cluster(id);
 		while(inCluster.contains(false)) {
 			if(!inCluster.get(index)) {
-				layer2[id] = cluster;
 				cluster.addCluster(layer1[index]);
 				inCluster.set(index, true);
 				int neighbor = result1[index];
@@ -40,14 +39,16 @@ public class Mapping {
 				}
 			}
 			else {
-				id++;
-				index = id;
 				cluster.calculateMean();
+				layer2[id] = cluster;
+				id++;
 				cluster = new Cluster(id);
+				index = inCluster.indexOf(false);
+				
 				
 			}
 		}
-		cluster.calculateMean();
+		
 		int numClusters = 0;
 		for(int i = 0; i < layer2.length; i++) {
 			if(layer2[i] != null) {
