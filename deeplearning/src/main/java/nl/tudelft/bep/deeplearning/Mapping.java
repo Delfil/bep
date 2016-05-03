@@ -41,7 +41,7 @@ public class Mapping {
 	 */
 	public static Cluster[] createClusters(Cluster[] layer1) {
 		// Run nearest neighbor algorithm.
-		int[] result1 = neighbour(layer1);
+		NeighborDistance result1 = neighbour(layer1);
 		// ArrayList for keeping track which cluster is already clustered.
 		ArrayList<Boolean> inCluster = new ArrayList<Boolean>(layer1.length);
 		for (int i = 0; i < layer1.length; i++) {
@@ -63,7 +63,7 @@ public class Mapping {
 				cluster.addCluster(layer1[index]);
 				inCluster.set(index, true);
 				// Get closest neighbor and find the index in layer1.
-				int neighbor = result1[index];
+				int neighbor = result1.getResults()[index];
 				for (int i = 0; i < layer1.length; i++) {
 					if (layer1[i].getID() == neighbor) {
 						index = i;
@@ -123,7 +123,7 @@ public class Mapping {
 	 *            The clusters we would like to know the nearest neighbors of.
 	 * @return Array of nearest neighbors
 	 */
-	public static int[] neighbour(Cluster[] clusters) {
+	public static NeighborDistance neighbour(Cluster[] clusters) {
 		int[] result = new int[clusters.length];
 		// Distances is used to keep track of the closest distance found for
 		// each point.
@@ -132,7 +132,7 @@ public class Mapping {
 			distances[i] = Double.MAX_VALUE;
 		}
 		closestClusters(clusters, result, distances);
-		return result;
+		return new NeighborDistance(result,distances);
 	}
 
 	/**
