@@ -10,4 +10,10 @@ end
     select = ges >1.2982;
     GE = Gene_Expression(:,select);
     corrs = corr(GE);
-    tsne_p(corrs);
+    P = tsne_p(corrs);
+    
+    M = map_d(P);
+    genes = M(:)';
+    data = GE(:,genes(genes~=0));
+    
+    sample_data(0,0,data, CancerTypeIndex, '100_Genes');
