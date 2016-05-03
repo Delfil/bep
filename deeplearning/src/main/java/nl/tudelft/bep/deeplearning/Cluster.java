@@ -61,8 +61,8 @@ public class Cluster implements Comparable<Cluster> {
 		}
 		while (iter.hasNext()) {
 			Cluster temp = iter.next();
-			tempX += temp.getX()/temp.size();
-			tempY += temp.getY()/temp.size();
+			tempX += temp.getX()/set.size();
+			tempY += temp.getY()/set.size();
 		}
 		this.x = tempX;
 		this.y = tempY;
