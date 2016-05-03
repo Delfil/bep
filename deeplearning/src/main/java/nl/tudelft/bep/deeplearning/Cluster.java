@@ -83,7 +83,7 @@ public class Cluster implements Comparable<Cluster> {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("[mean: "+id + " = (" + x + "," + y + ") set: {");
+		builder.append("[mean: "+id + " = (" + x + "," + y + ") \n \t set: {");
 		for(Cluster c : this.set) {
 			builder.append(c.toString() + ", ");
 		}
