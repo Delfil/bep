@@ -29,25 +29,25 @@ public class MappingTest {
 	
 	@Test
 	public void testReadGeneAct() throws FileNotFoundException, IOException {
-		ArrayList<ArrayList<Integer>> result = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("patients.in").getFile()),4);
+		ArrayList<ArrayList<Double>> result = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("patients.in").getFile()),4);
 		
-		ArrayList<Integer> patient1 = new ArrayList<Integer>();
-		patient1.add(1);
-		patient1.add(2);
-		patient1.add(3);
-		patient1.add(4);
-		ArrayList<Integer> patient2 = new ArrayList<Integer>();
-		patient2.add(5);
-		patient2.add(6);
-		patient2.add(7);
-		patient2.add(8);
-		ArrayList<Integer> patient3 = new ArrayList<Integer>();
-		patient3.add(9);
-		patient3.add(10);
-		patient3.add(11);
-		patient3.add(12);
+		ArrayList<Double> patient1 = new ArrayList<Double>();
+		patient1.add(1.0);
+		patient1.add(2.0);
+		patient1.add(3.0);
+		patient1.add(4.0);
+		ArrayList<Double> patient2 = new ArrayList<Double>();
+		patient2.add(5.0);
+		patient2.add(6.0);
+		patient2.add(7.0);
+		patient2.add(8.0);
+		ArrayList<Double> patient3 = new ArrayList<Double>();
+		patient3.add(9.0);
+		patient3.add(10.0);
+		patient3.add(11.0);
+		patient3.add(12.0);
 		
-		ArrayList<ArrayList<Integer>> expect = new ArrayList<ArrayList<Integer>>();
+		ArrayList<ArrayList<Double>> expect = new ArrayList<ArrayList<Double>>();
 		expect.add(patient1);
 		expect.add(patient2);
 		expect.add(patient3);

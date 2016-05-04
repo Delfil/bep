@@ -25,7 +25,7 @@ public class Mapping {
 		// Reading file containing points
 		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource(points).getFile()));
 		int n = layer1.length;
-		ArrayList<ArrayList<Integer>> matrix = readGeneAct(new FileInputStream(new ClassPathResource(geneAct).getFile()), n);
+		ArrayList<ArrayList<Double>> matrix = readGeneAct(new FileInputStream(new ClassPathResource(geneAct).getFile()), n);
 		// Initialize the temporary array representing a layer and run the
 		// createCluster for the first time on the input.
 		Cluster[] layer2 = new Cluster[n];
@@ -47,7 +47,7 @@ public class Mapping {
 	 * @throws FileNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static void writeFile(ArrayList<ArrayList<Integer>> matrix, ArrayList<Integer> indices) throws FileNotFoundException, UnsupportedEncodingException {	
+	public static void writeFile(ArrayList<ArrayList<Double>> matrix, ArrayList<Integer> indices) throws FileNotFoundException, UnsupportedEncodingException {	
 		PrintWriter writer = new PrintWriter("sample_data.dat", "UTF-8");
 		for(int i = 0; i < matrix.size(); i++) {
 			for(int j = 0; j < indices.size(); j++) {
@@ -169,14 +169,14 @@ public class Mapping {
 
 	}
 	
-	public static ArrayList<ArrayList<Integer>> readGeneAct(InputStream in, int numGenes) {
-		ArrayList<ArrayList<Integer>> matrix = new ArrayList<ArrayList<Integer>>();
+	public static ArrayList<ArrayList<Double>> readGeneAct(InputStream in, int numGenes) {
+		ArrayList<ArrayList<Double>> matrix = new ArrayList<ArrayList<Double>>();
 		Scanner scanner = new Scanner(new InputStreamReader(in));
 		
 		while(scanner.hasNext()) {
-			ArrayList<Integer> tempPatient = new ArrayList<Integer>(numGenes);
+			ArrayList<Double> tempPatient = new ArrayList<Double>(numGenes);
 			for(int i = 0; i < numGenes; i++) {
-				tempPatient.add(scanner.nextInt());
+				tempPatient.add(scanner.nextDouble());
 			}
 			matrix.add(tempPatient);
 		}
