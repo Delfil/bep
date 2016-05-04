@@ -3,6 +3,7 @@ package nl.tudelft.bep.deeplearning.datafetcher;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,74 +16,79 @@ import org.nd4j.linalg.dataset.api.iterator.fetcher.BaseDataFetcher;
 import org.nd4j.linalg.factory.Nd4j;
 
 public class MatrixDataFetcher extends BaseDataFetcher {
-	private int[] order;
-	private Random rng;
-	private boolean shuffle;
+	protected int[] order;
+	protected Random random;
 
-	private int[] label;
-	private double[][] data;
+	protected int[] label;
+	protected double[][] data;
+	protected int width;
+	protected int height;
+	protected String splitter = ",";
+	protected int startIndex;
 
-	public MatrixDataFetcher(String filename, boolean shuffle, long rngSeed, int width, int height, boolean train,
-			double trainSize) throws IOException {
-		String images = filename + ".dat";
-		String labels = filename + ".lab";
-		String meta = filename + ".meta";
-
-		cursor = 0;
-		inputColumns = width * height;
-
-		readData(images, labels, meta, train, trainSize);
-
-		this.shuffle = shuffle;
-
+	public MatrixDataFetcher(String fileName, long seed, double start, double end)
+			throws IOException {
+		readData(fileName, start, end);
+		
 		order = new int[totalExamples];
-
 		for (int i = 0; i < order.length; i++)
 			order[i] = i;
-		rng = new Random(rngSeed);
-		reset(); // Shuffle order
+		random = new Random(seed);
+		reset();
 	}
 
-	private void readData(String images, String labels, String meta, boolean train, double trainSize)
-			throws IOException {
-		final String splitter = ","; // " "
-		BufferedReader reader = new BufferedReader(new FileReader(MatrixDataFetcher.class.getResource(meta).getFile()));
-		reader.readLine(); // Random text
-		totalExamples = Integer.parseInt(reader.readLine());
-		int skip;
-		if (train) {
-			skip = 0;
-			totalExamples *= trainSize;
-		} else {
-			skip = (int) (trainSize * totalExamples);
-			totalExamples *= (1 - trainSize);
-		}
+	protected void readData(String fileName, double start, double end) throws IOException {
+		readMetaFile(fileName + ".meta", start, end);
+		readMatrix(fileName + ".dat");
+		readLabels(fileName + ".lab");
+	}
 
-		int dataSize = Integer.parseInt(reader.readLine());
+	protected void readMetaFile(String fileName, double start, double end) throws IOException {
+		BufferedReader reader = new BufferedReader(
+				new FileReader(MatrixDataFetcher.class.getResource(fileName).getFile()));
+
+		int examples = Integer.parseInt(reader.readLine());
+
+		startIndex = (int) (examples * start);
+		int endIndex = (int) (examples * end);
+		totalExamples = endIndex - startIndex;
+
+		width = Integer.parseInt(reader.readLine());
+		height = Integer.parseInt(reader.readLine());
 		numOutcomes = Integer.parseInt(reader.readLine());
 
-		int imageSize = (int) Math.ceil(Math.sqrt(dataSize));
-		imageSize *= imageSize;
-		data = new double[totalExamples][imageSize];
+		inputColumns = width * height;
+
+		data = new double[totalExamples][width * height];
 		label = new int[totalExamples];
 
 		reader.close();
-		reader = new BufferedReader(new FileReader(MatrixDataFetcher.class.getResource(images).getFile()));
-		for (int i = 0; i < skip; i++) {
+	}
+
+	protected void readMatrix(String fileName) throws IOException {
+		BufferedReader reader = new BufferedReader(
+				new FileReader(MatrixDataFetcher.class.getResource(fileName).getFile()));
+		for (int i = 0; i < startIndex; i++) {
 			reader.readLine();
 		}
 		for (int i = 0; i < totalExamples; i++) {
 			data[i] = (Arrays.stream(reader.readLine().split(splitter))
 					.mapToDouble(val -> Math.min(1, Math.max(0, (Double.parseDouble(val) + 1) / 2))).toArray());
+			data[i] = Arrays.copyOf(data[i], width*height);
 		}
 		reader.close();
-		reader = new BufferedReader(new FileReader(MatrixDataFetcher.class.getResource(labels).getFile()));
-		for (int i = 0; i < skip; i++) {
+	}
+
+	protected void readLabels(String fileName) throws IOException {
+		BufferedReader reader = new BufferedReader(
+				new FileReader(MatrixDataFetcher.class.getResource(fileName).getFile()));
+		for (int i = 0; i < startIndex; i++) {
 			reader.readLine();
 		}
 		for (int i = 0; i < totalExamples; i++) {
-			label[i] = (int) Double.parseDouble(reader.readLine()); // -1
+			label[i] = (int) Double.parseDouble(reader.readLine()) - 1;
 		}
+		reader.close();
 	}
 
 	@Override
@@ -113,8 +119,7 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 	public void reset() {
 		cursor = 0;
 		curr = null;
-		if (shuffle)
-			MathUtils.shuffleArray(order, rng);
+		MathUtils.shuffleArray(order, random);
 	}
 
 	public int getNumberExamples() {
@@ -123,5 +128,13 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 
 	public int getOutputNum() {
 		return numOutcomes;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
 	}
 }
