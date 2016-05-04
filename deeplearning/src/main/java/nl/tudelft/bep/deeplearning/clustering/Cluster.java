@@ -1,23 +1,22 @@
 package nl.tudelft.bep.deeplearning.clustering;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.TreeSet;
 
 public class Cluster implements Comparable<Cluster> {
 
 	double x, y;
 	int id;
-	Set<Cluster> set;
+	TreeSet<Cluster> set;
 
 	public Cluster(double x, double y, int id) {
 		this.x = x;
 		this.y = y;
 		this.id = id;
-		this.set = new HashSet<Cluster>();
+		this.set = new TreeSet<Cluster>();
 	}
 
-	public Cluster(double x, double y, int id, Set<Cluster> clusters) {
+	public Cluster(double x, double y, int id, TreeSet<Cluster> clusters) {
 		this.x = x;
 		this.y = y;
 		this.id = id;
@@ -28,7 +27,7 @@ public class Cluster implements Comparable<Cluster> {
 		this.x = 0;
 		this.y = 0;
 		this.id = cluster;
-		this.set = new HashSet<Cluster>();
+		this.set = new TreeSet<Cluster>();
 	}
 
 	@Override
