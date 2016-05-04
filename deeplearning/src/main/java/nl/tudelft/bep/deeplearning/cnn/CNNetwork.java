@@ -8,6 +8,7 @@ import org.deeplearning4j.nn.conf.Updater;
 import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
+import org.deeplearning4j.nn.conf.layers.SubsamplingLayer;
 import org.deeplearning4j.nn.conf.layers.setup.ConvolutionLayerSetup;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
@@ -26,52 +27,46 @@ public class CNNetwork {
 
 	private static final Logger log = LoggerFactory.getLogger(CNNetwork.class);
 
-	/**
-	 * Based on LenetMnistExample by agibsonccc on 9/16/15.
-	 */
 	public static void main(String[] args) throws Exception {
-		int batchSize = 16;
+		int batchSize = 32;
 		int nEpochs = 10;
 		int seed = 123;
 
-		int width = 11;
-		int height = width;
-		
+
 		log.info("Load data....");
-		
-		String fileName = "/Sample_data";
-		MatrixDataFetcher fetcher = new MatrixDataFetcher(fileName, false, seed, width, height, true, 0.6);
-		DataSetIterator mnistTrain = new MatrixDatasetIterator(batchSize,
-				fetcher);
+
+		String fileName = "/100_Genes";
+		MatrixDataFetcher fetcher = new MatrixDataFetcher(fileName, seed, 0.0, 0.75);
+		DataSetIterator mnistTrain = new MatrixDatasetIterator(batchSize, fetcher);
 		DataSetIterator mnistTest = new MatrixDatasetIterator(batchSize,
-				new MatrixDataFetcher(fileName, false, seed, width, height, false, 0.6));
+				new MatrixDataFetcher(fileName, seed, 0.75, 1.0));
 
+		int width = fetcher.getWidth();
+		int height = fetcher.getHeight();
 		int outputNum = fetcher.getOutputNum();
-
 		
 		log.info("Build model....");
-		MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder()
-				.seed(seed)
-				.iterations(1)
-				.regularization(true).l2(0.0005)
-				.learningRate(0.01)
-				.weightInit(WeightInit.XAVIER)
-				.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-				.updater(Updater.NESTEROVS).momentum(0.9)
-				.list(3)
-				.layer(0, new ConvolutionLayer.Builder(1, 1)
-						.stride(1, 1)
-						.nOut(1)
-						.activation("identity")
+		MultiLayerConfiguration.Builder builder = new NeuralNetConfiguration.Builder().seed(seed).iterations(1)
+				.regularization(true).l2(0.0005).learningRate(0.01).weightInit(WeightInit.XAVIER)
+				.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT).updater(Updater.NESTEROVS)
+				.momentum(0.9).list(3)
+				.layer(0, new ConvolutionLayer.Builder(5, 5)
+						.stride(2, 2)
+						.nOut(10)
+						.activation("identity").build())
+				.layer(1, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
+						.kernelSize(2, 2)
+						.stride(2, 2)
 						.build())
-				.layer(1, new DenseLayer.Builder()
-						.nOut(50).build())
+				.layer(2, new DenseLayer.Builder()
+						.activation("relu")
+						.nOut(50)
+						.build())
 				.layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
 						.nOut(outputNum)
-						.activation("softmax")
-						.build())
+						.activation("softmax").build())
 				.backprop(true).pretrain(false);
-		new ConvolutionLayerSetup(builder, width, height,1);
+		new ConvolutionLayerSetup(builder, width, height, 1);
 
 		MultiLayerConfiguration conf = builder.build();
 		MultiLayerNetwork model = new MultiLayerNetwork(conf);
@@ -84,13 +79,17 @@ public class CNNetwork {
 			log.info("*** Completed epoch {} ***", i);
 
 			log.info("Evaluate model....");
-			Evaluation eval = new Evaluation(outputNum);
+			Evaluation<Double> eval = new Evaluation<>(outputNum);
 			while (mnistTest.hasNext()) {
 				DataSet ds = mnistTest.next();
 				INDArray output = model.output(ds.getFeatureMatrix());
 				eval.eval(ds.getLabels(), output);
 			}
 			log.info(eval.stats());
+			log.info("TP: " + eval.truePositives());
+			log.info("TN: " + eval.trueNegatives());
+			log.info("FP: " + eval.falsePositives());
+			log.info("FM: " + eval.falseNegatives());
 			mnistTest.reset();
 		}
 		log.info("****************Example finished********************");
