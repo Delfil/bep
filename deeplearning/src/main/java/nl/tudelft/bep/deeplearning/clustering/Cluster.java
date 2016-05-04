@@ -1,38 +1,51 @@
 package nl.tudelft.bep.deeplearning.clustering;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.TreeSet;
 
 public class Cluster implements Comparable<Cluster> {
 
 	double x, y;
 	int id;
-	TreeSet<Cluster> set;
+	ArrayList<Cluster> set;
 
 	public Cluster(double x, double y, int id) {
 		this.x = x;
 		this.y = y;
 		this.id = id;
-		this.set = new TreeSet<Cluster>();
+		this.set = new ArrayList<Cluster>();
 	}
 
-	public Cluster(double x, double y, int id, TreeSet<Cluster> clusters) {
+	public Cluster(double x, double y, int id, ArrayList<Cluster> clusters) {
 		this.x = x;
 		this.y = y;
 		this.id = id;
 		this.set = clusters;
 	}
-	
+
 	public Cluster(int cluster) {
 		this.x = 0;
 		this.y = 0;
 		this.id = cluster;
-		this.set = new TreeSet<Cluster>();
+		this.set = new ArrayList<Cluster>();
 	}
 
 	@Override
 	public int compareTo(Cluster o) {
 		return Double.compare(x, o.getX());
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Cluster) {
+			Cluster o = (Cluster) other;
+			if (this.getX() == o.getX() && this.getY() == o.getY() && this.getID() == o.getID()
+					&& this.getSet().equals(o.getSet())) {
+				return true;
+			}
+			return false;
+		}
+		return false;
 	}
 
 	public double getX() {
@@ -47,6 +60,10 @@ public class Cluster implements Comparable<Cluster> {
 		return id;
 	}
 
+	public ArrayList<Cluster> getSet() {
+		return set;
+	}
+
 	public boolean addCluster(Cluster cluster) {
 		return set.add(cluster);
 	}
@@ -55,13 +72,13 @@ public class Cluster implements Comparable<Cluster> {
 		double tempX = 0;
 		double tempY = 0;
 		Iterator<Cluster> iter = set.iterator();
-		if(!iter.hasNext()) {
+		if (!iter.hasNext()) {
 			return;
 		}
 		while (iter.hasNext()) {
 			Cluster temp = iter.next();
-			tempX += temp.getX()/set.size();
-			tempY += temp.getY()/set.size();
+			tempX += temp.getX() / set.size();
+			tempY += temp.getY() / set.size();
 		}
 		this.x = tempX;
 		this.y = tempY;
@@ -82,8 +99,8 @@ public class Cluster implements Comparable<Cluster> {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("[mean: "+id + " = (" + x + "," + y + ") \n \t set: {");
-		for(Cluster c : this.set) {
+		builder.append("[mean: " + id + " = (" + x + "," + y + ") \n \t set: {");
+		for (Cluster c : this.set) {
 			builder.append(c.toString() + ", ");
 		}
 		builder.append("}]");
