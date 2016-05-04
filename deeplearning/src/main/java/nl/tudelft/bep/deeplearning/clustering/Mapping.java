@@ -195,7 +195,7 @@ public class Mapping {
 		int[] result = new int[clusters.length];
 		// Distances is used to keep track of the closest distance found for
 		// each point.
-		double[] distances = new double[clusters.length];
+		Double[] distances = new Double[clusters.length];
 		for (int i = 0; i < clusters.length; i++) {
 			distances[i] = Double.MAX_VALUE;
 		}
@@ -216,7 +216,7 @@ public class Mapping {
 	 * @param distances
 	 *            Array for keeping track of the distances of the result array.
 	 */
-	public static void closestClusters(Cluster[] Clusters, int[] result, double[] distances) {
+	public static void closestClusters(Cluster[] Clusters, int[] result, Double[] distances) {
 
 		int n = Clusters.length;
 

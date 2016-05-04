@@ -3,10 +3,10 @@ package nl.tudelft.bep.deeplearning.clustering;
 public class NeighborDistance {
 
 	private int[] results;
-	private double[] distances;
+	private Double[] distances;
 	
 	
-	public NeighborDistance(int[] results, double[] distances) {
+	public NeighborDistance(int[] results, Double[] distances) {
 		this.results = results;
 		this.distances = distances;
 	}
@@ -15,7 +15,7 @@ public class NeighborDistance {
 		return results;
 	}
 	
-	public double[] getDistances() {
+	public Double[] getDistances() {
 		return distances;
 	}
 	
