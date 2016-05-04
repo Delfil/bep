@@ -86,12 +86,8 @@ public class CNNetwork {
 				eval.eval(ds.getLabels(), output);
 			}
 			log.info(eval.stats());
-			log.info("TP: " + eval.truePositives());
-			log.info("TN: " + eval.trueNegatives());
-			log.info("FP: " + eval.falsePositives());
-			log.info("FM: " + eval.falseNegatives());
 			mnistTest.reset();
 		}
-		log.info("****************Example finished********************");
+		log.info("**************** Finished ********************");
 	}
 }
