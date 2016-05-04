@@ -27,7 +27,38 @@ public class Mapping {
 		while (layer2.length != 1) {
 			layer2 = createClusters(layer2);
 		}
-		System.out.println(layer2[0].toString());
+
+		ArrayList<Integer> list = createList(layer2[0]);
+		Double dim = Math.ceil(Math.sqrt(layer2[0].size()));
+		int[][] matrix = new int[dim.intValue()][dim.intValue()];
+		int index = 0;
+		for (int i = 0; i < dim.intValue(); i++) {
+			for (int j = 0; j < dim.intValue(); j++) {
+				if (index < list.size()) {
+					matrix[i][j] = list.get(index);
+					index++;
+				}
+				else{
+					matrix[i][j] = -1;
+				}
+			}
+		}
+
+	}
+
+	public static ArrayList<Integer> createList(Cluster cluster) {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+
+		if (!cluster.set.isEmpty()) {
+			for (Cluster c : cluster.set) {
+				list.addAll(createList(c));
+
+			}
+			return list;
+		} else {
+			list.add(cluster.id);
+			return list;
+		}
 	}
 
 	/**
@@ -132,7 +163,7 @@ public class Mapping {
 			distances[i] = Double.MAX_VALUE;
 		}
 		closestClusters(clusters, result, distances);
-		return new NeighborDistance(result,distances);
+		return new NeighborDistance(result, distances);
 	}
 
 	/**
