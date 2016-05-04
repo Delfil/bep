@@ -87,7 +87,7 @@ public class Mapping {
 	 */
 	public static Cluster[] createClusters(Cluster[] layer1) {
 		// Run nearest neighbor algorithm.
-		NeighborDistance result1 = neighbour(layer1);
+		NeighborDistance result1 = neighbour(layer1.clone());
 		// ArrayList for keeping track which cluster is already clustered.
 		ArrayList<Boolean> inCluster = new ArrayList<Boolean>(layer1.length);
 		for (int i = 0; i < layer1.length; i++) {
@@ -129,6 +129,8 @@ public class Mapping {
 				index = inCluster.indexOf(false);
 			}
 		}
+		cluster.calculateMean();
+		layer2.add(cluster);
 		// Make from the ArrayList an Array.
 		Cluster[] res = new Cluster[layer2.size()];
 		int i = 0;
