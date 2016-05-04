@@ -18,11 +18,14 @@ import org.nd4j.linalg.io.ClassPathResource;
 public class Mapping {
 
 	public static void main(String[] args) throws IOException {
-
+		map("points.in", "patients.in");
+	}
+	
+	public static void map(String points, String geneAct) throws IOException {
 		// Reading file containing points
-		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource("points.in").getFile()));
+		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource(points).getFile()));
 		int n = layer1.length;
-		ArrayList<ArrayList<Integer>> matrix = readGeneAct(new FileInputStream(new ClassPathResource("patients.in").getFile()), n);
+		ArrayList<ArrayList<Integer>> matrix = readGeneAct(new FileInputStream(new ClassPathResource(geneAct).getFile()), n);
 		// Initialize the temporary array representing a layer and run the
 		// createCluster for the first time on the input.
 		Cluster[] layer2 = new Cluster[n];
