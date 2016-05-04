@@ -22,7 +22,10 @@ function sample_data(N, NGenes, Data, Labels, file_name, image_size)
         data_selection = 1:size(Data,1);
     end
     
-    write_files(file_name , data_selection, selection_genes, Data, Labels, image_size);
+
+    LabelsOk = Labels - min(Labels);
+    
+    write_files(file_name , data_selection, selection_genes, Data, LabelsOk, image_size);
         
 end
 
@@ -36,7 +39,7 @@ function write_data_files(file_name, N, genes, Data, Label)
 
 	for person = N;
 		fprintf(label_file, '%u\r\n' , Label(person));
-		fprintf(data_file, '%.4f,' ,Data(person, genes));
+		fprintf(data_file, '%.4f,' ,Data(person, genes(1:end-1)));
 		fprintf(data_file, '%.4f' ,Data(person, genes(end)));
 		fprintf(data_file, '\r\n');
 	end
