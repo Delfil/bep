@@ -27,6 +27,36 @@ public class MappingTest {
 		assertEquals(point4, result[3]);
 	}
 	
+	@Test
+	public void testReadGeneAct() throws FileNotFoundException, IOException {
+		ArrayList<ArrayList<Integer>> result = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("patients.in").getFile()),4);
+		
+		ArrayList<Integer> patient1 = new ArrayList<Integer>();
+		patient1.add(1);
+		patient1.add(2);
+		patient1.add(3);
+		patient1.add(4);
+		ArrayList<Integer> patient2 = new ArrayList<Integer>();
+		patient2.add(5);
+		patient2.add(6);
+		patient2.add(7);
+		patient2.add(8);
+		ArrayList<Integer> patient3 = new ArrayList<Integer>();
+		patient3.add(9);
+		patient3.add(10);
+		patient3.add(11);
+		patient3.add(12);
+		
+		ArrayList<ArrayList<Integer>> expect = new ArrayList<ArrayList<Integer>>();
+		expect.add(patient1);
+		expect.add(patient2);
+		expect.add(patient3);
+		
+		assertEquals(expect, result);
+		
+		
+	}
+	
 	@Test 
 	public void testCreateCluster() throws FileNotFoundException, IOException {
 		Cluster[] input = Mapping.read(new FileInputStream(new ClassPathResource("points.in").getFile()));
