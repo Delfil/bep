@@ -1,10 +1,12 @@
 package nl.tudelft.bep.deeplearning;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,36 +33,36 @@ public class Mapping {
 			layer2 = createClusters(layer2);
 		}
 
-		ArrayList<Integer> list = createList(layer2[0]);
-		
-		
+		ArrayList<Integer> indices = createList(layer2[0]);
+		writeFile(matrix, indices);
+	}	
+	
+	/**
+	 * Creates a file with the gene activation data of each patient based on the indices found by the clustering.
+	 * @param matrix Gene activation of patients
+	 * @param indices were in the matrix those activations should be
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
+	public static void writeFile(ArrayList<ArrayList<Integer>> matrix, ArrayList<Integer> indices) throws FileNotFoundException, UnsupportedEncodingException {	
 		PrintWriter writer = new PrintWriter("sample_data.dat", "UTF-8");
 		for(int i = 0; i < matrix.size(); i++) {
-			for(int j = 0; j < n; j++) {
-				writer.print(matrix.get(i).get(list.get(j)));
-				if(j != n-1) {
+			for(int j = 0; j < indices.size(); j++) {
+				writer.print(matrix.get(i).get(indices.get(j)));
+				if(j != indices.size()-1) {
 					writer.print(",");
 				}
 			}
 			writer.print("\n");
 		}
 		writer.close();
-//		Double dim = Math.ceil(Math.sqrt(layer2[0].size()));
-//		int[][] matrix = new int[dim.intValue()][dim.intValue()];
-//		int index = 0;
-//		for (int i = 0; i < dim.intValue(); i++) {
-//			for (int j = 0; j < dim.intValue(); j++) {
-//				if (index < list.size()) {
-//					matrix[i][j] = list.get(index);
-//					index++;
-//				}
-//				else{
-//					matrix[i][j] = -1;
-//				}
-//			}
-//		}
 	}
-
+	
+	/**
+	 * Given a root cluster this function will give a list of the correlating genes next to each other.
+	 * @param cluster Root cluster of the cluster tree.
+	 * @return List with the points sorted for insertion into the matrix.
+	 */
 	public static ArrayList<Integer> createList(Cluster cluster) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 
