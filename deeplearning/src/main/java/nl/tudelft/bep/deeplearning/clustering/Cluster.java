@@ -1,4 +1,4 @@
-package nl.tudelft.bep.deeplearning;
+package nl.tudelft.bep.deeplearning.clustering;
 
 import java.util.HashSet;
 import java.util.Iterator;
