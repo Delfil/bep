@@ -1,5 +1,5 @@
 function M = map_d(P)
-% MAP maps a m by 2 set of 2d points P to a matrix containing the index of
+% MAP maps an m by 2 set of 2d points P to a matrix containing the index of
 % that point.
 
 %M, the raster containing P indices
@@ -19,7 +19,6 @@ points = randperm(size(P,1));
 point_ind = 1;
 same = 0;
 iters = 1;
-last = P(points(point_ind),:);
 
 while point_ind <= numel(points)
     
@@ -61,9 +60,8 @@ while point_ind <= numel(points)
         
         %         if the distance is zero
         if dist(1) == dist(2) && dist(1) == 0
-            %             yet to be determined
-            same = same +1;
-            point_ind = point_ind +1;
+%             yet to be determined
+            disp('Todo: fix this!');
             
         else
             
@@ -123,13 +121,8 @@ while point_ind <= numel(points)
     %show progress
     iters = iters +1;
     if mod(iters, 1000) == 0
-        ['Iteration ', num2str(iters), ': ', num2str(floor(100*point_ind/numel(points))), '% done.']
-        fout = last(1) == point(1) && last(2) == point(2);
-        if fout
-        end
-        last = point;
+        disp(sprintf('Iteration\t%s:\t%s%% done.', num2str(iters), num2str(floor(100*point_ind/numel(points)))))
     end
-    
 end
-same
+disp(sprintf('Iteration\t%s:\t%s%% done.', num2str(iters), num2str(floor(100*point_ind/numel(points)))))
 end
