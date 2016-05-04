@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,10 +18,12 @@ public class Mapping {
 	public static void main(String[] args) throws IOException {
 
 		// Reading file containing points
-		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource("decimal-points.in").getFile()));
+		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource("points.in").getFile()));
+		int n = layer1.length;
+		ArrayList<ArrayList<Integer>> matrix = readGeneAct(new FileInputStream(new ClassPathResource("patients.in").getFile()), n);
 		// Initialize the temporary array representing a layer and run the
 		// createCluster for the first time on the input.
-		Cluster[] layer2 = new Cluster[layer1.length];
+		Cluster[] layer2 = new Cluster[n];
 		layer2 = createClusters(layer1);
 
 		// Keep looping until one cluster is left.
@@ -29,21 +32,33 @@ public class Mapping {
 		}
 
 		ArrayList<Integer> list = createList(layer2[0]);
-		Double dim = Math.ceil(Math.sqrt(layer2[0].size()));
-		int[][] matrix = new int[dim.intValue()][dim.intValue()];
-		int index = 0;
-		for (int i = 0; i < dim.intValue(); i++) {
-			for (int j = 0; j < dim.intValue(); j++) {
-				if (index < list.size()) {
-					matrix[i][j] = list.get(index);
-					index++;
-				}
-				else{
-					matrix[i][j] = -1;
+		
+		
+		PrintWriter writer = new PrintWriter("sample_data.dat", "UTF-8");
+		for(int i = 0; i < matrix.size(); i++) {
+			for(int j = 0; j < n; j++) {
+				writer.print(matrix.get(i).get(list.get(j)));
+				if(j != n-1) {
+					writer.print(",");
 				}
 			}
+			writer.print("\n");
 		}
-
+		writer.close();
+//		Double dim = Math.ceil(Math.sqrt(layer2[0].size()));
+//		int[][] matrix = new int[dim.intValue()][dim.intValue()];
+//		int index = 0;
+//		for (int i = 0; i < dim.intValue(); i++) {
+//			for (int j = 0; j < dim.intValue(); j++) {
+//				if (index < list.size()) {
+//					matrix[i][j] = list.get(index);
+//					index++;
+//				}
+//				else{
+//					matrix[i][j] = -1;
+//				}
+//			}
+//		}
 	}
 
 	public static ArrayList<Integer> createList(Cluster cluster) {
@@ -145,6 +160,21 @@ public class Mapping {
 
 		return clusters;
 
+	}
+	
+	public static ArrayList<ArrayList<Integer>> readGeneAct(InputStream in, int numGenes) {
+		ArrayList<ArrayList<Integer>> matrix = new ArrayList<ArrayList<Integer>>();
+		Scanner scanner = new Scanner(new InputStreamReader(in));
+		
+		while(scanner.hasNext()) {
+			ArrayList<Integer> tempPatient = new ArrayList<Integer>(numGenes);
+			for(int i = 0; i < numGenes; i++) {
+				tempPatient.add(scanner.nextInt());
+			}
+			matrix.add(tempPatient);
+		}
+		scanner.close();
+		return matrix;
 	}
 
 	/**
