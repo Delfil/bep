@@ -5,9 +5,9 @@ import java.util.Iterator;
 
 public class Cluster implements Comparable<Cluster> {
 
-	double x, y;
-	int id;
-	ArrayList<Cluster> set;
+	private double x, y;
+	private int id;
+	private ArrayList<Cluster> set;
 
 	public Cluster(double x, double y, int id) {
 		this.x = x;

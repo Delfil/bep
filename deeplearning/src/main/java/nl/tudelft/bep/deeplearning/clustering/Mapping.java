@@ -69,14 +69,14 @@ public class Mapping {
 	public static ArrayList<Integer> createList(Cluster cluster) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 
-		if (!cluster.set.isEmpty()) {
-			for (Cluster c : cluster.set) {
+		if (!cluster.getSet().isEmpty()) {
+			for (Cluster c : cluster.getSet()) {
 				list.addAll(createList(c));
 
 			}
 			return list;
 		} else {
-			list.add(cluster.id);
+			list.add(cluster.getID());
 			return list;
 		}
 	}
