@@ -40,7 +40,8 @@ public class Mapping {
 		while(layerSize(layer2[0], layer) < imgSize) {
 			layer++;
 		}
-		int matrixSize = layerSize(layer2[0], layer);
+		ArrayList<Cluster> listLayer = layer(layer2[0], layer);
+		writeAvgFile(matrix, listLayer);
 		
 		
 		
@@ -78,10 +79,10 @@ public class Mapping {
 	}
 	
 	/**
-	 * Returns for each layer the amount of clusters contained. Layer 0 is the root cluster 
+	 * Returns for each layer the clusters in an ArrayList. Layer 0 is the root cluster 
 	 * @param root
 	 * @param layer
-	 * @return
+	 * @return Layer as ArrayList
 	 */
 	public static ArrayList<Cluster> layer(Cluster root, int layer) {
 		if(layer == 0) {
@@ -129,10 +130,45 @@ public class Mapping {
 		writer.close();
 	}
 	
-	public static void writeAvgFile(ArrayList<ArrayList<Double>> matrix, Cluster root, int matrixSize) {
-		int matrixDim = Double.valueOf(Math.ceil(Math.sqrt(matrixSize))).intValue();
+	/**
+	 * Creates a output file based on which layer is representing the pixels of the matrix.
+	 * @param matrix the gene activation matrix
+	 * @param listLayer The layer representing the pixels
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
+	public static void writeAvgFile(ArrayList<ArrayList<Double>> matrix, ArrayList<Cluster> listLayer) throws FileNotFoundException, UnsupportedEncodingException {
+		PrintWriter writer = new PrintWriter("sample_dataAVG.dat", "UTF-8");
+		int count = 0;
+		for(int i = 0; i < matrix.size(); i++) {
+			for(int j = 0; j < listLayer.size(); j++) {
+				Double res = avgActivation(matrix, listLayer.get(count), i);
+				writer.print(res);
+				if(j != listLayer.size()-1) {
+					writer.print(",");
+				}
+			}
+			writer.print("\n");
+		}
+		writer.close();
 		
 		
+		
+	}
+	
+	/**
+	 * Based on the matrix and the pixel at hand, return the average value of the cluster
+	 * @param matrix containing all the gene activation data
+	 * @param c Cluster representing the pixel we want to fill
+	 * @param patient which patient we wish to pick.
+	 * @return
+	 */
+	public static Double avgActivation(ArrayList<ArrayList<Double>> matrix, Cluster c, int patient) {
+		Double res = 0.0;
+		for(Integer i : c.listIndices()) {
+			res += matrix.get(patient).get(i);
+		}
+		return res/c.listIndices().size();
 	}
 	
 	/**
