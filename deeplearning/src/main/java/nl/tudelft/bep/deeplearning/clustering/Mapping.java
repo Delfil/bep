@@ -47,7 +47,10 @@ public class Mapping {
 	 * @return
 	 */
 	public static int layerSize(Cluster root, int layer) {
-		if(root.getSet().isEmpty() && layer != 1) {
+		if(layer == 0) {
+			return 1;
+		}
+		else if(root.getSet().isEmpty() && layer != 1) {
 			return -1;
 		}
 		else if(layer > 1){

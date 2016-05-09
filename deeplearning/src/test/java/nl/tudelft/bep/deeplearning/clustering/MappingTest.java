@@ -29,7 +29,7 @@ public class MappingTest {
 	
 	@Test
 	public void testReadGeneAct() throws FileNotFoundException, IOException {
-		ArrayList<ArrayList<Double>> result = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("patients.in").getFile()),4);
+		ArrayList<ArrayList<Double>> result = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("patient.in").getFile()),4);
 		
 		ArrayList<Double> patient1 = new ArrayList<Double>();
 		patient1.add(1.0);
@@ -113,6 +113,7 @@ public class MappingTest {
 		Cluster[] result = Mapping.createClusters(input);
 		result = Mapping.createClusters(result);	
 		
+		assertEquals(1, Mapping.layerSize(result[0], 0));
 		assertEquals(2, Mapping.layerSize(result[0], 1));
 		assertEquals(4, Mapping.layerSize(result[0], 2));
 		
