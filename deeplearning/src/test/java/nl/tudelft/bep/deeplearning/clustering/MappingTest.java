@@ -107,4 +107,15 @@ public class MappingTest {
 		assertEquals(expect, result);	
 	}
 	
+	@Test 
+	public void testLayerSize() throws FileNotFoundException, IOException {
+		Cluster[] input = Mapping.read(new FileInputStream(new ClassPathResource("points.in").getFile()));
+		Cluster[] result = Mapping.createClusters(input);
+		result = Mapping.createClusters(result);	
+		
+		assertEquals(2, Mapping.layerSize(result[0], 1));
+		assertEquals(4, Mapping.layerSize(result[0], 2));
+		
+	}	
+	
 }
