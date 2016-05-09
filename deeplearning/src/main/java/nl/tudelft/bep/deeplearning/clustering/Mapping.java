@@ -42,11 +42,6 @@ public class Mapping {
 		}
 		ArrayList<Cluster> listLayer = layer(layer2[0], layer);
 		writeAvgFile(matrix, listLayer);
-		
-		
-		
-//		ArrayList<Integer> indices = createList(layer2[0]);
-//		writeFile(matrix, indices);
 	}	
 	
 	/**
