@@ -128,6 +128,6 @@ public class Cluster implements Comparable<Cluster> {
 
 	@Override
 	public Cluster clone() {
-		return new Cluster(this.x, this.y, this.id);
+		return new Cluster(this.x, this.y, this.id, this.set);
 	}
 }
