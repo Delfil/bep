@@ -18,7 +18,7 @@ import org.nd4j.linalg.io.ClassPathResource;
 public class Mapping {
 
 	public static void main(String[] args) throws IOException {
-		map("point.in", "patients.in", 25);
+		map("point.in", "patients.in", 50);
 	}
 	
 	public static void map(String points, String geneAct, int imgSize) throws IOException {
