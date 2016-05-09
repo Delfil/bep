@@ -139,6 +139,7 @@ public class Mapping {
 	 */
 	public static void writeAvgFile(ArrayList<ArrayList<Double>> matrix, ArrayList<Cluster> listLayer) throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter("sample_dataAVG.dat", "UTF-8");
+		writer.println(listLayer.size());
 		int count = 0;
 		for(int i = 0; i < matrix.size(); i++) {
 			for(int j = 0; j < listLayer.size(); j++) {
