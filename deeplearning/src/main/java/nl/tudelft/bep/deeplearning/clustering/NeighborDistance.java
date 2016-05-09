@@ -19,15 +19,22 @@ public class NeighborDistance {
 		return distances;
 	}
 	
-	public int getPointIDWithClosestNeighbor() {
+	public int getPointIDWithClosestNeighbor(int no) {
+		Double[] tempDist = distances.clone();
 		double temp = Double.MAX_VALUE;
 		int index = -1;
-		for(int i = 0; i < distances.length; i++) {
-			if(distances[i] < temp) {
-				temp = distances[i];
-				index = i;
+		for(int c = 0; c < no; c++) {
+			index = -1;
+			temp = Double.MAX_VALUE;
+			for(int i = 0; i < tempDist.length; i++) {
+				if(tempDist[i] < temp) {
+					temp = tempDist[i];
+					index = i;
+				}
 			}
+			tempDist[index] = Double.MAX_VALUE;
 		}
+		
 		return results[index];
 	}
 	
