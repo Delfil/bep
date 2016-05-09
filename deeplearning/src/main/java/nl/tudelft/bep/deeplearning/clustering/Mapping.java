@@ -146,6 +146,7 @@ public class Mapping {
 				count++;
 			}
 			writer.print("\n");
+			count = 0;
 		}
 		writer.close();	
 	}
