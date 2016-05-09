@@ -143,13 +143,11 @@ public class Mapping {
 				if(j != listLayer.size()-1) {
 					writer.print(",");
 				}
+				count++;
 			}
 			writer.print("\n");
 		}
-		writer.close();
-		
-		
-		
+		writer.close();	
 	}
 	
 	/**
