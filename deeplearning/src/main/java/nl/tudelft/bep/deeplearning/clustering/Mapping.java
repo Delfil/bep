@@ -18,10 +18,10 @@ import org.nd4j.linalg.io.ClassPathResource;
 public class Mapping {
 
 	public static void main(String[] args) throws IOException {
-		map("point.in", "patients.in");
+		map("point.in", "patients.in", 25);
 	}
 	
-	public static void map(String points, String geneAct) throws IOException {
+	public static void map(String points, String geneAct, int imgSize) throws IOException {
 		// Reading file containing points
 		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource(points).getFile()));
 		int n = layer1.length;
@@ -36,8 +36,16 @@ public class Mapping {
 			layer2 = createClusters(layer2);
 		}
 
-		ArrayList<Integer> indices = createList(layer2[0]);
-		writeFile(matrix, indices);
+		int layer = 0;
+		while(layerSize(layer2[0], layer) < imgSize) {
+			layer++;
+		}
+		int matrixSize = layerSize(layer2[0], layer);
+		
+		
+		
+//		ArrayList<Integer> indices = createList(layer2[0]);
+//		writeFile(matrix, indices);
 	}	
 	
 	/**
@@ -67,7 +75,38 @@ public class Mapping {
 			}
 			return res;
 		}
-}
+	}
+	
+	/**
+	 * Returns for each layer the amount of clusters contained. Layer 0 is the root cluster 
+	 * @param root
+	 * @param layer
+	 * @return
+	 */
+	public static ArrayList<Cluster> layer(Cluster root, int layer) {
+		if(layer == 0) {
+			ArrayList<Cluster> res = new ArrayList<Cluster>();
+			res.add(root);
+			return res;
+		}
+		else if(root.getSet().isEmpty() && layer != 1) {
+			return null;
+		}
+		else if(layer > 1){
+			ArrayList<Cluster> res = new ArrayList<Cluster>();
+			for(Cluster c : root.getSet()) {
+				res.addAll(layer(c, layer-1));
+			}
+			return res;
+		}
+		else {
+			ArrayList<Cluster> res = new ArrayList<Cluster>();
+			for(int i = 0; i < root.getSet().size(); i++) {
+				res.add(root.getSet().get(i));
+			}
+			return res;
+		}
+	}
 	
 	/**
 	 * Creates a file with the gene activation data of each patient based on the indices found by the clustering.
@@ -88,6 +127,12 @@ public class Mapping {
 			writer.print("\n");
 		}
 		writer.close();
+	}
+	
+	public static void writeAvgFile(ArrayList<ArrayList<Double>> matrix, Cluster root, int matrixSize) {
+		int matrixDim = Double.valueOf(Math.ceil(Math.sqrt(matrixSize))).intValue();
+		
+		
 	}
 	
 	/**
