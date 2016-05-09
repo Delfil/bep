@@ -95,6 +95,25 @@ public class Cluster implements Comparable<Cluster> {
 			return res;
 		}
 	}
+	
+	/**
+	 * Gives the indices in the gene activation matrix of the cluster.
+	 * @return
+	 */
+	public ArrayList<Integer> listIndices() {
+		if(this.getSet().isEmpty()) {
+			ArrayList<Integer> res = new ArrayList<Integer>(1);
+			res.add(this.getID());
+			return res;
+		}
+		else {
+			ArrayList<Integer> res = new ArrayList<Integer>();
+			for(Cluster c : this.getSet()) {
+				res.addAll(c.listIndices());
+			}
+			return res;
+		}
+	}
 
 	@Override
 	public String toString() {
