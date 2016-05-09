@@ -18,7 +18,7 @@ import org.nd4j.linalg.io.ClassPathResource;
 public class Mapping {
 
 	public static void main(String[] args) throws IOException {
-		map("points.in", "patients.in");
+		map("point.in", "patients.in");
 	}
 	
 	public static void map(String points, String geneAct) throws IOException {
@@ -39,6 +39,32 @@ public class Mapping {
 		ArrayList<Integer> indices = createList(layer2[0]);
 		writeFile(matrix, indices);
 	}	
+	
+	/**
+	 * Returns for each layer the amount of clusters contained. Layer 0 is the root cluster 
+	 * @param root
+	 * @param layer
+	 * @return
+	 */
+	public static int layerSize(Cluster root, int layer) {
+		if(root.getSet().isEmpty() && layer != 1) {
+			return -1;
+		}
+		else if(layer > 1){
+			int res = 0;
+			for(Cluster c : root.getSet()) {
+				res += layerSize(c, layer - 1);
+			}
+			return res;
+		}
+		else {
+			int res = 0;
+			for(int i = 0; i < root.getSet().size(); i++) {
+				res += 1;
+			}
+			return res;
+		}
+}
 	
 	/**
 	 * Creates a file with the gene activation data of each patient based on the indices found by the clustering.
