@@ -161,13 +161,13 @@ public class MappingTest {
 		result = Mapping.createClusters(result);
 		
 		Double expect1_1 = 2.0;
-		assertEquals(expect1_1, Mapping.avgActivation(matrix, result[0].getSet().get(0), 0));
+		assertEquals(expect1_1, Mapping.avgActivation(matrix, result[0].getList().get(0), 0));
 		Double expect1_2 = 3.0;
-		assertEquals(expect1_2, Mapping.avgActivation(matrix, result[0].getSet().get(1), 0));
+		assertEquals(expect1_2, Mapping.avgActivation(matrix, result[0].getList().get(1), 0));
 		Double expect2_1 = 6.0;
-		assertEquals(expect2_1, Mapping.avgActivation(matrix, result[0].getSet().get(0), 1));
+		assertEquals(expect2_1, Mapping.avgActivation(matrix, result[0].getList().get(0), 1));
 		Double expect3_2 = 11.0;
-		assertEquals(expect3_2, Mapping.avgActivation(matrix, result[0].getSet().get(1), 2));
+		assertEquals(expect3_2, Mapping.avgActivation(matrix, result[0].getList().get(1), 2));
 		Double expect_root_1 = 2.5;
 		assertEquals(expect_root_1, Mapping.avgActivation(matrix, result[0], 0));
 		Double expect_root_2 = 6.5;

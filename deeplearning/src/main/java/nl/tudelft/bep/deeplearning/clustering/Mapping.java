@@ -54,19 +54,19 @@ public class Mapping {
 		if(layer == 0) {
 			return 1;
 		}
-		else if(root.getSet().isEmpty() && layer != 1) {
+		else if(root.getList().isEmpty() && layer != 1) {
 			return -1;
 		}
 		else if(layer > 1){
 			int res = 0;
-			for(Cluster c : root.getSet()) {
+			for(Cluster c : root.getList()) {
 				res += layerSize(c, layer - 1);
 			}
 			return res;
 		}
 		else {
 			int res = 0;
-			for(int i = 0; i < root.getSet().size(); i++) {
+			for(int i = 0; i < root.getList().size(); i++) {
 				res += 1;
 			}
 			return res;
@@ -85,20 +85,20 @@ public class Mapping {
 			res.add(root);
 			return res;
 		}
-		else if(root.getSet().isEmpty() && layer != 1) {
+		else if(root.getList().isEmpty() && layer != 1) {
 			return null;
 		}
 		else if(layer > 1){
 			ArrayList<Cluster> res = new ArrayList<Cluster>();
-			for(Cluster c : root.getSet()) {
+			for(Cluster c : root.getList()) {
 				res.addAll(layer(c, layer-1));
 			}
 			return res;
 		}
 		else {
 			ArrayList<Cluster> res = new ArrayList<Cluster>();
-			for(int i = 0; i < root.getSet().size(); i++) {
-				res.add(root.getSet().get(i));
+			for(int i = 0; i < root.getList().size(); i++) {
+				res.add(root.getList().get(i));
 			}
 			return res;
 		}
@@ -171,8 +171,8 @@ public class Mapping {
 	public static ArrayList<Integer> createList(Cluster cluster) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 
-		if (!cluster.getSet().isEmpty()) {
-			for (Cluster c : cluster.getSet()) {
+		if (!cluster.getList().isEmpty()) {
+			for (Cluster c : cluster.getList()) {
 				list.addAll(createList(c));
 
 			}

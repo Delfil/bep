@@ -8,7 +8,7 @@ public class Cluster implements Comparable<Cluster> {
 	//Coordinates of the point or in the case of the cluster the mean.
 	private double x, y;
 	private int id;
-	private ArrayList<Cluster> set;
+	private ArrayList<Cluster> list;
 
 	public Cluster(double x, double y, int id) {
 		this(x, y, id, new ArrayList<Cluster>());
@@ -18,7 +18,7 @@ public class Cluster implements Comparable<Cluster> {
 		this.x = x;
 		this.y = y;
 		this.id = id;
-		this.set = clusters;
+		this.list = clusters;
 	}
 
 	public Cluster(int cluster) {
@@ -35,7 +35,7 @@ public class Cluster implements Comparable<Cluster> {
 		if (other instanceof Cluster) {
 			Cluster o = (Cluster) other;
 			if (this.getX() == o.getX() && this.getY() == o.getY() && this.getID() == o.getID()
-					&& this.getSet().equals(o.getSet())) {
+					&& this.getList().equals(o.getList())) {
 				return true;
 			}
 			return false;
@@ -55,8 +55,8 @@ public class Cluster implements Comparable<Cluster> {
 		return id;
 	}
 
-	public ArrayList<Cluster> getSet() {
-		return set;
+	public ArrayList<Cluster> getList() {
+		return list;
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class Cluster implements Comparable<Cluster> {
 	 * @param cluster we wish to add.
 	 */
 	public void addCluster(Cluster cluster) {
-		set.add(cluster);
+		list.add(cluster);
 		this.calculateMean();
 	}
 
@@ -74,14 +74,14 @@ public class Cluster implements Comparable<Cluster> {
 	public void calculateMean() {
 		double tempX = 0;
 		double tempY = 0;
-		Iterator<Cluster> iter = set.iterator();
+		Iterator<Cluster> iter = list.iterator();
 		if (!iter.hasNext()) {
 			return;
 		}
 		while (iter.hasNext()) {
 			Cluster temp = iter.next();
-			tempX += temp.getX() / set.size();
-			tempY += temp.getY() / set.size();
+			tempX += temp.getX() / list.size();
+			tempY += temp.getY() / list.size();
 		}
 		this.x = tempX;
 		this.y = tempY;
@@ -92,11 +92,11 @@ public class Cluster implements Comparable<Cluster> {
 	 * @return
 	 */
 	public int size() {
-		if (set.size() == 0) {
+		if (list.size() == 0) {
 			return 1;
 		} else {
 			int res = 0;
-			for (Cluster c : set) {
+			for (Cluster c : list) {
 				res += c.size();
 			}
 			return res;
@@ -108,14 +108,14 @@ public class Cluster implements Comparable<Cluster> {
 	 * @return
 	 */
 	public ArrayList<Integer> listIndices() {
-		if(this.getSet().isEmpty()) {
+		if(this.getList().isEmpty()) {
 			ArrayList<Integer> res = new ArrayList<Integer>(1);
 			res.add(this.getID());
 			return res;
 		}
 		else {
 			ArrayList<Integer> res = new ArrayList<Integer>();
-			for(Cluster c : this.getSet()) {
+			for(Cluster c : this.getList()) {
 				res.addAll(c.listIndices());
 			}
 			return res;
@@ -126,7 +126,7 @@ public class Cluster implements Comparable<Cluster> {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("[mean: " + id + " = (" + x + "," + y + ") \n \t set: {");
-		for (Cluster c : this.set) {
+		for (Cluster c : this.list) {
 			builder.append(c.toString() + ", ");
 		}
 		builder.append("}]");
@@ -135,6 +135,6 @@ public class Cluster implements Comparable<Cluster> {
 
 	@Override
 	public Cluster clone() {
-		return new Cluster(this.x, this.y, this.id, this.set);
+		return new Cluster(this.x, this.y, this.id, this.list);
 	}
 }
