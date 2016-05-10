@@ -155,6 +155,33 @@ public class MappingTest {
 	}
 	
 	@Test
+	public void testSorting() throws FileNotFoundException, IOException {
+		Cluster[] input = Mapping.read(new FileInputStream(new ClassPathResource("pointsdistances.in").getFile()));
+		Cluster[] result = Mapping.createClusters(input);
+		result = Mapping.createClusters(result);
+		
+		Cluster point1 = new Cluster(1,2,0);
+		Cluster point2 = new Cluster(4,5,1);
+		Cluster point3 = new Cluster(1,3,2);
+		Cluster point4 = new Cluster(4,5.5,3);
+		
+		Cluster layer1_1 = new Cluster(4,5.75,0);
+		Cluster layer1_2 = new Cluster(1,2.5,1);
+		
+		layer1_1.addCluster(point2);
+		layer1_1.addCluster(point4);
+		layer1_2.addCluster(point1);
+		layer1_2.addCluster(point3);
+		
+		Cluster root = new Cluster(2.5,4.125,0);
+		root.addCluster(layer1_1);
+		root.addCluster(layer1_2);
+		
+		assertEquals(root, result[0]);
+		
+	}
+	
+	@Test
 	public void testAvgActivation() throws FileNotFoundException, IOException {
 		List<ArrayList<Double>> matrix = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("patient.in").getFile()),4);
 		Cluster[] input = Mapping.read(new FileInputStream(new ClassPathResource("points.in").getFile()));
