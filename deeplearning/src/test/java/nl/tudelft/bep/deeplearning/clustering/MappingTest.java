@@ -161,19 +161,19 @@ public class MappingTest {
 		result = Mapping.createClusters(result);
 		
 		Cluster point1 = new Cluster(1,2,0);
-		Cluster point2 = new Cluster(4,5,1);
+		Cluster point2 = new Cluster(4,5.5,1);
 		Cluster point3 = new Cluster(1,3,2);
-		Cluster point4 = new Cluster(4,5.5,3);
+		Cluster point4 = new Cluster(4,6,3);
 		
-		Cluster layer1_1 = new Cluster(4,5.75,0);
-		Cluster layer1_2 = new Cluster(1,2.5,1);
+		Cluster layer1_1 = new Cluster(0);
+		Cluster layer1_2 = new Cluster(1);
 		
 		layer1_1.addCluster(point2);
 		layer1_1.addCluster(point4);
 		layer1_2.addCluster(point1);
 		layer1_2.addCluster(point3);
 		
-		Cluster root = new Cluster(2.5,4.125,0);
+		Cluster root = new Cluster(0);
 		root.addCluster(layer1_1);
 		root.addCluster(layer1_2);
 		
