@@ -75,15 +75,5 @@ public class ClusterTest {
 		int wrongType = 0;
 		assertFalse(root.equals(wrongType));
 
-	}
-	
-	@Test
-	public void testClone() {
-		setup();
-		Cluster root_same = root.clone();
-		assertEquals(root, root_same);
-	}
-	
-	
-	
+	}	
 }

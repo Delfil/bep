@@ -132,9 +132,4 @@ public class Cluster implements Comparable<Cluster> {
 		builder.append("}]");
 		return builder.toString();
 	}
-
-	@Override
-	public Cluster clone() {
-		return new Cluster(this.x, this.y, this.id, this.list);
-	}
 }
