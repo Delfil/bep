@@ -217,15 +217,7 @@ public class Mapping {
 	 */
 	public static Cluster[] createClusters(Cluster[] layer1) {
 		// Run nearest neighbor algorithm.
-		NeighborDistance result1 = neighbour(layer1.clone());
-		List<Neighbors> neighbors = new ArrayList<Neighbors>();
-		// ArrayList for keeping track which cluster is already clustered.
-		List<Boolean> inCluster = new ArrayList<Boolean>(layer1.length);
-		for (int i = 0; i < layer1.length; i++) {
-			inCluster.add(false);
-			int index = getIndexFromID(layer1, result1.getResults()[i]);
-			neighbors.add(new Neighbors(layer1[i], layer1[index], result1.getDistances()[i]));
-		}
+		List<Neighbors> neighbors = neighbour(layer1.clone());
 		// Temporary ArrayList for the newly created higher level clusters.
 		List<Cluster> layer2 = new ArrayList<Cluster>();
 		Collections.sort(neighbors);
@@ -316,16 +308,21 @@ public class Mapping {
 	 *            The clusters we would like to know the nearest neighbors of.
 	 * @return Array of nearest neighbors
 	 */
-	public static NeighborDistance neighbour(Cluster[] clusters) {
+	public static List<Neighbors> neighbour(Cluster[] clusters) {
 		int[] result = new int[clusters.length];
 		// Distances is used to keep track of the closest distance found for
 		// each point.
 		Double[] distances = new Double[clusters.length];
 		for (int i = 0; i < clusters.length; i++) {
 			distances[i] = Double.MAX_VALUE;
+		}		
+		closestClusters(clusters.clone(), result, distances);
+		List<Neighbors> neighbors = new ArrayList<Neighbors>();
+		for (int i = 0; i < clusters.length; i++) {
+			int index = getIndexFromID(clusters, result[i]);
+			neighbors.add(new Neighbors(clusters[i], clusters[index], distances[i]));
 		}
-		closestClusters(clusters, result, distances);
-		return new NeighborDistance(result, distances);
+		return neighbors;
 	}
 
 	/**
