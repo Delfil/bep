@@ -238,12 +238,7 @@ public class Mapping {
 		}
 		layer2.add(cluster);
 		// Make from the ArrayList an Array.
-		Cluster[] res = new Cluster[layer2.size()];
-		int i = 0;
-		for (Cluster c : layer2) {
-			res[i] = c;
-			i++;
-		}
+		Cluster[] res = layer2.toArray(new Cluster[layer2.size()]);
 		return res;
 	}
 
