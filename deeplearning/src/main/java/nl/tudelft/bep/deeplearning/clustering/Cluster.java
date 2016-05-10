@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 public class Cluster implements Comparable<Cluster> {
 
+	//Coordinates of the point or in the case of the cluster the mean.
 	private double x, y;
 	private int id;
 	private ArrayList<Cluster> set;
@@ -64,10 +65,18 @@ public class Cluster implements Comparable<Cluster> {
 		return set;
 	}
 
-	public boolean addCluster(Cluster cluster) {
-		return set.add(cluster);
+	/**
+	 * Adding a cluster to the higher level cluster. Mean is calculated thereafter.
+	 * @param cluster we wish to add.
+	 */
+	public void addCluster(Cluster cluster) {
+		set.add(cluster);
+		this.calculateMean();
 	}
 
+	/**
+	 * Function for calculating the mean.
+	 */
 	public void calculateMean() {
 		double tempX = 0;
 		double tempY = 0;
@@ -84,6 +93,10 @@ public class Cluster implements Comparable<Cluster> {
 		this.y = tempY;
 	}
 
+	/**
+	 * Looks at how many points (leafs of the tree) are in a cluster.
+	 * @return
+	 */
 	public int size() {
 		if (set.size() == 0) {
 			return 1;
