@@ -199,7 +199,7 @@ public class Mapping {
 		// ArrayList for keeping track which cluster is already clustered.
 		List<Boolean> inCluster = new ArrayList<Boolean>(layer1.length);
 		for (int i = 0; i < layer1.length; i++) {
-			inCluster.add(i, false);
+			inCluster.add(false);
 		}
 		// Temporary ArrayList for the newly created higher level clusters.
 		List<Cluster> layer2 = new ArrayList<Cluster>();
