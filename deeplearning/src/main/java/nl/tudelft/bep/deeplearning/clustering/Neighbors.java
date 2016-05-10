@@ -5,13 +5,11 @@ public class Neighbors implements Comparable<Neighbors>  {
 	private Cluster c;
 	private Cluster neighbor;
 	private Double distance;
-	private boolean inCluster;
 	
 	public Neighbors(Cluster c, Cluster neighbor, Double distance) {
 		this.c = c;
 		this.neighbor = neighbor;
 		this.distance = distance;
-		this.inCluster = false;
 	}
 
 	@Override
