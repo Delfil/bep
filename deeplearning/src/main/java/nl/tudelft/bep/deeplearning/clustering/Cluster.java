@@ -69,7 +69,7 @@ public class Cluster implements Comparable<Cluster> {
 	}
 
 	/**
-	 * Function for calculating the mean.
+	 * Function for calculating the mean. The mean is save inside the cluster as x and y.
 	 */
 	public void calculateMean() {
 		double tempX = 0;
@@ -88,7 +88,7 @@ public class Cluster implements Comparable<Cluster> {
 	}
 
 	/**
-	 * Looks at how many points (leafs of the tree) are in a cluster.
+	 * Looks at how many points (leafs of the tree) are in a cluster. If set is empty its a point, so return 1
 	 * @return the amount of points in this cluster
 	 */
 	public int size() {
