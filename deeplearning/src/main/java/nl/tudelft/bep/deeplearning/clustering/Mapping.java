@@ -217,7 +217,7 @@ public class Mapping {
 	 */
 	public static Cluster[] createClusters(Cluster[] layer1) {
 		// Run nearest neighbor algorithm.
-		List<Neighbors> neighbors = neighbour(layer1.clone());
+		List<Neighbors> neighbors = neighbour(layer1);
 		// Temporary ArrayList for the newly created higher level clusters.
 		List<Cluster> layer2 = new ArrayList<Cluster>();
 		Collections.sort(neighbors);
