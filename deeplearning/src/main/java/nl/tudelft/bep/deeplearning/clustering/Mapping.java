@@ -19,10 +19,10 @@ import org.nd4j.linalg.io.ClassPathResource;
 public class Mapping {
 
 	public static void main(String[] args) throws IOException {
-		map("point.in", "patients.in", 50);
+		map("point.in", "patients.in", 50, "sample_dataAVG.dat");
 	}
 	
-	public static void map(String points, String geneAct, int imgSize) throws IOException {
+	public static void map(String points, String geneAct, int imgSize, String outputFile) throws IOException {
 		// Reading file containing points
 		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource(points).getFile()));
 		int n = layer1.length;
@@ -42,14 +42,14 @@ public class Mapping {
 			layer++;
 		}
 		List<Cluster> listLayer = layer(layer2[0], layer);
-		writeAvgFile(matrix, listLayer);
+		writeAvgFile(matrix, listLayer, outputFile);
 	}	
 	
 	/**
 	 * Returns for each layer the amount of clusters contained. Layer 0 is the root cluster 
-	 * @param root
-	 * @param layer
-	 * @return
+	 * @param root The root cluster of the tree.
+	 * @param layer which layer you want the size of.
+	 * @return the size of the layer.
 	 */
 	public static int layerSize(Cluster root, int layer) {
 		if(layer == 0) {
@@ -75,10 +75,10 @@ public class Mapping {
 	}
 	
 	/**
-	 * Returns for each layer the clusters in an ArrayList. Layer 0 is the root cluster 
-	 * @param root
-	 * @param layer
-	 * @return Layer as ArrayList
+	 * Returns for each layer the clusters in a List. Layer 0 is the root cluster 
+	 * @param root The root cluster
+	 * @param layer which layer you wish to return
+	 * @return Layer as List
 	 */
 	public static List<Cluster> layer(Cluster root, int layer) {
 		if(layer == 0) {
@@ -112,8 +112,8 @@ public class Mapping {
 	 * @throws FileNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static void writeFile(ArrayList<ArrayList<Double>> matrix, ArrayList<Integer> indices) throws FileNotFoundException, UnsupportedEncodingException {	
-		PrintWriter writer = new PrintWriter("sample_data.dat", "UTF-8");
+	public static void writeFile(ArrayList<ArrayList<Double>> matrix, ArrayList<Integer> indices, String outputFile) throws FileNotFoundException, UnsupportedEncodingException {	
+		PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
 		for(int i = 0; i < matrix.size(); i++) {
 			for(int j = 0; j < indices.size(); j++) {
 				writer.print(matrix.get(i).get(indices.get(j)));
@@ -133,8 +133,8 @@ public class Mapping {
 	 * @throws FileNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static void writeAvgFile(List<ArrayList<Double>> matrix, List<Cluster> listLayer) throws FileNotFoundException, UnsupportedEncodingException {
-		PrintWriter writer = new PrintWriter("sample_dataAVG.dat", "UTF-8");
+	public static void writeAvgFile(List<ArrayList<Double>> matrix, List<Cluster> listLayer, String outputFile) throws FileNotFoundException, UnsupportedEncodingException {
+		PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
 		writer.println(listLayer.size());
 		for(int i = 0; i < matrix.size(); i++) {
 			for(int j = 0; j < listLayer.size(); j++) {
@@ -154,7 +154,7 @@ public class Mapping {
 	 * @param matrix containing all the gene activation data
 	 * @param c Cluster representing the pixel we want to fill
 	 * @param patient which patient we wish to pick.
-	 * @return
+	 * @return the average activation value of the cluster
 	 */
 	public static Double avgActivation(List<ArrayList<Double>> matrix, Cluster c, int patient) {
 		Double res = 0.0;
