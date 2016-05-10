@@ -227,7 +227,6 @@ public class Mapping {
 			}
 			// Case if the closest neighbor is already in a high level cluster.
 			else {
-				cluster.calculateMean();
 				layer2.add(cluster);
 				id++;
 				// Create new high level cluster and find the next cluster not
@@ -236,7 +235,6 @@ public class Mapping {
 				index = inCluster.indexOf(false);
 			}
 		}
-		cluster.calculateMean();
 		layer2.add(cluster);
 		// Make from the ArrayList an Array.
 		Cluster[] res = new Cluster[layer2.size()];
