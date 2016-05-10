@@ -109,8 +109,8 @@ public class Mapping {
 	 * Creates a file with the gene activation data of each patient based on the indices found by the clustering.
 	 * @param matrix Gene activation of patients
 	 * @param indices were in the matrix those activations should be
-	 * @throws FileNotFoundException
-	 * @throws UnsupportedEncodingException
+	 * @throws FileNotFoundException file not found.
+	 * @throws UnsupportedEncodingException unsupported encoding,
 	 */
 	public static void writeFile(ArrayList<ArrayList<Double>> matrix, ArrayList<Integer> indices, String outputFile) throws FileNotFoundException, UnsupportedEncodingException {	
 		PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
