@@ -11,10 +11,7 @@ public class Cluster implements Comparable<Cluster> {
 	private ArrayList<Cluster> set;
 
 	public Cluster(double x, double y, int id) {
-		this.x = x;
-		this.y = y;
-		this.id = id;
-		this.set = new ArrayList<Cluster>();
+		this(x, y, id, new ArrayList<Cluster>());
 	}
 
 	public Cluster(double x, double y, int id, ArrayList<Cluster> clusters) {
@@ -25,10 +22,7 @@ public class Cluster implements Comparable<Cluster> {
 	}
 
 	public Cluster(int cluster) {
-		this.x = 0;
-		this.y = 0;
-		this.id = cluster;
-		this.set = new ArrayList<Cluster>();
+		this(0,0,cluster,new ArrayList<Cluster>());
 	}
 
 	@Override
