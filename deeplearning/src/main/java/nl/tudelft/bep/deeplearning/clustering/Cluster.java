@@ -89,7 +89,7 @@ public class Cluster implements Comparable<Cluster> {
 
 	/**
 	 * Looks at how many points (leafs of the tree) are in a cluster.
-	 * @return
+	 * @return the amount of points in this cluster
 	 */
 	public int size() {
 		if (list.size() == 0) {
@@ -105,7 +105,7 @@ public class Cluster implements Comparable<Cluster> {
 	
 	/**
 	 * Gives the indices in the gene activation matrix of the cluster.
-	 * @return
+	 * @return the indices in the gene activation matrix of the cluster
 	 */
 	public ArrayList<Integer> listIndices() {
 		if(this.getList().isEmpty()) {
