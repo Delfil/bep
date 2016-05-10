@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
 
 import org.nd4j.linalg.io.ClassPathResource;
@@ -25,7 +26,7 @@ public class Mapping {
 		// Reading file containing points
 		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource(points).getFile()));
 		int n = layer1.length;
-		ArrayList<ArrayList<Double>> matrix = readGeneAct(new FileInputStream(new ClassPathResource(geneAct).getFile()), n);
+		List<ArrayList<Double>> matrix = readGeneAct(new FileInputStream(new ClassPathResource(geneAct).getFile()), n);
 		// Initialize the temporary array representing a layer and run the
 		// createCluster for the first time on the input.
 		Cluster[] layer2 = new Cluster[n];
@@ -40,7 +41,7 @@ public class Mapping {
 		while(layerSize(layer2[0], layer) < imgSize) {
 			layer++;
 		}
-		ArrayList<Cluster> listLayer = layer(layer2[0], layer);
+		List<Cluster> listLayer = layer(layer2[0], layer);
 		writeAvgFile(matrix, listLayer);
 	}	
 	
@@ -79,7 +80,7 @@ public class Mapping {
 	 * @param layer
 	 * @return Layer as ArrayList
 	 */
-	public static ArrayList<Cluster> layer(Cluster root, int layer) {
+	public static List<Cluster> layer(Cluster root, int layer) {
 		if(layer == 0) {
 			ArrayList<Cluster> res = new ArrayList<Cluster>();
 			res.add(root);
@@ -132,7 +133,7 @@ public class Mapping {
 	 * @throws FileNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static void writeAvgFile(ArrayList<ArrayList<Double>> matrix, ArrayList<Cluster> listLayer) throws FileNotFoundException, UnsupportedEncodingException {
+	public static void writeAvgFile(List<ArrayList<Double>> matrix, List<Cluster> listLayer) throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter("sample_dataAVG.dat", "UTF-8");
 		writer.println(listLayer.size());
 		for(int i = 0; i < matrix.size(); i++) {
@@ -155,7 +156,7 @@ public class Mapping {
 	 * @param patient which patient we wish to pick.
 	 * @return
 	 */
-	public static Double avgActivation(ArrayList<ArrayList<Double>> matrix, Cluster c, int patient) {
+	public static Double avgActivation(List<ArrayList<Double>> matrix, Cluster c, int patient) {
 		Double res = 0.0;
 		for(Integer i : c.listIndices()) {
 			res += matrix.get(patient).get(i);
@@ -196,12 +197,12 @@ public class Mapping {
 		// Run nearest neighbor algorithm.
 		NeighborDistance result1 = neighbour(layer1.clone());
 		// ArrayList for keeping track which cluster is already clustered.
-		ArrayList<Boolean> inCluster = new ArrayList<Boolean>(layer1.length);
+		List<Boolean> inCluster = new ArrayList<Boolean>(layer1.length);
 		for (int i = 0; i < layer1.length; i++) {
 			inCluster.add(i, false);
 		}
 		// Temporary ArrayList for the newly created higher level clusters.
-		ArrayList<Cluster> layer2 = new ArrayList<Cluster>();
+		List<Cluster> layer2 = new ArrayList<Cluster>();
 		// Initialize the index for keeping track of where the cluster at hand
 		// is located in layer1
 		int index = 0;
@@ -269,8 +270,8 @@ public class Mapping {
 
 	}
 	
-	public static ArrayList<ArrayList<Double>> readGeneAct(InputStream in, int numGenes) {
-		ArrayList<ArrayList<Double>> matrix = new ArrayList<ArrayList<Double>>();
+	public static List<ArrayList<Double>> readGeneAct(InputStream in, int numGenes) {
+		List<ArrayList<Double>> matrix = new ArrayList<ArrayList<Double>>();
 		Scanner scanner = new Scanner(new InputStreamReader(in));
 		
 		while(scanner.hasNext()) {

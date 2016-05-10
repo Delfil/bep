@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.nd4j.linalg.io.ClassPathResource;
@@ -29,7 +30,7 @@ public class MappingTest {
 	
 	@Test
 	public void testReadGeneAct() throws FileNotFoundException, IOException {
-		ArrayList<ArrayList<Double>> result = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("patient.in").getFile()),4);
+		List<ArrayList<Double>> result = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("patient.in").getFile()),4);
 		
 		ArrayList<Double> patient1 = new ArrayList<Double>();
 		patient1.add(1.0);
@@ -155,7 +156,7 @@ public class MappingTest {
 	
 	@Test
 	public void testAvgActivation() throws FileNotFoundException, IOException {
-		ArrayList<ArrayList<Double>> matrix = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("patient.in").getFile()),4);
+		List<ArrayList<Double>> matrix = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("patient.in").getFile()),4);
 		Cluster[] input = Mapping.read(new FileInputStream(new ClassPathResource("points.in").getFile()));
 		Cluster[] result = Mapping.createClusters(input);
 		result = Mapping.createClusters(result);
