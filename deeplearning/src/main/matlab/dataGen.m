@@ -2,13 +2,13 @@ function dataGen(data, labels, varargin)
 % DATAGEN(data, labels, 'name', 'file_name') creates .dat, .lab, and .meta 
 % files based on the data, labels and additional options provided.
 % 
-% CHANGE THE VERSION NUMBER IF YOU CHANGE THIS FILE
+% DO NOT CHANGE THIS FILE, COPY IT INSTEAD AND CHANGE THE VERSION
 
     
 %     load the default values
     a = defaults;
     a.observations = size(data,1);
-    a.classes = max(labels)-1;
+    a.classes = max(labels);
     
     options = fieldnames(a);
     

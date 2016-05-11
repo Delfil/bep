@@ -121,8 +121,8 @@ while point_ind <= numel(points)
     %show progress
     iters = iters +1;
     if mod(iters, 1000) == 0
-        disp(sprintf('Iteration\t%s:\t%s%% done.', num2str(iters), num2str(floor(100*point_ind/numel(points)))))
+        disp(sprintf('Iteration\t%s:\t%s%% done.', num2str(iters-1), num2str(floor(100*point_ind/numel(points)))))
     end
 end
-disp(sprintf('Iteration\t%s:\t%s%% done.', num2str(iters), num2str(floor(100*point_ind/numel(points)))))
+disp(sprintf('Iteration\t%s:\t%s%% done.', num2str(iters-1), num2str(floor(100*(point_ind-1)/numel(points)))))
 end
