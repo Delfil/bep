@@ -30,7 +30,7 @@ public class MappingTest {
 	
 	@Test
 	public void testReadGeneAct() throws FileNotFoundException, IOException {
-		List<ArrayList<Double>> result = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("patient.in").getFile()),4);
+		List<ArrayList<Double>> result = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("test_patient.in").getFile()),4);
 		
 		ArrayList<Double> patient1 = new ArrayList<Double>();
 		patient1.add(1.0);
@@ -183,7 +183,7 @@ public class MappingTest {
 	
 	@Test
 	public void testAvgActivation() throws FileNotFoundException, IOException {
-		List<ArrayList<Double>> matrix = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("patient.in").getFile()),4);
+		List<ArrayList<Double>> matrix = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("test_patient.in").getFile()),4);
 		Cluster[] input = Mapping.read(new FileInputStream(new ClassPathResource("points.in").getFile()));
 		Cluster[] result = Mapping.createClusters(input);
 		result = Mapping.createClusters(result);
