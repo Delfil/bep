@@ -17,9 +17,10 @@ import java.util.Scanner;
 import org.nd4j.linalg.io.ClassPathResource;
 
 public class Mapping {
+	
+	private static int outputNum;
 
 	public static void main(String[] args) throws IOException {
-		map("point.in", "patients.in", 50, "sample_dataAVGSorted50.dat");
 	}
 
 	/**
@@ -51,8 +52,11 @@ public class Mapping {
 		while (layerSize(layer2[0], layer) < imgSize) {
 			layer++;
 		}
+		String datFile = outputFile + ".dat";
+		String metaFile = outputFile + ".meta";
 		List<Cluster> listLayer = layer(layer2[0], layer);
-		writeAvgFile(matrix, listLayer, outputFile);
+		writeAvgFile(matrix, listLayer, datFile);
+		writeMetaFile(Double.valueOf(Math.ceil(Math.sqrt(listLayer.size()))).intValue(), matrix.size(), metaFile);
 	}
 
 	/**
@@ -171,6 +175,16 @@ public class Mapping {
 			writer.print("\n");
 		}
 		writer.close();
+	}
+	
+	public static void writeMetaFile(int dim, int numPatients, String metaOutputFile) throws FileNotFoundException, UnsupportedEncodingException {
+		PrintWriter writer = new PrintWriter(metaOutputFile, "UTF-8");
+		writer.println(numPatients);
+		writer.println(dim);
+		writer.println(dim);
+		writer.println(outputNum);
+		writer.close();
+		
 	}
 
 	/**
@@ -316,7 +330,7 @@ public class Mapping {
 	public static List<ArrayList<Double>> readGeneAct(InputStream in, int numGenes) {
 		List<ArrayList<Double>> matrix = new ArrayList<ArrayList<Double>>();
 		Scanner scanner = new Scanner(new InputStreamReader(in));
-
+		outputNum = scanner.nextInt();
 		while (scanner.hasNext()) {
 			ArrayList<Double> tempPatient = new ArrayList<Double>(numGenes);
 			for (int i = 0; i < numGenes; i++) {
