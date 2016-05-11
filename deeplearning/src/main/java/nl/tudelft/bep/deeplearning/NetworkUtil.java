@@ -10,7 +10,6 @@ public class NetworkUtil {
 	protected final static String NETWORK_FOLDER = "networks";
 	protected final static String MULTI_LAYER_NETWORK = "MLN_";
 	protected final static String F = "/";
-	protected final static String JSON = ".json";
 	protected static final String FILE_EXTENTION = ".NNConf.json";
 
 	public static String getPathName(NNConfigurationBuilder builder) {
@@ -22,12 +21,13 @@ public class NetworkUtil {
 		int max = -1;
 		for (File f : files) {
 			String fn = f.getName();
-			if (fn.endsWith(JSON) && fn.startsWith(MULTI_LAYER_NETWORK)) {
+			if (fn.endsWith(FILE_EXTENTION) && fn.startsWith(MULTI_LAYER_NETWORK)) {
 				if (NNConfigurationBuilder.load(f.getAbsolutePath()).equals(builder)) {
-					System.out.println("succes");
-					return f.getAbsolutePath();
+					String string = f.getAbsolutePath();
+					return string.substring(0, string.length() - FILE_EXTENTION.length());
 				} else {
-					max = Math.max(max, Integer.parseInt(fn.substring(MULTI_LAYER_NETWORK.length(), JSON.length())));
+					max = Math.max(max,
+							Integer.parseInt(fn.substring(MULTI_LAYER_NETWORK.length(), FILE_EXTENTION.length())));
 				}
 			}
 		}

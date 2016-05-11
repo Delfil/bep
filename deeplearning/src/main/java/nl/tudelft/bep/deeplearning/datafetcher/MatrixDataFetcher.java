@@ -1,6 +1,6 @@
 package nl.tudelft.bep.deeplearning.datafetcher;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -23,7 +23,6 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 	protected int height;
 	protected String seperator = ",";
 	protected int startIndex;
-//	protected int cursor = 0;
 
 	/**
 	 * Initialize a MatrixDataFetcher
@@ -38,6 +37,7 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 	 */
 	public MatrixDataFetcher(DataPath data, double start, double end) {
 		List<DataSet> dataList = data.getSubset(start, end);
+
 		this.data = dataList.toArray(new DataSet[dataList.size()]);
 
 		this.totalExamples = dataList.size();
@@ -57,8 +57,11 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 		if (!hasMore()) {
 			throw new IllegalStateException("Unable to getFromOrigin more; there are no more images");
 		}
-		initializeCurrFromList(Arrays.asList(
-				Arrays.copyOfRange(data, this.cursor, this.cursor = Math.min(this.cursor + batch, data.length))));
+		List<DataSet> result = new ArrayList<>();
+		for(int i = 0; i<batch && cursor < this.totalExamples; i++){
+			result.add(data[order[cursor++]]);
+		}
+		initializeCurrFromList(result);
 	}
 
 	@Override
