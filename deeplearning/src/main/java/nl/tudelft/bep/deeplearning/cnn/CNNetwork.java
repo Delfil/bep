@@ -30,7 +30,7 @@ public class CNNetwork {
 	public static void main(String[] args) throws Exception {
 		int batchSize = 32;
 		int nEpochs = 10;
-		int seed = 123;
+		long seed = 123;
 
 
 		log.info("Load data....");
