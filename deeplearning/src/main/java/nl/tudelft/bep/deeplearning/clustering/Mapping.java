@@ -22,6 +22,16 @@ public class Mapping {
 		map("point.in", "patients.in", 50, "sample_dataAVGSorted50.dat");
 	}
 
+	/**
+	 * Function which takes files containing points and a matrix of gene
+	 * activation and outputs a file with correlating genes next to each other
+	 * 
+	 * @param points string of the file name containing the points
+	 * @param geneAct string of the file name containing the gene activation data.
+	 * @param imgSize the minimum image we would like to create
+	 * @param outputFile the string representing the outputfile name
+	 * @throws IOException for when a file isn't found
+	 */
 	public static void map(String points, String geneAct, int imgSize, String outputFile) throws IOException {
 		// Reading file containing points
 		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource(points).getFile()));
@@ -232,8 +242,7 @@ public class Mapping {
 				id++;
 				cluster = new Cluster(id);
 				temp = neighbors.remove(0);
-			}
-			else {
+			} else {
 				temp = neighbors.remove(getIndexFromNeighbors(neighbors, temp.getNeighbor()));
 			}
 		}
@@ -245,6 +254,12 @@ public class Mapping {
 		return res;
 	}
 
+	/**
+	 * Helper function which finds the cluster in an array based on its ID.
+	 * @param list list of clusters where we would like to find the cluster with ID id
+	 * @param id the id we would like to find
+	 * @return the index in the array
+	 */
 	public static int getIndexFromID(Cluster[] list, int id) {
 		for (int i = 0; i < list.length; i++) {
 			if (list[i].getID() == id) {
@@ -254,6 +269,12 @@ public class Mapping {
 		return -1;
 	}
 
+	/**
+	 * Helper function which finds the cluster in an list of Neighbors.class.
+	 * @param list list of neighbors where we would like to find the cluster c.
+	 * @param c the cluster we would like to find.
+	 * @return the index of cluster c. 
+	 */
 	public static int getIndexFromNeighbors(List<Neighbors> list, Cluster c) {
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getCluster().getID() == c.getID()) {
@@ -315,7 +336,7 @@ public class Mapping {
 		Double[] distances = new Double[clusters.length];
 		for (int i = 0; i < clusters.length; i++) {
 			distances[i] = Double.MAX_VALUE;
-		}		
+		}
 		closestClusters(clusters.clone(), result, distances);
 		List<Neighbors> neighbors = new ArrayList<Neighbors>();
 		for (int i = 0; i < clusters.length; i++) {
