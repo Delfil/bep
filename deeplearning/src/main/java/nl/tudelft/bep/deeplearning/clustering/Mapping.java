@@ -87,19 +87,19 @@ public class Mapping {
 	 */
 	public static List<Cluster> layer(Cluster root, int layer) {
 		if (layer == 0) {
-			ArrayList<Cluster> res = new ArrayList<Cluster>();
+			List<Cluster> res = new ArrayList<Cluster>();
 			res.add(root);
 			return res;
 		} else if (root.getList().isEmpty() && layer != 1) {
 			return null;
 		} else if (layer > 1) {
-			ArrayList<Cluster> res = new ArrayList<Cluster>();
+			List<Cluster> res = new ArrayList<Cluster>();
 			for (Cluster c : root.getList()) {
 				res.addAll(layer(c, layer - 1));
 			}
 			return res;
 		} else {
-			ArrayList<Cluster> res = new ArrayList<Cluster>();
+			List<Cluster> res = new ArrayList<Cluster>();
 			for (int i = 0; i < root.getList().size(); i++) {
 				res.add(root.getList().get(i));
 			}
@@ -120,7 +120,7 @@ public class Mapping {
 	 * @throws UnsupportedEncodingException
 	 *             unsupported encoding,
 	 */
-	public static void writeFile(ArrayList<ArrayList<Double>> matrix, ArrayList<Integer> indices, String outputFile)
+	public static void writeFile(List<ArrayList<Double>> matrix, List<Integer> indices, String outputFile)
 			throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
 		for (int i = 0; i < matrix.size(); i++) {
