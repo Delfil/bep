@@ -35,7 +35,7 @@ public class CNNetwork {
 
 		log.info("Load data....");
 
-		String fileName = "/100_Genes";
+		String fileName = "/sample_dataAVGSorted50";
 		MatrixDataFetcher fetcher = new MatrixDataFetcher(fileName, seed, 0.0, 0.75);
 		DataSetIterator mnistTrain = new MatrixDatasetIterator(batchSize, fetcher);
 		DataSetIterator mnistTest = new MatrixDatasetIterator(batchSize,
@@ -50,15 +50,15 @@ public class CNNetwork {
 				.regularization(true).l2(0.0005).learningRate(0.01).weightInit(WeightInit.XAVIER)
 				.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT).updater(Updater.NESTEROVS)
 				.momentum(0.9).list(3)
-				.layer(0, new ConvolutionLayer.Builder(5, 5)
-						.stride(2, 2)
+				.layer(0, new ConvolutionLayer.Builder(1, 1)
+						.stride(1, 1)
 						.nOut(10)
 						.activation("identity").build())
-				.layer(1, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
-						.kernelSize(2, 2)
-						.stride(2, 2)
-						.build())
-				.layer(2, new DenseLayer.Builder()
+//				.layer(1, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
+//						.kernelSize(2, 2)
+//						.stride(2, 2)
+//						.build())
+				.layer(1, new DenseLayer.Builder()
 						.activation("relu")
 						.nOut(50)
 						.build())

@@ -19,7 +19,7 @@ import org.nd4j.linalg.io.ClassPathResource;
 public class Mapping {
 
 	public static void main(String[] args) throws IOException {
-		map("point.in", "patients.in", 50, "sample_dataAVG.dat");
+		map("point.in", "patients.in", 50, "sample_dataAVGSorted50.dat");
 	}
 
 	public static void map(String points, String geneAct, int imgSize, String outputFile) throws IOException {
