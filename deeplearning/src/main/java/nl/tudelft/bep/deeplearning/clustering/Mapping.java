@@ -307,6 +307,12 @@ public class Mapping {
 
 	}
 
+	/**
+	 * Reads the gene activation data and returns a matrix represented as a 2 dimensional list
+	 * @param in inputstream of the file.
+	 * @param numGenes the number of elements each row.
+	 * @return matrix representation of the gene activation.
+	 */
 	public static List<ArrayList<Double>> readGeneAct(InputStream in, int numGenes) {
 		List<ArrayList<Double>> matrix = new ArrayList<ArrayList<Double>>();
 		Scanner scanner = new Scanner(new InputStreamReader(in));
