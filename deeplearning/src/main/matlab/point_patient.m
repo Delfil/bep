@@ -13,7 +13,7 @@ file_patients = fopen('geneact.in','w');
 
 fprintf(file_patients, '%i\n', size(CancerTypeList,1));
 for i = 1:size(GE,1)
-    fprintf(file_patients,'%f,', GE(i,1:end-1));
+    fprintf(file_patients,'%f ', GE(i,1:end-1));
     fprintf(file_patients,'%f\n', GE(i,end));
 end
 
