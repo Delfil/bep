@@ -66,6 +66,7 @@ public class MLNN {
 			log.info("*** Completed epoch {} ***", i);
 
 			log.info("Evaluate model....");
+			@SuppressWarnings("rawtypes")
 			Evaluation eval = new Evaluation(outputNum);
 			while (mnistTest.hasNext()) {
 				DataSet ds = mnistTest.next();
