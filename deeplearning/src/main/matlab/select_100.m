@@ -14,6 +14,9 @@ end
     
     M = map_d(P);
     genes = M(:)';
-    data = GE(:,genes(genes~=0));
     
-    sample_data(0,0,data, CancerTypeIndex, '100_Genes');
+    GEt = [zeros(size(GE,1),1), GE];
+    data = GEt(:,genes+1);
+    clear GEt;
+    
+    sample_data(0,0,data, CancerTypeIndex, '100_Genes', size(M));

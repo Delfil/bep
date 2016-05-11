@@ -25,16 +25,22 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.tudelft.bep.deeplearning.datafetcher.MatrixDataFetcher;
+import nl.tudelft.bep.deeplearning.datafetcher.MatrixDatasetIterator;
+
 public class nnIris {
 	private static Logger log = LoggerFactory.getLogger(nnIris.class);
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
-		  final int numInputs = 12750;
+		  final int numInputs = 121;
 	        int outputNum = 5;
 	        int iterations = 1000;
 	        long seed = 6;
-
-	        DataSetIterator data = getData("alldata.meta");
+	        
+	        MatrixDataFetcher fetcher = new MatrixDataFetcher("/Sample_data", false, seed, 11, 11, true, 0.6);
+	        MatrixDatasetIterator data = new MatrixDatasetIterator(1616,
+					fetcher);
+			
 	        DataSet next = data.next();
 
 	        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
