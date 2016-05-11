@@ -21,6 +21,7 @@ public class Mapping {
 	private static int outputNum;
 
 	public static void main(String[] args) throws IOException {
+		map("100points.in", "geneact.in", 50, "sample_dataAVGSorted50");
 	}
 
 	/**
