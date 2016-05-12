@@ -22,6 +22,16 @@ public class Mapping {
 		map("point.in", "patients.in", 50, "sample_dataAVG.dat");
 	}
 	
+	/**
+	 * Function which takes files containing points and a matrix of gene
+	 * activation and outputs a file with correlating genes next to each other
+	 * 
+	 * @param points string of the file name containing the points
+	 * @param geneAct string of the file name containing the gene activation data.
+	 * @param imgSize the minimum image we would like to create
+	 * @param outputFile the string representing the outputfile name
+	 * @throws IOException for when a file isn't found
+	 */
 	public static void map(String points, String geneAct, int imgSize, String outputFile) throws IOException {
 		// Reading file containing points
 		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource(points).getFile()));
@@ -264,17 +274,13 @@ public class Mapping {
 		return clusters;
 
 	}
-<<<<<<< HEAD
 	
-=======
-
 	/**
 	 * Reads the gene activation data and returns a matrix represented as a 2 dimensional list
 	 * @param in inputstream of the file.
 	 * @param numGenes the number of elements each row.
 	 * @return matrix representation of the gene activation.
 	 */
->>>>>>> 5ffc4d3... Added javadoc to readGeneAct()
 	public static List<ArrayList<Double>> readGeneAct(InputStream in, int numGenes) {
 		List<ArrayList<Double>> matrix = new ArrayList<ArrayList<Double>>();
 		Scanner scanner = new Scanner(new InputStreamReader(in));
