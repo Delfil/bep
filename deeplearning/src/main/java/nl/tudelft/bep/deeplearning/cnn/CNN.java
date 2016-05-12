@@ -5,11 +5,11 @@ import org.deeplearning4j.nn.conf.Updater;
 import org.deeplearning4j.nn.conf.layers.Layer;
 import org.deeplearning4j.nn.weights.WeightInit;
 
-import nl.tudelft.bep.deeplearning.NNConfigurationBuilder;
+import nl.tudelft.bep.deeplearning.NNCBuilder;
 
 public class CNN {
-	public static NNConfigurationBuilder BuildExampleCNN(Layer... layers){
-		NNConfigurationBuilder builder = new NNConfigurationBuilder();
+	public static NNCBuilder BuildExampleCNN(Layer... layers){
+		NNCBuilder builder = new NNCBuilder();
 				builder
 				// Initialization
 				.weightInit(WeightInit.XAVIER)
@@ -24,9 +24,6 @@ public class CNN {
 				// Over fitting
 				.l2(0.0005)
 				.regularization(true);
-//				
-//				// layers
-//				.list(layers.length);
 		
 		for(int i = 0 ; i < layers.length; i++) {
 			builder.add(layers[i]);
@@ -35,12 +32,5 @@ public class CNN {
 		
 
 		return builder;
-		
-//		new ConvolutionLayerSetup(builder, width, height, 1);		
-//		MultiLayerConfiguration conf = builder.build();
-//		System.out.println(conf.toJson());
-//		MultiLayerNetwork model = new MultiLayerNetwork(conf);
-//		model.init();
-//		return model;
 	}
 }

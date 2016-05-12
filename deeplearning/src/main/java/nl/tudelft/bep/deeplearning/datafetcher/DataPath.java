@@ -44,14 +44,6 @@ public class DataPath {
 		this.numOutcomes = numOutcomes;
 		this.batchSize = batchSize;
 		this.trainPercentage = trainPercentage;
-		System.out.println(this.toString());
-	}
-
-	@Override
-	public String toString() {
-		return "DataPath [path=" + path + ", version=" + version + ", timeStamp=" + timeStamp + ", examples=" + examples
-				+ ", width=" + width + ", height=" + height + ", numOutcomes=" + numOutcomes + ", batchSize="
-				+ batchSize + ", trainPercentage=" + trainPercentage + "]";
 	}
 
 	public static DataPath readDataSet(String folderName) {
