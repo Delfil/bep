@@ -38,6 +38,10 @@ public class Tester {
 		this.testIterator = new MatrixDatasetIterator(this.data, this.data.getTrainPercentage(), 1.0);
 	}
 
+	public Tester(String networkFile, String dataFile) {
+		this(FinishedNNCBuilder.load(networkFile), DataPath.readDataSet(dataFile));
+	}
+
 	protected MultiLayerNetwork setupModel(long seed) {
 		org.deeplearning4j.nn.conf.MultiLayerConfiguration.Builder listBuilder = builder.build();
 		new ConvolutionLayerSetup(listBuilder, this.data.getWidth(), this.data.getHeight(), 1);

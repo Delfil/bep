@@ -113,7 +113,7 @@ public class DataPath {
 	 */
 	protected static DataPath readMetaFile(String pathName)
 			throws UnknownMetaDataFileVersion, NumberFormatException, IOException {
-		BufferedReader reader = readFile(pathName + META_SUFFIX);
+		BufferedReader reader = new BufferedReader(findFile(pathName, META_SUFFIX));
 		int version = Integer.parseInt(reader.readLine());
 
 		if (version > 0) {
@@ -131,6 +131,19 @@ public class DataPath {
 		}
 	}
 
+	private static BufferedReader findFile(String pathName, String suffix) {
+		File dir = new File(pathName);
+		for(File file : dir.listFiles()) {
+			if(file.getName().endsWith(suffix))
+				try {
+					return new BufferedReader(new FileReader(file));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+		}
+		return null;
+	}
+
 	/**
 	 * Import the data file.
 	 * 
@@ -139,7 +152,7 @@ public class DataPath {
 	 *             If an I/O error occurs
 	 */
 	protected double[][] readMatrices() throws IOException {
-		BufferedReader reader = readFile(this.path + DATA_SUFFIX);
+		BufferedReader reader = findFile(this.path, DATA_SUFFIX);
 
 		double[][] matrix = new double[examples][];
 
@@ -166,7 +179,7 @@ public class DataPath {
 	 *             If an I/O error occurs
 	 */
 	protected int[] readLabels() throws IOException {
-		BufferedReader reader = readFile(path + LABEL_SUFFIX);
+		BufferedReader reader = findFile(path, LABEL_SUFFIX);
 		int[] label = new int[examples];
 		for (int i = 0; i < examples; i++) {
 			label[i] = (int) Double.parseDouble(reader.readLine());

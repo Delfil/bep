@@ -9,15 +9,14 @@ import org.deeplearning4j.nn.conf.layers.SubsamplingLayer;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import nl.tudelft.bep.deeplearning.cnn.CNN;
-import nl.tudelft.bep.deeplearning.datafetcher.DataPath;
 
 public class App {
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
-		ResultUtil.generateCSV();
+		ResultUtil.generateCSV(10, new ComputeFiller(10));
 		String network1 = saveNetworks();
 		String network2 = saveNetwork2();
 		// String data1 = "100_Genes/100_Genes";
-		String data1 = "cluster_v1/cluster_v1";
+		String data1 = "cluster_v1";
 		String data2 = data1;
 
 		int epochs1 = 10;
@@ -57,7 +56,7 @@ public class App {
 	}
 
 	private static void test(String networkFile, String dataFile, int iterations, int epochs) {
-		Tester test1 = new Tester(FinishedNNCBuilder.load(networkFile), DataPath.readDataSet(dataFile));
+		Tester test1 = new Tester(networkFile, dataFile);
 		test1.start(iterations, epochs);
 	}
 }
