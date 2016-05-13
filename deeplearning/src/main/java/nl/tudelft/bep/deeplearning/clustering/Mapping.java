@@ -21,7 +21,7 @@ public class Mapping {
 	private static int outputNum;
 
 	public static void main(String[] args) throws IOException {
-		map("100points.in", "geneact.in", 50, "sample_dataAVGSorted50");
+		map("100points.in", "geneact.in", 100, "cluster_1x100");
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class Mapping {
 		String metaFile = outputFile + ".meta";
 		List<Cluster> listLayer = layer(layer2[0], layer);
 		writeAvgFile(matrix, listLayer, datFile);
-		writeMetaFile(Double.valueOf(Math.ceil(Math.sqrt(listLayer.size()))).intValue(), matrix.size(), metaFile);
+		writeMetaFile(listLayer.size(), matrix.size(),true, metaFile);
 	}
 
 	/**
@@ -177,11 +177,27 @@ public class Mapping {
 		writer.close();
 	}
 	
-	public static void writeMetaFile(int dim, int numPatients, String metaOutputFile) throws FileNotFoundException, UnsupportedEncodingException {
+	/**
+	 * Creates the meta file needed for the neural networks.
+	 * @param x number of cells in the matrix
+	 * @param numPatients number of patients.
+	 * @param one boolean for creating a one by size of layer matrix, otherwise create square matrix.
+	 * @param metaOutputFile the name of the output .meta file.
+	 * @throws FileNotFoundException if file cannot be created.
+	 * @throws UnsupportedEncodingException if encoding isn't supported.
+	 */
+	public static void writeMetaFile(int x, int numPatients, boolean one, String metaOutputFile) throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter(metaOutputFile, "UTF-8");
 		writer.println(numPatients);
-		writer.println(dim);
-		writer.println(dim);
+		if(one) {
+			writer.println(1);
+			writer.println(x);
+		}
+		else {
+			int res = Double.valueOf(Math.ceil(Math.sqrt(x))).intValue();
+			writer.println(res);
+			writer.println(res);
+		}
 		writer.println(outputNum);
 		writer.close();
 		
