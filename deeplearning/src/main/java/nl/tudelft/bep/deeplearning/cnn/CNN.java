@@ -30,7 +30,6 @@ public class CNN {
 		}
 		builder.backprop(true).pretrain(false);
 		
-
 		return builder;
 	}
 }

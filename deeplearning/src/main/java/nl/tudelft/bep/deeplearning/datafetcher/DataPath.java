@@ -19,7 +19,7 @@ public class DataPath {
 	protected static final String DATA_SUFFIX = ".dat";
 	protected static final String LABEL_SUFFIX = ".lab";
 	protected static final String SEPERATOR = ",";
-	protected static final String DATA_FOLDER = "datasets";
+	public static final String DATA_FOLDER = "datasets";
 	protected static final String F = "/";
 
 	protected final String path;

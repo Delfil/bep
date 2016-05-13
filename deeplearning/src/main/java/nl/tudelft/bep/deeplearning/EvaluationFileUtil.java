@@ -14,7 +14,7 @@ import org.deeplearning4j.eval.Evaluation;
 
 import nl.tudelft.bep.deeplearning.datafetcher.DataPath;
 
-public class FileUtil {
+public class EvaluationFileUtil {
 	protected static final DecimalFormat SEED_FORMATER = new DecimalFormat(
 			"S+0000000000000000000;S-0000000000000000000");
 	protected static final DecimalFormat EPOCH_FORMATER = new DecimalFormat("E000");

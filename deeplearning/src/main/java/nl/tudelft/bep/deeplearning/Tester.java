@@ -63,7 +63,7 @@ public class Tester {
 	}
 
 	protected boolean iterate(long seed, int epochs) {
-		if (FileUtil.evalExistst(seed, epochs, this.data, this.builder)) {
+		if (EvaluationFileUtil.evalExistst(seed, epochs, this.data, this.builder)) {
 			return false;
 		}
 
@@ -76,7 +76,7 @@ public class Tester {
 		}
 		Evaluation<Double> eval = evaluate(model);
 
-		FileUtil.save(eval, seed, epochs, this.data, this.builder);
+		EvaluationFileUtil.save(eval, seed, epochs, this.data, this.builder);
 //		log.info(eval.stats());
 		return true;
 	}

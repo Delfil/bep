@@ -12,12 +12,13 @@ import org.deeplearning4j.nn.conf.layers.Layer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class FinishedNNCBuilder {
-	protected final static String NETWORK_FOLDER = "networks";
+	public final static String NETWORK_FOLDER = "networks";
 	protected final static String MULTI_LAYER_NETWORK = "MLN_";
 	protected final static String F = "/";
-	protected static final String FILE_EXTENTION = ".NNConf.json";
+	public static final String NETWORK_SUFFIX = ".NNConf.json";
 
 	protected final String fileName;
 	protected final String pathName;
@@ -26,7 +27,7 @@ public class FinishedNNCBuilder {
 	public FinishedNNCBuilder(NNCBuilder nncBuilder) {
 		this.builder = nncBuilder.clone();
 		this.pathName = this.computePathName();
-		this.fileName = this.pathName + FILE_EXTENTION;
+		this.fileName = this.pathName + NETWORK_SUFFIX;
 		this.save();
 	}
 
@@ -40,14 +41,14 @@ public class FinishedNNCBuilder {
 		String thisBuilderString = toJSON(this.builder);
 		for (File f : files) {
 			String fn = f.getName();
-			if (fn.endsWith(FILE_EXTENTION) && fn.startsWith(MULTI_LAYER_NETWORK)) {
+			if (fn.endsWith(NETWORK_SUFFIX) && fn.startsWith(MULTI_LAYER_NETWORK)) {
 				if (FinishedNNCBuilder.toJSON(FinishedNNCBuilder.loadBuilder(f.getAbsolutePath()))
 						.equals(thisBuilderString)) {
 					String string = f.getAbsolutePath();
-					return string.substring(0, string.length() - FILE_EXTENTION.length());
+					return string.substring(0, string.length() - NETWORK_SUFFIX.length());
 				} else {
-					max = Math.max(max,
-							Integer.parseInt(fn.substring(MULTI_LAYER_NETWORK.length(), FILE_EXTENTION.length())));
+					max = Math.max(max, Integer.parseInt(
+							fn.substring(MULTI_LAYER_NETWORK.length(), fn.length() - NETWORK_SUFFIX.length())));
 				}
 			}
 		}
@@ -67,6 +68,7 @@ public class FinishedNNCBuilder {
 
 	protected void save() {
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		try {
 			Files.write(Paths.get(this.fileName),
 					mapper.writeValueAsString(this.builder).replaceAll(",", ",\n").getBytes(StandardCharsets.UTF_8));
