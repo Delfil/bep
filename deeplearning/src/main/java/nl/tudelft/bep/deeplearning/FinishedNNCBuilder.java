@@ -94,7 +94,7 @@ public class FinishedNNCBuilder {
 	public String getShortDescription() {
 		return MULTI_LAYER_NETWORK + this.builder.getLayers().stream().map(Layer::getClass).map(Class::getName)
 				.map(name -> name.split("\\.")).map(array -> array[array.length - 1])
-				.map(name -> name.split("Layer")[0]).collect(Collectors.joining("|"));
+				.map(name -> name.split("Layer")[0]).collect(Collectors.joining("_"));
 	}
 
 	public org.deeplearning4j.nn.conf.MultiLayerConfiguration.Builder build() {
