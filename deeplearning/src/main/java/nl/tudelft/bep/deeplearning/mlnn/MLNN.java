@@ -29,17 +29,16 @@ public class MLNN {
 		int nEpochs = 10;
 		int seed = 123;
 
-		int width = 113;
-		int height = width;
-
 		log.info("Load data....");
 
-		String fileName = "/100data";
-		MatrixDataFetcher fetcher = new MatrixDataFetcher(fileName, false, seed, width, height, true, 0.4);
+		String fileName = "/sample_dataAVGtest";
+		MatrixDataFetcher fetcher = new MatrixDataFetcher(fileName, seed, 0.0, 0.75);
 		DataSetIterator mnistTrain = new MatrixDatasetIterator(batchSize, fetcher);
 		DataSetIterator mnistTest = new MatrixDatasetIterator(batchSize,
-				new MatrixDataFetcher(fileName, false, seed, width, height, true, 0.4));
+				new MatrixDataFetcher(fileName, seed, 0.75, 1.0));
 
+		int width = fetcher.getWidth();
+		int height = fetcher.getHeight();
 		int outputNum = fetcher.getOutputNum();
 
 		MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().iterations(1).learningRate(0.01)
@@ -67,6 +66,7 @@ public class MLNN {
 			log.info("*** Completed epoch {} ***", i);
 
 			log.info("Evaluate model....");
+			@SuppressWarnings("rawtypes")
 			Evaluation eval = new Evaluation(outputNum);
 			while (mnistTest.hasNext()) {
 				DataSet ds = mnistTest.next();
