@@ -5,8 +5,6 @@ import org.deeplearning4j.nn.conf.Updater;
 import org.deeplearning4j.nn.conf.layers.Layer;
 import org.deeplearning4j.nn.weights.WeightInit;
 
-import nl.tudelft.bep.deeplearning.datafetcher.NNCBuilder;
-
 public class CNN {
 	public static NNCBuilder BuildExampleCNN(Layer... layers){
 		NNCBuilder builder = new NNCBuilder();

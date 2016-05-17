@@ -14,9 +14,9 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.tudelft.bep.deeplearning.datafetcher.DataPath;
-import nl.tudelft.bep.deeplearning.datafetcher.FinishedNNCBuilder;
-import nl.tudelft.bep.deeplearning.datafetcher.MatrixDatasetIterator;
+import nl.tudelft.bep.deeplearning.data.DataPath;
+import nl.tudelft.bep.deeplearning.data.MatrixDatasetIterator;
+import nl.tudelft.bep.deeplearning.network.FinishedNNCBuilder;
 
 public class Tester {
 	private static final Logger log = LoggerFactory.getLogger(Tester.class);
