@@ -8,6 +8,12 @@ public class ComputeAverageAccuracyFiller implements CSVFiller {
 
 	protected final int iterations;
 
+	/**
+	 * Initialize a {@link ComputeAverageAccuracyFiller}.
+	 * 
+	 * @param iterations
+	 *            the number of iterations to make if a value isn't computed yet
+	 */
 	public ComputeAverageAccuracyFiller(int iterations) {
 		this.iterations = iterations;
 	}

@@ -7,8 +7,8 @@ package nl.tudelft.bep.deeplearning.test;
 public class IgnoreAverageAccuracyFiller implements CSVFiller {
 
 	@Override
-	public String fill(String network, String data, int batchSzie) {
-		return Double.toString(ResultUtil.getAverageAccuracy(network, data, batchSzie));
+	public String fill(String network, String data, int epochs) {
+		return Double.toString(ResultUtil.getAverageAccuracy(network, data, epochs));
 	}
 
 }
