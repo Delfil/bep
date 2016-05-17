@@ -14,22 +14,21 @@ import org.nd4j.linalg.dataset.api.iterator.fetcher.BaseDataFetcher;
  */
 public class MatrixDataFetcher extends BaseDataFetcher {
 	protected static final long TRAIN_SEED = 63775512; // Should never change
+	protected final static String SEPERATOR = ",";
+
 	protected int[] order;
 	protected Random random;
-
 	protected int[] label;
 	protected DataSet[] data;
 	protected int width;
 	protected int height;
-	protected String seperator = ",";
 	protected int startIndex;
 
 	/**
 	 * Initialize a MatrixDataFetcher
 	 * 
-	 * @param fileName
-	 *            The shared file name for the meta, lab and dat file to load,
-	 *            located in the resources folder
+	 * @param data
+	 *            The {@link Data} instance to fetch from
 	 * @param start
 	 *            The percentage of examples to skip from the left
 	 * @param end
@@ -58,7 +57,7 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 			throw new IllegalStateException("Unable to getFromOrigin more; there are no more images");
 		}
 		List<DataSet> result = new ArrayList<>();
-		for(int i = 0; i<batch && cursor < this.totalExamples; i++){
+		for (int i = 0; i < batch && cursor < this.totalExamples; i++) {
 			result.add(data[order[cursor++]]);
 		}
 		initializeCurrFromList(result);
