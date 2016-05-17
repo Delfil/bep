@@ -1,4 +1,4 @@
-package nl.tudelft.bep.deeplearning;
+package nl.tudelft.bep.deeplearning.test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,7 +12,8 @@ import java.util.List;
 
 import org.deeplearning4j.eval.Evaluation;
 
-import nl.tudelft.bep.deeplearning.datafetcher.DataPath;
+import nl.tudelft.bep.deeplearning.data.DataPath;
+import nl.tudelft.bep.deeplearning.network.FinishedNNCBuilder;
 
 public class EvaluationFileUtil {
 	protected static final DecimalFormat SEED_FORMATER = new DecimalFormat(

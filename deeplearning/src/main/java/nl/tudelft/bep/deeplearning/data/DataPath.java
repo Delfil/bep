@@ -1,4 +1,4 @@
-package nl.tudelft.bep.deeplearning.datafetcher;
+package nl.tudelft.bep.deeplearning.data;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,6 +13,9 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.util.FeatureUtil;
+
+import nl.tudelft.bep.deeplearning.data.exception.MetaDataMatchException;
+import nl.tudelft.bep.deeplearning.data.exception.UnknownMetaDataFileVersion;
 
 public class DataPath {
 	protected static final String META_SUFFIX = ".meta";

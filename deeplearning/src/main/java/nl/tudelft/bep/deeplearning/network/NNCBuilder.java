@@ -1,4 +1,4 @@
-package nl.tudelft.bep.deeplearning;
+package nl.tudelft.bep.deeplearning.network;
 
 import java.util.ArrayList;
 import java.util.List;

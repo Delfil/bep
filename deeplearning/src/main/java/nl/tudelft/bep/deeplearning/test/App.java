@@ -1,4 +1,4 @@
-package nl.tudelft.bep.deeplearning;
+package nl.tudelft.bep.deeplearning.test;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.conf.layers.SubsamplingLayer;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
-import nl.tudelft.bep.deeplearning.cnn.CNN;
+import nl.tudelft.bep.deeplearning.network.CNN;
 
 public class App {
 	public static void main(String[] args) throws IOException, ClassNotFoundException {

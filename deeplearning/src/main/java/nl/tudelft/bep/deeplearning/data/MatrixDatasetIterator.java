@@ -1,8 +1,8 @@
-package nl.tudelft.bep.deeplearning.datafetcher;
+package nl.tudelft.bep.deeplearning.data;
 
 import org.nd4j.linalg.dataset.api.iterator.BaseDatasetIterator;
 
-import nl.tudelft.bep.deeplearning.datafetcher.MatrixDataFetcher;
+import nl.tudelft.bep.deeplearning.data.MatrixDataFetcher;
 
 public class MatrixDatasetIterator extends BaseDatasetIterator {
 
