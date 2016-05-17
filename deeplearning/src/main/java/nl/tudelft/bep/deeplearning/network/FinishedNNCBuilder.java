@@ -135,6 +135,14 @@ public class FinishedNNCBuilder {
 				.map(name -> name.split("Layer")[0]).collect(Collectors.joining("_"));
 	}
 
+	/**
+	 * Use the set configurations to build a
+	 * {@link org.deeplearning4j.nn.conf.MultiLayerConfiguration.Builder }.
+	 * 
+	 * @return a configured
+	 *         {@link org.deeplearning4j.nn.conf.MultiLayerConfiguration.Builder }
+	 *         instance
+	 */
 	public org.deeplearning4j.nn.conf.MultiLayerConfiguration.Builder build() {
 		int layersC = this.builder.getLayers().size();
 		ListBuilder lb = this.builder.list(layersC);
