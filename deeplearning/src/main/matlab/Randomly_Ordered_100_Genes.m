@@ -1,5 +1,4 @@
 %Generate randomly ordered gene-expresion data
-a = randperm(size(Gene_Expression,2));
 %select the 100 genes with the highest standard deviation calculate
 %correlations and run tsne on it
 
