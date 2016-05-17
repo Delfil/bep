@@ -43,6 +43,13 @@ public class Tester {
 		this(FinishedNNCBuilder.load(networkFile), Data.readDataSet(dataFile));
 	}
 
+	/**
+	 * Setup a model with the given seed.
+	 * 
+	 * @param seed
+	 *            the seed to set
+	 * @return a configured and initialized model
+	 */
 	protected MultiLayerNetwork setupModel(long seed) {
 		org.deeplearning4j.nn.conf.MultiLayerConfiguration.Builder listBuilder = builder.build();
 		new ConvolutionLayerSetup(listBuilder, this.data.getWidth(), this.data.getHeight(), 1);
@@ -53,6 +60,15 @@ public class Tester {
 		return model;
 	}
 
+	/**
+	 * Start a {@link Tester}
+	 * 
+	 * @param iterations
+	 *            the number of iterations with different initialization seeds
+	 *            to run
+	 * @param epochs
+	 *            the number of epochs to run each iteration
+	 */
 	public void start(int iterations, int epochs) {
 		long startTime = System.currentTimeMillis();
 		for (int i = 1; i <= iterations; i++) {
@@ -67,6 +83,16 @@ public class Tester {
 		}
 	}
 
+	/**
+	 * Start an iteration
+	 * 
+	 * @param seed
+	 *            the seed to run the iteration on
+	 * @param epochs
+	 *            the number of epochs to run this iteration
+	 * @return {@code true} if the iteration successfully ran <br>
+	 *         {@code false} if the iteration was already ran
+	 */
 	protected boolean iterate(long seed, int epochs) {
 		if (EvaluationFileUtil.evalExistst(seed, epochs, this.data, this.builder)) {
 			return false;
@@ -82,11 +108,18 @@ public class Tester {
 		Evaluation<Double> eval = evaluate(model);
 
 		EvaluationFileUtil.save(eval, seed, epochs, this.data, this.builder);
-//		log.info(eval.stats());
+		// log.info(eval.stats());
 		return true;
 	}
 
-	private Evaluation<Double> evaluate(MultiLayerNetwork model) {
+	/**
+	 * Computes a evaluation for the given model.
+	 * 
+	 * @param model
+	 *            the model to evaluate
+	 * @return a {@link Evaluation} of the given model
+	 */
+	protected Evaluation<Double> evaluate(MultiLayerNetwork model) {
 		log.info("Evaluate model....");
 		Evaluation<Double> eval = new Evaluation<>(data.getNumOutcomes());
 		this.testIterator.reset();
