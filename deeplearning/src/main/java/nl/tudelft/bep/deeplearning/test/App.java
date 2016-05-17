@@ -12,7 +12,7 @@ import nl.tudelft.bep.deeplearning.network.CNN;
 
 public class App {
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
-		ResultUtil.generateCSV(10, new ComputeFiller(10));
+		ResultUtil.generateCSV(10, new ComputeAverageAccuracyFiller(10));
 		String network1 = saveNetworks();
 		String network2 = saveNetwork2();
 		// String data1 = "100_Genes/100_Genes";

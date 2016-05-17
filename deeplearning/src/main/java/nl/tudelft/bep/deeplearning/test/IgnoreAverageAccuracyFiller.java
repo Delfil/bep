@@ -1,6 +1,10 @@
 package nl.tudelft.bep.deeplearning.test;
 
-public class IgnoreFiller implements CSVFiller {
+/**
+ * A CSV table filler that fills the cells with the average of the accuracy, and
+ * ignores this value if it isn't computed yet.
+ */
+public class IgnoreAverageAccuracyFiller implements CSVFiller {
 
 	@Override
 	public String fill(String network, String data, int batchSzie) {

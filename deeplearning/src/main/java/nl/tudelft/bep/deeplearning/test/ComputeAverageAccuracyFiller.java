@@ -1,10 +1,14 @@
 package nl.tudelft.bep.deeplearning.test;
 
-public class ComputeFiller implements CSVFiller {
+/**
+ * A CSV table filler that fills the cells with the average of the accuracy, and
+ * computes this value if it isn't computed yet.
+ */
+public class ComputeAverageAccuracyFiller implements CSVFiller {
 
 	protected final int iterations;
 
-	public ComputeFiller(int iterations) {
+	public ComputeAverageAccuracyFiller(int iterations) {
 		this.iterations = iterations;
 	}
 
