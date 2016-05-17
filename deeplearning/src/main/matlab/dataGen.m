@@ -77,12 +77,19 @@ function write_data_files(file_name, data, labels)
 	data_file = fopen([file_name '.dat'], 'w');
 	label_file = fopen([file_name '.lab'], 'w');
 
-	for person = N;
-		fprintf(label_file, '%u\r\n' , labels(person));
-		fprintf(data_file, '%.4f,' ,data(person, genes(1:end-1)));
-		fprintf(data_file, '%.4f' ,data(person, genes(end)));
-		fprintf(data_file, '\r\n');
-	end
+    if size(data,2) ~=1
+        for person = N;
+            fprintf(label_file, '%u\r\n' , labels(person));
+            fprintf(data_file, '%.4f,' ,data(person, genes(1:end-1)));
+            fprintf(data_file, '%.4f' ,data(person, genes(end)));
+            fprintf(data_file, '\r\n');
+        end
+    else
+        for person = N;
+            fprintf(label_file, '%u\r\n' , labels(person));
+            fprintf(data_file, '%.4f\r\n' ,data(person, genes(end)));
+        end
+    end
 	fclose(data_file);
 	fclose(label_file);
 end
