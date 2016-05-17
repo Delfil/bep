@@ -1,4 +1,4 @@
-package nl.tudelft.bep.deeplearning;
+package nl.tudelft.bep.deeplearning.test;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.bep.deeplearning.datafetcher.DataPath;
+import nl.tudelft.bep.deeplearning.datafetcher.FinishedNNCBuilder;
 import nl.tudelft.bep.deeplearning.datafetcher.MatrixDatasetIterator;
 
 public class Tester {

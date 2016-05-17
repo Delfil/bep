@@ -1,4 +1,4 @@
-package nl.tudelft.bep.deeplearning;
+package nl.tudelft.bep.deeplearning.datafetcher;
 
 import java.io.File;
 import java.io.IOException;
