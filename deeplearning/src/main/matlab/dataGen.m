@@ -8,7 +8,7 @@ function dataGen(data, labels, varargin)
 %     load the default values
     a = defaults;
     a.observations = size(data,1);
-    a.classes = max(labels);
+    a.classes = max(labels); %TODO: hardcoded
     
     options = fieldnames(a);
     
@@ -36,7 +36,7 @@ function dataGen(data, labels, varargin)
         warning ('Make sure to define width and height correctly. Using width = %i and height = %i for now.', a.width, a.height);
     end
     write_meta_file(version, a);
-    write_data_files(a.name, data, labels);
+    write_data_files(a.name, data, labels-1);%TODO: hardcoded
 
 end
 

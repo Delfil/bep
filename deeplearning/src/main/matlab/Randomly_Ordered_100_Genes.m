@@ -14,6 +14,6 @@ end
     GE = Gene_Expression(:,select);
     
     
-    data = Gene_Expression(:,randperm(size(Gene_Expression,2)));
+    data = GE(:,randperm(size(GE,2)));
     
     dataGen(data, CancerTypeIndex, 'name', 'Randomly_Ordered_100_Genes', 'height', 1, 'width', size(data,2));
