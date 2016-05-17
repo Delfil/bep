@@ -6,9 +6,9 @@ import nl.tudelft.bep.deeplearning.datafetcher.MatrixDataFetcher;
 
 public class MatrixDatasetIterator extends BaseDatasetIterator {
 
-	public MatrixDatasetIterator(int batch, MatrixDataFetcher fetcher) {
-		super(batch, fetcher.getNumberExamples(), fetcher);
+	public MatrixDatasetIterator(DataPath data, double start, double end) {
+		super(data.getBatchSize(), 0, new MatrixDataFetcher(data, start, end));
+		this.numExamples = this.fetcher.totalExamples();
 	}
-
 
 }

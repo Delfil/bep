@@ -1,127 +1,73 @@
 package nl.tudelft.bep.deeplearning.datafetcher;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 import org.deeplearning4j.util.MathUtils;
-import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.fetcher.BaseDataFetcher;
-import org.nd4j.linalg.factory.Nd4j;
 
+/**
+ * A DataFetcher for Matrixes that are loaded from three files: .meta, .dat and
+ * .lab.
+ */
 public class MatrixDataFetcher extends BaseDataFetcher {
-	private int[] order;
-	private Random rng;
-	private boolean shuffle;
+	protected static final long TRAIN_SEED = 63775512; // Should never change
+	protected int[] order;
+	protected Random random;
 
-	private int[] label;
-	private double[][] data;
+	protected int[] label;
+	protected DataSet[] data;
+	protected int width;
+	protected int height;
+	protected String seperator = ",";
+	protected int startIndex;
 
-	public MatrixDataFetcher(String filename, boolean shuffle, long rngSeed, int width, int height, boolean train,
-			double trainSize) throws IOException {
-		String images = filename + ".dat";
-		String labels = filename + ".lab";
-		String meta = filename + ".meta";
+	/**
+	 * Initialize a MatrixDataFetcher
+	 * 
+	 * @param fileName
+	 *            The shared file name for the meta, lab and dat file to load,
+	 *            located in the resources folder
+	 * @param start
+	 *            The percentage of examples to skip from the left
+	 * @param end
+	 *            The percentage of examples to skip from the right
+	 */
+	public MatrixDataFetcher(DataPath data, double start, double end) {
+		List<DataSet> dataList = data.getSubset(start, end);
 
-		cursor = 0;
-		inputColumns = width * height;
+		this.data = dataList.toArray(new DataSet[dataList.size()]);
 
-		readData(images, labels, meta, train, trainSize);
-
-		this.shuffle = shuffle;
+		this.totalExamples = dataList.size();
+		this.inputColumns = data.getWidth() * data.getHeight();
+		this.numOutcomes = data.getNumOutcomes();
 
 		order = new int[totalExamples];
-
-		for (int i = 0; i < order.length; i++)
+		for (int i = 0; i < order.length; i++) {
 			order[i] = i;
-		rng = new Random(rngSeed);
-		reset(); // Shuffle order
-	}
-
-	private void readData(String images, String labels, String meta, boolean train, double trainSize)
-			throws IOException {
-		final String splitter = ","; // " "
-		BufferedReader reader = new BufferedReader(new FileReader(MatrixDataFetcher.class.getResource(meta).getFile()));
-		reader.readLine(); // Random text
-		totalExamples = Integer.parseInt(reader.readLine());
-		int skip;
-		if (train) {
-			skip = 0;
-			totalExamples *= trainSize;
-		} else {
-			skip = (int) (trainSize * totalExamples);
-			totalExamples *= (1 - trainSize);
 		}
-
-		int dataSize = Integer.parseInt(reader.readLine());
-		numOutcomes = Integer.parseInt(reader.readLine());
-
-		int imageSize = (int) Math.ceil(Math.sqrt(dataSize));
-		imageSize *= imageSize;
-		data = new double[totalExamples][imageSize];
-		label = new int[totalExamples];
-
-		reader.close();
-		reader = new BufferedReader(new FileReader(MatrixDataFetcher.class.getResource(images).getFile()));
-		for (int i = 0; i < skip; i++) {
-			reader.readLine();
-		}
-		for (int i = 0; i < totalExamples; i++) {
-			data[i] = (Arrays.stream(reader.readLine().split(splitter))
-					.mapToDouble(val -> Math.min(1, Math.max(0, (Double.parseDouble(val) + 1) / 2))).toArray());
-		}
-		reader.close();
-		reader = new BufferedReader(new FileReader(MatrixDataFetcher.class.getResource(labels).getFile()));
-		for (int i = 0; i < skip; i++) {
-			reader.readLine();
-		}
-		for (int i = 0; i < totalExamples; i++) {
-			label[i] = (int) Double.parseDouble(reader.readLine()); // -1
-		}
+		random = new Random(TRAIN_SEED);
+		reset();
 	}
 
 	@Override
-	public void fetch(int numExamples) {
+	public void fetch(int batch) {
 		if (!hasMore()) {
 			throw new IllegalStateException("Unable to getFromOrigin more; there are no more images");
 		}
-
-		List<DataSet> toConvert = new ArrayList<>(numExamples);
-
-		for (int i = 0; i < numExamples; i++, cursor++) {
-			if (!hasMore()) {
-				break;
-			}
-
-			INDArray in = Nd4j.create(1, data[order[cursor]].length);
-			for (int j = 0; j < data[order[cursor]].length; j++) {
-				in.putScalar(j, data[order[cursor]][j]);
-			}
-
-			INDArray out = createOutputVector(label[order[cursor]]);
-			toConvert.add(new DataSet(in, out));
+		List<DataSet> result = new ArrayList<>();
+		for(int i = 0; i<batch && cursor < this.totalExamples; i++){
+			result.add(data[order[cursor++]]);
 		}
-		initializeCurrFromList(toConvert);
+		initializeCurrFromList(result);
 	}
 
 	@Override
 	public void reset() {
-		cursor = 0;
-		curr = null;
-		if (shuffle)
-			MathUtils.shuffleArray(order, rng);
-	}
-
-	public int getNumberExamples() {
-		return this.totalExamples;
-	}
-
-	public int getOutputNum() {
-		return numOutcomes;
+		this.cursor = 0;
+		this.curr = null;
+		MathUtils.shuffleArray(this.order, this.random);
 	}
 }
