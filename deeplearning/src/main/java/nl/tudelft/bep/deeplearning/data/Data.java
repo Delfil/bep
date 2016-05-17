@@ -17,7 +17,7 @@ import org.nd4j.linalg.util.FeatureUtil;
 import nl.tudelft.bep.deeplearning.data.exception.MetaDataMatchException;
 import nl.tudelft.bep.deeplearning.data.exception.UnknownMetaDataFileVersion;
 
-public class DataPath {
+public class Data {
 	protected static final String META_SUFFIX = ".meta";
 	protected static final String DATA_SUFFIX = ".dat";
 	protected static final String LABEL_SUFFIX = ".lab";
@@ -36,7 +36,7 @@ public class DataPath {
 	protected final double trainPercentage;
 	protected DataSet[][] data;
 
-	protected DataPath(String path, int version, long timeStamp, int examples, int width, int height, int numOutcomes,
+	protected Data(String path, int version, long timeStamp, int examples, int width, int height, int numOutcomes,
 			int batchSize, double trainPercentage) {
 		this.path = path;
 		this.version = version;
@@ -49,8 +49,16 @@ public class DataPath {
 		this.trainPercentage = trainPercentage;
 	}
 
-	public static DataPath readDataSet(String folderName) {
-		DataPath data = null;
+	/**
+	 * Construct a {@link Data} from the files in the given path
+	 * 
+	 * @param folderName
+	 *            the name of the folder to read
+	 * 
+	 * @return a {@link Data} constructed from the files in the given path
+	 */
+	public static Data readDataSet(String folderName) {
+		Data data = null;
 		try {
 			data = readMetaFile(DATA_FOLDER + F + folderName);
 			data.importData();
@@ -60,6 +68,12 @@ public class DataPath {
 		return data;
 	}
 
+	/**
+	 * Imports the data from the instance its files to its memory
+	 * 
+	 * @throws IOException
+	 *             If an I/O error occurs
+	 */
 	protected void importData() throws IOException {
 		double[][] matrix = this.readMatrices();
 		int[] labels = this.readLabels();
@@ -114,7 +128,7 @@ public class DataPath {
 	 * @throws IOException
 	 *             If an I/O error occurs
 	 */
-	protected static DataPath readMetaFile(String pathName)
+	protected static Data readMetaFile(String pathName)
 			throws UnknownMetaDataFileVersion, NumberFormatException, IOException {
 		BufferedReader reader = new BufferedReader(findFile(pathName, META_SUFFIX));
 		int version = Integer.parseInt(reader.readLine());
@@ -127,17 +141,26 @@ public class DataPath {
 			int numOutcomes = Integer.parseInt(reader.readLine());
 			double trainPercentage = Double.parseDouble(reader.readLine());
 			int batchSize = Integer.parseInt(reader.readLine());
-			return new DataPath(pathName, version, timeStamp, examples, width, height, numOutcomes, batchSize,
+			return new Data(pathName, version, timeStamp, examples, width, height, numOutcomes, batchSize,
 					trainPercentage);
 		} else {
 			throw new UnknownMetaDataFileVersion();
 		}
 	}
 
+	/**
+	 * Finds a file with the given suffix in the given path
+	 * 
+	 * @param pathName
+	 *            the path to search in
+	 * @param suffix
+	 *            the suffix to search for
+	 * @return a {@link BufferedReader}, reading the found file
+	 */
 	private static BufferedReader findFile(String pathName, String suffix) {
 		File dir = new File(pathName);
-		for(File file : dir.listFiles()) {
-			if(file.getName().endsWith(suffix))
+		for (File file : dir.listFiles()) {
+			if (file.getName().endsWith(suffix))
 				try {
 					return new BufferedReader(new FileReader(file));
 				} catch (FileNotFoundException e) {
@@ -211,7 +234,7 @@ public class DataPath {
 		}
 		return subset;
 	}
-	
+
 	/**
 	 * Gives a BufferedReader, reading the desired file.
 	 * 

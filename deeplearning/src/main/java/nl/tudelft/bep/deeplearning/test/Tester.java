@@ -14,7 +14,7 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.tudelft.bep.deeplearning.data.DataPath;
+import nl.tudelft.bep.deeplearning.data.Data;
 import nl.tudelft.bep.deeplearning.data.MatrixDatasetIterator;
 import nl.tudelft.bep.deeplearning.network.FinishedNNCBuilder;
 
@@ -28,9 +28,9 @@ public class Tester {
 	protected final FinishedNNCBuilder builder;
 	protected final DataSetIterator trainIterator;
 	protected final DataSetIterator testIterator;
-	protected final DataPath data;
+	protected final Data data;
 
-	public Tester(FinishedNNCBuilder builder, DataPath data) {
+	public Tester(FinishedNNCBuilder builder, Data data) {
 		this.seeder = new Random(SEEDER_SEED);
 		this.data = data;
 		this.builder = builder;
@@ -40,7 +40,7 @@ public class Tester {
 	}
 
 	public Tester(String networkFile, String dataFile) {
-		this(FinishedNNCBuilder.load(networkFile), DataPath.readDataSet(dataFile));
+		this(FinishedNNCBuilder.load(networkFile), Data.readDataSet(dataFile));
 	}
 
 	protected MultiLayerNetwork setupModel(long seed) {

@@ -13,18 +13,18 @@ import java.util.stream.Collectors;
 import org.apache.commons.math3.stat.inference.TTest;
 import org.deeplearning4j.eval.Evaluation;
 
-import nl.tudelft.bep.deeplearning.data.DataPath;
+import nl.tudelft.bep.deeplearning.data.Data;
 import nl.tudelft.bep.deeplearning.network.FinishedNNCBuilder;
 
 public class ResultUtil {
 	public static double getTTest(String builder1, String data1, int epoch1, String builder2, String data2,
 			int epoch2) {
-		return getTTest(FinishedNNCBuilder.load(builder1), DataPath.readDataSet(data1), epoch1,
-				FinishedNNCBuilder.load(builder2), DataPath.readDataSet(data2), epoch2);
+		return getTTest(FinishedNNCBuilder.load(builder1), Data.readDataSet(data1), epoch1,
+				FinishedNNCBuilder.load(builder2), Data.readDataSet(data2), epoch2);
 	}
 
-	public static double getTTest(FinishedNNCBuilder builder1, DataPath data1, int epoch1, FinishedNNCBuilder builder2,
-			DataPath data2, int epoch2) {
+	public static double getTTest(FinishedNNCBuilder builder1, Data data1, int epoch1, FinishedNNCBuilder builder2,
+			Data data2, int epoch2) {
 		return get(EvaluationFileUtil.load(epoch1, data1, builder1), EvaluationFileUtil.load(epoch2, data2, builder2));
 	}
 
@@ -46,10 +46,10 @@ public class ResultUtil {
 	}
 
 	public static double getAverageAccuracy(String builder1, String data, int epoch) {
-		return getAverageAccuracy(FinishedNNCBuilder.load(builder1), DataPath.readDataSet(data), epoch);
+		return getAverageAccuracy(FinishedNNCBuilder.load(builder1), Data.readDataSet(data), epoch);
 	}
 
-	public static double getAverageAccuracy(FinishedNNCBuilder builder, DataPath data, int epoch) {
+	public static double getAverageAccuracy(FinishedNNCBuilder builder, Data data, int epoch) {
 		List<Evaluation<Double>> a = EvaluationFileUtil.load(epoch, data, builder);
 		if (a == null || a.isEmpty()) {
 			return Double.NaN;
@@ -112,7 +112,7 @@ public class ResultUtil {
 
 	protected static List<String> getDataList() {
 		List<String> dataList = new ArrayList<>();
-		for (File file : new File(DataPath.DATA_FOLDER).listFiles()) {
+		for (File file : new File(Data.DATA_FOLDER).listFiles()) {
 			if (file.isDirectory()) {
 				String[] path = file.getName().split("/");
 				dataList.add(path[path.length - 1]);

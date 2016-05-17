@@ -35,7 +35,7 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 	 * @param end
 	 *            The percentage of examples to skip from the right
 	 */
-	public MatrixDataFetcher(DataPath data, double start, double end) {
+	public MatrixDataFetcher(Data data, double start, double end) {
 		List<DataSet> dataList = data.getSubset(start, end);
 
 		this.data = dataList.toArray(new DataSet[dataList.size()]);
