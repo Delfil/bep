@@ -13,11 +13,11 @@ import nl.tudelft.bep.deeplearning.cnn.CNN;
 public class App {
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		ResultUtil.generateCSV(10, new ComputeFiller(10));
-		String network1 = saveNetworks();
-		String network2 = saveNetwork2();
+		String network1 = saveNN();
+		String network2 = saveNN();
 		// String data1 = "100_Genes/100_Genes";
-		String data1 = "cluster_v1";
-		String data2 = data1;
+		String data1 = "gene1/gene1";
+		String data2 = "geneAVG/geneAVG";
 
 		int epochs1 = 10;
 		int epochs2 = 10;
@@ -54,6 +54,15 @@ public class App {
 								.activation("softmax").build())
 				.backprop(true).pretrain(false).finish().getFileName();
 	}
+	
+	private static String saveNN() {
+		return CNN
+				.BuildExampleCNN(
+						new ConvolutionLayer.Builder(1, 1).stride(1, 1).nOut(5).activation("identity").build(),
+						new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5)
+								.activation("softmax").build())
+				.backprop(true).pretrain(false).finish().getFileName();
+	} 
 
 	private static void test(String networkFile, String dataFile, int iterations, int epochs) {
 		Tester test1 = new Tester(networkFile, dataFile);
