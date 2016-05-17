@@ -31,6 +31,13 @@ public class FinishedNNCBuilder {
 		this.save();
 	}
 
+	/**
+	 * Compute the path name that should be used to save or load this
+	 * {@link FinishedNNCBuilder}.
+	 * 
+	 * @return the path name corresponding to this {@link FinishedNNCBuilder}
+	 *         instance
+	 */
 	protected String computePathName() {
 		String fileName = new StringBuilder(NETWORK_FOLDER).append(F).append(this.getShortDescription()).append(F)
 				.toString();
@@ -56,6 +63,13 @@ public class FinishedNNCBuilder {
 				.toString();
 	}
 
+	/**
+	 * Converts the given {@link NNCBuilder} instance to a JSON {@link String}.
+	 * 
+	 * @param loadBuilder
+	 *            the {@link NNCBuilder} instance to convert
+	 * @return a {@link String}
+	 */
 	private static String toJSON(NNCBuilder loadBuilder) {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -66,6 +80,9 @@ public class FinishedNNCBuilder {
 		return null;
 	}
 
+	/**
+	 * Save this network configuration to the disk.
+	 */
 	protected void save() {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -77,10 +94,25 @@ public class FinishedNNCBuilder {
 		}
 	}
 
+	/**
+	 * Initialize a {@link FinishedNNCBuilder} instance from a saved
+	 * {@link NNCBuilder}.
+	 * 
+	 * @param fileName
+	 *            the fileName of the instance to load
+	 * @return a {@link FinishedNNCBuilder} instance
+	 */
 	public static FinishedNNCBuilder load(String fileName) {
 		return new FinishedNNCBuilder(loadBuilder(fileName));
 	}
 
+	/**
+	 * Load a saved {@link NNCBuilder} instance.
+	 * 
+	 * @param fileName
+	 *            the fileName of the instance to load
+	 * @return the saved {@link NNCBuilder} instance
+	 */
 	protected static NNCBuilder loadBuilder(String fileName) {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -91,6 +123,12 @@ public class FinishedNNCBuilder {
 		return null;
 	}
 
+	/**
+	 * Generates a short description of the network configuration as a sum of
+	 * layer names within the network configuration.
+	 * 
+	 * @return a {@link String} with a short description of the instance
+	 */
 	public String getShortDescription() {
 		return MULTI_LAYER_NETWORK + this.builder.getLayers().stream().map(Layer::getClass).map(Class::getName)
 				.map(name -> name.split("\\.")).map(array -> array[array.length - 1])
