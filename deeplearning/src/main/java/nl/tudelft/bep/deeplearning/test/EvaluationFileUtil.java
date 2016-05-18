@@ -13,7 +13,7 @@ import java.util.List;
 import org.deeplearning4j.eval.Evaluation;
 
 import nl.tudelft.bep.deeplearning.data.Data;
-import nl.tudelft.bep.deeplearning.network.FinishedNNCBuilder;
+import nl.tudelft.bep.deeplearning.network.FNNCBuilder;
 
 public class EvaluationFileUtil {
 	protected static final DecimalFormat SEED_FORMATER = new DecimalFormat(
@@ -28,11 +28,11 @@ public class EvaluationFileUtil {
 				.toString();
 	}
 
-	public static String getEvalPathName(Data data, FinishedNNCBuilder builder) {
+	public static String getEvalPathName(Data data, FNNCBuilder builder) {
 		return new StringBuilder(builder.getPathName()).append(F).append(data.getTimeStamp()).append(F).toString();
 	}
 
-	public static Evaluation<Double> load(long seed, int epoch, Data data, FinishedNNCBuilder builder) {
+	public static Evaluation<Double> load(long seed, int epoch, Data data, FNNCBuilder builder) {
 		File file = new File(getEvalPathName(data, builder) + getEvalFileName(seed, epoch));
 		if (file.exists()) {
 			try {
@@ -51,7 +51,7 @@ public class EvaluationFileUtil {
 		}
 	}
 
-	public static List<Evaluation<Double>> load(int epoch, Data data, FinishedNNCBuilder builder) {
+	public static List<Evaluation<Double>> load(int epoch, Data data, FNNCBuilder builder) {
 		File folder = new File(getEvalPathName(data, builder));
 		if(!folder.exists() || folder.isFile()) {
 			return null;
@@ -77,11 +77,11 @@ public class EvaluationFileUtil {
 		return results;
 	}
 
-	public static boolean evalExistst(long seed, int epoch, Data data, FinishedNNCBuilder builder) {
+	public static boolean evalExistst(long seed, int epoch, Data data, FNNCBuilder builder) {
 		return new File(getEvalPathName(data, builder) + getEvalFileName(seed, epoch)).exists();
 	}
 
-	public static void save(Evaluation<Double> eval, long seed, int epoch, Data data, FinishedNNCBuilder builder) {
+	public static void save(Evaluation<Double> eval, long seed, int epoch, Data data, FNNCBuilder builder) {
 		String pathName = getEvalPathName(data, builder);
 		File file = new File(pathName);
 		if (!file.exists()) {

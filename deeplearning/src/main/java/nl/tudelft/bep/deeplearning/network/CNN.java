@@ -5,7 +5,7 @@ import org.deeplearning4j.nn.conf.Updater;
 import org.deeplearning4j.nn.conf.layers.Layer;
 import org.deeplearning4j.nn.weights.WeightInit;
 
-public class CNN {
+public abstract class CNN {
 	public static NNCBuilder BuildExampleCNN(Layer... layers){
 		NNCBuilder builder = new NNCBuilder();
 				builder

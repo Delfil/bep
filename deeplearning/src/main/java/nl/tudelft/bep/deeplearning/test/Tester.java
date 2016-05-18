@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import nl.tudelft.bep.deeplearning.data.Data;
 import nl.tudelft.bep.deeplearning.data.MatrixDatasetIterator;
-import nl.tudelft.bep.deeplearning.network.FinishedNNCBuilder;
+import nl.tudelft.bep.deeplearning.network.FNNCBuilder;
 
 public class Tester {
 	private static final Logger log = LoggerFactory.getLogger(Tester.class);
@@ -25,12 +25,12 @@ public class Tester {
 	protected static final DateFormat TIME_FORMATER_HM = new SimpleDateFormat("HH:mm");
 
 	protected final Random seeder;
-	protected final FinishedNNCBuilder builder;
+	protected final FNNCBuilder builder;
 	protected final DataSetIterator trainIterator;
 	protected final DataSetIterator testIterator;
 	protected final Data data;
 
-	public Tester(FinishedNNCBuilder builder, Data data) {
+	public Tester(FNNCBuilder builder, Data data) {
 		this.seeder = new Random(SEEDER_SEED);
 		this.data = data;
 		this.builder = builder;
@@ -40,7 +40,7 @@ public class Tester {
 	}
 
 	public Tester(String networkFile, String dataFile) {
-		this(FinishedNNCBuilder.load(networkFile), Data.readDataSet(dataFile));
+		this(FNNCBuilder.load(networkFile), Data.readDataSet(dataFile));
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class Tester {
 		Evaluation<Double> eval = evaluate(model);
 
 		EvaluationFileUtil.save(eval, seed, epochs, this.data, this.builder);
-		// log.info(eval.stats());
+		 log.info(eval.stats());
 		return true;
 	}
 

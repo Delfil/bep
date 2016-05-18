@@ -14,17 +14,17 @@ import org.apache.commons.math3.stat.inference.TTest;
 import org.deeplearning4j.eval.Evaluation;
 
 import nl.tudelft.bep.deeplearning.data.Data;
-import nl.tudelft.bep.deeplearning.network.FinishedNNCBuilder;
+import nl.tudelft.bep.deeplearning.network.FNNCBuilder;
 
 public class ResultUtil {
 	public static double getTTest(String builder1, String data1, int epoch1, String builder2, String data2,
 			int epoch2) {
-		return getTTest(FinishedNNCBuilder.load(builder1), Data.readDataSet(data1), epoch1,
-				FinishedNNCBuilder.load(builder2), Data.readDataSet(data2), epoch2);
+		return getTTest(FNNCBuilder.load(builder1), Data.readDataSet(data1), epoch1, FNNCBuilder.load(builder2),
+				Data.readDataSet(data2), epoch2);
 	}
 
-	public static double getTTest(FinishedNNCBuilder builder1, Data data1, int epoch1, FinishedNNCBuilder builder2,
-			Data data2, int epoch2) {
+	public static double getTTest(FNNCBuilder builder1, Data data1, int epoch1, FNNCBuilder builder2, Data data2,
+			int epoch2) {
 		return get(EvaluationFileUtil.load(epoch1, data1, builder1), EvaluationFileUtil.load(epoch2, data2, builder2));
 	}
 
@@ -42,10 +42,10 @@ public class ResultUtil {
 	}
 
 	public static double getAverageAccuracy(String builder1, String data, int epoch) {
-		return getAverageAccuracy(FinishedNNCBuilder.load(builder1), Data.readDataSet(data), epoch);
+		return getAverageAccuracy(FNNCBuilder.load(builder1), Data.readDataSet(data), epoch);
 	}
 
-	public static double getAverageAccuracy(FinishedNNCBuilder builder, Data data, int epoch) {
+	public static double getAverageAccuracy(FNNCBuilder builder, Data data, int epoch) {
 		List<Evaluation<Double>> a = EvaluationFileUtil.load(epoch, data, builder);
 		if (a == null || a.isEmpty()) {
 			return Double.NaN;
@@ -102,11 +102,12 @@ public class ResultUtil {
 	 */
 	private static List<String> getNetworkList() {
 		List<String> networkList = new ArrayList<>();
-		for (File file : new File(FinishedNNCBuilder.NETWORK_FOLDER).listFiles()) {
+		for (File file : new File(FNNCBuilder.NETWORK_FOLDER).listFiles()) {
 			if (file.isDirectory()) {
 				for (File file2 : file.listFiles()) {
 					if (file2.isFile()) {
-						if (file2.getName().endsWith(FinishedNNCBuilder.NETWORK_SUFFIX)) {
+						if (file2.getName().endsWith(FNNCBuilder.MULTI_LAYER_NETWORK)
+								&& file2.getName().endsWith(FNNCBuilder.NETWORK_SUFFIX)) {
 							networkList.add(file2.getPath());
 						}
 					}

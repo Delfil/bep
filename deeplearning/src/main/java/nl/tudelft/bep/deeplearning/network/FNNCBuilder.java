@@ -14,9 +14,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-public class FinishedNNCBuilder {
+public class FNNCBuilder {
 	public final static String NETWORK_FOLDER = "networks";
-	protected final static String MULTI_LAYER_NETWORK = "MLN_";
+	public final static String MULTI_LAYER_NETWORK = "MLN_";
 	protected final static String F = "/";
 	public static final String NETWORK_SUFFIX = ".NNConf.json";
 
@@ -24,7 +24,7 @@ public class FinishedNNCBuilder {
 	protected final String pathName;
 	protected final NNCBuilder builder;
 
-	public FinishedNNCBuilder(NNCBuilder nncBuilder) {
+	public FNNCBuilder(NNCBuilder nncBuilder) {
 		this.builder = nncBuilder.clone();
 		this.pathName = this.computePathName();
 		this.fileName = this.pathName + NETWORK_SUFFIX;
@@ -33,9 +33,9 @@ public class FinishedNNCBuilder {
 
 	/**
 	 * Compute the path name that should be used to save or load this
-	 * {@link FinishedNNCBuilder}.
+	 * {@link FNNCBuilder}.
 	 * 
-	 * @return the path name corresponding to this {@link FinishedNNCBuilder}
+	 * @return the path name corresponding to this {@link FNNCBuilder}
 	 *         instance
 	 */
 	protected String computePathName() {
@@ -49,7 +49,7 @@ public class FinishedNNCBuilder {
 		for (File f : files) {
 			String fn = f.getName();
 			if (fn.endsWith(NETWORK_SUFFIX) && fn.startsWith(MULTI_LAYER_NETWORK)) {
-				if (FinishedNNCBuilder.toJSON(FinishedNNCBuilder.loadBuilder(f.getAbsolutePath()))
+				if (FNNCBuilder.toJSON(FNNCBuilder.loadBuilder(f.getAbsolutePath()))
 						.equals(thisBuilderString)) {
 					String string = f.getAbsolutePath();
 					return string.substring(0, string.length() - NETWORK_SUFFIX.length());
@@ -59,7 +59,7 @@ public class FinishedNNCBuilder {
 				}
 			}
 		}
-		return new StringBuilder(fileName).append(F).append(MULTI_LAYER_NETWORK).append(Integer.toString(++max))
+		return new StringBuilder(fileName).append(MULTI_LAYER_NETWORK).append(Integer.toString(++max))
 				.toString();
 	}
 
@@ -70,7 +70,7 @@ public class FinishedNNCBuilder {
 	 *            the {@link NNCBuilder} instance to convert
 	 * @return a {@link String}
 	 */
-	private static String toJSON(NNCBuilder loadBuilder) {
+	protected static String toJSON(NNCBuilder loadBuilder) {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			return mapper.writeValueAsString(loadBuilder);
@@ -95,15 +95,15 @@ public class FinishedNNCBuilder {
 	}
 
 	/**
-	 * Initialize a {@link FinishedNNCBuilder} instance from a saved
+	 * Initialize a {@link FNNCBuilder} instance from a saved
 	 * {@link NNCBuilder}.
 	 * 
 	 * @param fileName
 	 *            the fileName of the instance to load
-	 * @return a {@link FinishedNNCBuilder} instance
+	 * @return a {@link FNNCBuilder} instance
 	 */
-	public static FinishedNNCBuilder load(String fileName) {
-		return new FinishedNNCBuilder(loadBuilder(fileName));
+	public static FNNCBuilder load(String fileName) {
+		return new FNNCBuilder(loadBuilder(fileName));
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class FinishedNNCBuilder {
 		return lb;
 	}
 
-	public void seed(long seed) {
+	public void setSeed(long seed) {
 		this.builder.seed(seed);
 	}
 

@@ -41,8 +41,8 @@ public class NNCBuilder extends NeuralNetConfiguration.Builder {
 		return this;
 	}
 
-	public FinishedNNCBuilder finish() {
-		return new FinishedNNCBuilder(this);
+	public FNNCBuilder finish() {
+		return new FNNCBuilder(this);
 	}
 
 	public List<Layer> getLayers() {
