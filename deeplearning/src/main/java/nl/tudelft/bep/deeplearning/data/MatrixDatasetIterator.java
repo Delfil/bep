@@ -21,4 +21,9 @@ public class MatrixDatasetIterator extends BaseDatasetIterator {
 		this.numExamples = this.fetcher.totalExamples();
 	}
 
+	protected MatrixDatasetIterator(Data data, MatrixDataFetcher df) {
+		super(data.getBatchSize(), 0, df);
+		this.numExamples = this.fetcher.totalExamples();
+	}
+
 }

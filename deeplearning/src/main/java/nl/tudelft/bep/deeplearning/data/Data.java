@@ -62,7 +62,7 @@ public class Data {
 		try {
 			data = readMetaFile(DATA_FOLDER + F + folderName);
 			data.importData();
-		} catch (Exception e) {
+		} catch (IOException | NumberFormatException | UnknownMetaDataFileVersion | MetaDataMatchException e) {
 			e.printStackTrace();
 		}
 		return data;
@@ -73,8 +73,10 @@ public class Data {
 	 * 
 	 * @throws IOException
 	 *             If an I/O error occurs
+	 * @throws MetaDataMatchException
+	 *             if the meta data and dat data doesn't match
 	 */
-	protected void importData() throws IOException {
+	protected void importData() throws IOException, MetaDataMatchException {
 		double[][] matrix = this.readMatrices();
 		int[] labels = this.readLabels();
 
@@ -157,8 +159,11 @@ public class Data {
 	 *            the suffix to search for
 	 * @return a {@link BufferedReader}, reading the found file
 	 */
-	private static BufferedReader findFile(String pathName, String suffix) {
+	protected static BufferedReader findFile(String pathName, String suffix) {
 		File dir = new File(pathName);
+		if (!dir.exists()) {
+			return null;
+		}
 		for (File file : dir.listFiles()) {
 			if (file.getName().endsWith(suffix))
 				try {
@@ -176,8 +181,10 @@ public class Data {
 	 * @return a matrix corresponding with the meta file
 	 * @throws IOException
 	 *             If an I/O error occurs
+	 * @throws MetaDataMatchException
+	 *             if the meta data and dat data doesn't match
 	 */
-	protected double[][] readMatrices() throws IOException {
+	protected double[][] readMatrices() throws IOException, MetaDataMatchException {
 		BufferedReader reader = findFile(this.path, DATA_SUFFIX);
 
 		double[][] matrix = new double[examples][];
@@ -186,11 +193,7 @@ public class Data {
 			matrix[i] = (Arrays.stream(reader.readLine().split(SEPERATOR))
 					.mapToDouble(val -> Math.min(1, Math.max(0, (Double.parseDouble(val) + 1) / 2))).toArray());
 			if (matrix[i].length != width * height) {
-				try {
-					throw new MetaDataMatchException();
-				} catch (MetaDataMatchException e) {
-					e.printStackTrace();
-				}
+				throw new MetaDataMatchException();
 			}
 		}
 		reader.close();
@@ -233,23 +236,6 @@ public class Data {
 			}
 		}
 		return subset;
-	}
-
-	/**
-	 * Gives a BufferedReader, reading the desired file.
-	 * 
-	 * @param fileName
-	 *            Name of the desired file that can be found in the resources
-	 *            folder.
-	 * @return A BufferedReader reading the file that belongs to the given file
-	 *         name.
-	 * @throws FileNotFoundException
-	 *             if the named file does not exist, is a directory rather than
-	 *             a regular file, or for some other reason cannot be opened for
-	 *             reading.
-	 */
-	public static BufferedReader readFile(String fileName) throws FileNotFoundException {
-		return new BufferedReader(new FileReader(new File(fileName)));
 	}
 
 	public String getPath() {
