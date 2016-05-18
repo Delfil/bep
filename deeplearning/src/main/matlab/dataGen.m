@@ -8,7 +8,7 @@ function dataGen(data, labels, varargin)
 %     load the default values
     a = defaults;
     a.observations = size(data,1);
-    a.classes = max(labels);
+    a.classes = max(labels); %TODO: hardcoded
     
     options = fieldnames(a);
     
@@ -36,7 +36,7 @@ function dataGen(data, labels, varargin)
         warning ('Make sure to define width and height correctly. Using width = %i and height = %i for now.', a.width, a.height);
     end
     write_meta_file(version, a);
-    write_data_files(a.name, data, labels);
+    write_data_files(a.name, data, labels-1);%TODO: hardcoded
 
 end
 
@@ -77,12 +77,19 @@ function write_data_files(file_name, data, labels)
 	data_file = fopen([file_name '.dat'], 'w');
 	label_file = fopen([file_name '.lab'], 'w');
 
-	for person = N;
-		fprintf(label_file, '%u\r\n' , labels(person));
-		fprintf(data_file, '%.4f,' ,data(person, genes(1:end-1)));
-		fprintf(data_file, '%.4f' ,data(person, genes(end)));
-		fprintf(data_file, '\r\n');
-	end
+    if size(data,2) ~=1
+        for person = N;
+            fprintf(label_file, '%u\r\n' , labels(person));
+            fprintf(data_file, '%.4f,' ,data(person, genes(1:end-1)));
+            fprintf(data_file, '%.4f' ,data(person, genes(end)));
+            fprintf(data_file, '\r\n');
+        end
+    else
+        for person = N;
+            fprintf(label_file, '%u\r\n' , labels(person));
+            fprintf(data_file, '%.4f\r\n' ,data(person, genes(end)));
+        end
+    end
 	fclose(data_file);
 	fclose(label_file);
 end
