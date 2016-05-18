@@ -33,10 +33,6 @@ public class ResultUtil {
 	}
 
 	public static double get(double[] sample1, double[] sample2) {
-		System.out.println(Arrays.toString(sample1));
-		System.out.println();
-		System.out.println(Arrays.toString(sample2));
-		System.out.println();
 		int min = Math.min(sample1.length, sample2.length);
 		return new TTest().pairedTTest(Arrays.copyOf(sample1, min), Arrays.copyOf(sample2, min));
 	}
@@ -65,8 +61,15 @@ public class ResultUtil {
 		return Arrays.stream(sample).reduce((a, b) -> a + b).getAsDouble() / sample.length;
 	}
 
-	//
-
+	/**
+	 * Generate a csv file with data sets as columns and networks as rows,
+	 * filled by the specified filler, and saves it on the disk.
+	 * 
+	 * @param epochs
+	 *            the number of epochs on which the data should be filtered
+	 * @param filler
+	 *            the filler which should fill the table its cells.
+	 */
 	public static void generateCSV(int epochs, CSVFiller filler) {
 		List<String> networkList = getNetworkList();
 		List<String> dataList = getDataList();
@@ -92,6 +95,11 @@ public class ResultUtil {
 		}
 	}
 
+	/**
+	 * Get all network file names from the network folder.
+	 * 
+	 * @return a list of file names
+	 */
 	private static List<String> getNetworkList() {
 		List<String> networkList = new ArrayList<>();
 		for (File file : new File(FinishedNNCBuilder.NETWORK_FOLDER).listFiles()) {
@@ -100,7 +108,6 @@ public class ResultUtil {
 					if (file2.isFile()) {
 						if (file2.getName().endsWith(FinishedNNCBuilder.NETWORK_SUFFIX)) {
 							networkList.add(file2.getPath());
-							System.out.println(file2.getPath());
 						}
 					}
 
@@ -110,15 +117,17 @@ public class ResultUtil {
 		return networkList;
 	}
 
+	/**
+	 * Get all data set file names from the network folder.
+	 * 
+	 * @return a list of file names
+	 */
 	protected static List<String> getDataList() {
 		List<String> dataList = new ArrayList<>();
 		for (File file : new File(Data.DATA_FOLDER).listFiles()) {
 			if (file.isDirectory()) {
 				String[] path = file.getName().split("/");
 				dataList.add(path[path.length - 1]);
-				System.out.println(path[path.length - 1]);
-				// dataList.add(file.getPath());
-				// System.out.println(file.getPath());
 			}
 		}
 		return dataList;
