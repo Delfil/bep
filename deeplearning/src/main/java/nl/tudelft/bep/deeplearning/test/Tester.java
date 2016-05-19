@@ -19,19 +19,18 @@ import nl.tudelft.bep.deeplearning.data.MatrixDatasetIterator;
 import nl.tudelft.bep.deeplearning.network.FNNCBuilder;
 
 public class Tester {
-	private static final Logger log = LoggerFactory.getLogger(Tester.class);
+	protected static final Logger log = LoggerFactory.getLogger(Tester.class);
 	protected static final long SEEDER_SEED = 0;
 	protected static final DateFormat TIME_FORMATER = new SimpleDateFormat("HH:mm:ss:SSS");
 	protected static final DateFormat TIME_FORMATER_HM = new SimpleDateFormat("HH:mm");
 
-	protected final Random seeder;
+	protected Random seeder;
 	protected final FNNCBuilder builder;
 	protected final DataSetIterator trainIterator;
 	protected final DataSetIterator testIterator;
 	protected final Data data;
 
 	public Tester(FNNCBuilder builder, Data data) {
-		this.seeder = new Random(SEEDER_SEED);
 		this.data = data;
 		this.builder = builder;
 
@@ -70,6 +69,7 @@ public class Tester {
 	 *            the number of epochs to run each iteration
 	 */
 	public void start(int iterations, int epochs) {
+		this.seeder = new Random(SEEDER_SEED);
 		long startTime = System.currentTimeMillis();
 		for (int i = 1; i <= iterations; i++) {
 			if (iterate(seeder.nextLong(), epochs)) {

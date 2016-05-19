@@ -111,7 +111,6 @@ public class ResultUtil {
 							networkList.add(file2.getPath());
 						}
 					}
-
 				}
 			}
 		}

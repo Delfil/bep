@@ -53,22 +53,20 @@ public class EvaluationFileUtil {
 
 	public static List<Evaluation<Double>> load(int epoch, Data data, FNNCBuilder builder) {
 		File folder = new File(getEvalPathName(data, builder));
-		if(!folder.exists() || folder.isFile()) {
+		if (!folder.exists() || folder.isFile()) {
 			return null;
 		}
 		List<Evaluation<Double>> results = new ArrayList<>();
 		String suffix = EPOCH_FORMATER.format(epoch) + EVAL_EXTENTION;
 		try {
 			for (File file : folder.listFiles()) {
-				if (file.exists()) {
-					if (file.getName().endsWith(suffix)) {
-						FileInputStream fileIn = new FileInputStream(file);
-						ObjectInputStream in = new ObjectInputStream(fileIn);
-						Evaluation<Double> eval = (Evaluation<Double>) in.readObject();
-						in.close();
-						fileIn.close();
-						results.add(eval);
-					}
+				if (file.getName().endsWith(suffix)) {
+					FileInputStream fileIn = new FileInputStream(file);
+					ObjectInputStream in = new ObjectInputStream(fileIn);
+					Evaluation<Double> eval = (Evaluation<Double>) in.readObject();
+					in.close();
+					fileIn.close();
+					results.add(eval);
 				}
 			}
 		} catch (IOException | ClassNotFoundException e) {
