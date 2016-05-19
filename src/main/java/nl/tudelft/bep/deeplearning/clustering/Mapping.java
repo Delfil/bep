@@ -23,7 +23,11 @@ public class Mapping {
 	public static void main(String[] args) throws IOException {
 		map("100points.in", "geneact.in", 100, "cluster_1x100");
 	}
+<<<<<<< HEAD:src/main/java/nl/tudelft/bep/deeplearning/clustering/Mapping.java
 
+=======
+	
+>>>>>>> origin:src/main/java/nl/tudelft/bep/deeplearning/clustering/Mapping.java
 	/**
 	 * Function which takes files containing points and a matrix of gene
 	 * activation and outputs a file with correlating genes next to each other
@@ -336,7 +340,11 @@ public class Mapping {
 		return clusters;
 
 	}
+<<<<<<< HEAD:src/main/java/nl/tudelft/bep/deeplearning/clustering/Mapping.java
 
+=======
+	
+>>>>>>> origin:src/main/java/nl/tudelft/bep/deeplearning/clustering/Mapping.java
 	/**
 	 * Reads the gene activation data and returns a matrix represented as a 2 dimensional list
 	 * @param in inputstream of the file.

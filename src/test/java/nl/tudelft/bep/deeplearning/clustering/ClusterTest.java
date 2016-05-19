@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class ClusterTest {
@@ -19,8 +20,10 @@ public class ClusterTest {
 	Cluster layer1_2 = new Cluster(4,5.5,1);
 	
 	Cluster root = new Cluster(0);
-	
+
+	@Before
 	public void setup() {
+
 		layer1_1.addCluster(point1);
 		layer1_1.addCluster(point3);
 		layer1_2.addCluster(point2);
@@ -32,7 +35,6 @@ public class ClusterTest {
 
 	@Test
 	public void testIndices() {	
-		setup();
 		ArrayList<Integer> expect1_1 = new ArrayList<Integer>();
 		expect1_1.add(0);
 		expect1_1.add(2);
@@ -53,7 +55,6 @@ public class ClusterTest {
 	
 	@Test
 	public void testSize() {
-		setup();
 		assertEquals(2, layer1_1.size());
 		assertEquals(2, layer1_2.size());
 		assertEquals(4, root.size());
@@ -62,7 +63,6 @@ public class ClusterTest {
 	
 	@Test
 	public void testEquals() {
-		setup();
 		Cluster root_same = new Cluster(0);
 		assertFalse(root.equals(root_same));
 		
