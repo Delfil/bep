@@ -28,7 +28,7 @@ public class DataTest {
 		assertEquals(0.5, data.getTrainPercentage(), 0);
 		assertEquals(2, data.getNumOutcomes());
 	}
-	
+
 	@Test
 	public void subSetTest() {
 		String testFile = "test_data/correct_1";
@@ -42,35 +42,35 @@ public class DataTest {
 	@Test
 	public void nonexistingReadTest() {
 		String testFile = "test_data/nonexisting_data";
-		assertFalse(new File(Data.DATA_FOLDER + "/" + testFile).exists());
+		assertFalse(new File(testFile).exists());
 		assertNull(Data.findFile(testFile, ""));
 	}
 
 	@Test
 	public void missingReadTest() {
-		String testFile = Data.DATA_FOLDER + "/test_data/correct_1";
-		assertTrue(new File(testFile).exists());
+		String testFile = "test_data/correct_1";
+		assertTrue(new File(Data.DATA_FOLDER + "/" + testFile).exists());
 		assertNull(Data.findFile(testFile, ".missing"));
 	}
 
 	@Test(expected = UnknownMetaDataFileVersion.class)
 	public void badMetaReadTest() throws NumberFormatException, UnknownMetaDataFileVersion, IOException {
-		String testFile = Data.DATA_FOLDER + "/test_data/bad_meta";
+		String testFile = "test_data/bad_meta";
 		Data.readMetaFile(testFile);
 	}
 
 	@Test(expected = MetaDataMatchException.class)
 	public void badDatReadTest()
 			throws IOException, MetaDataMatchException, NumberFormatException, UnknownMetaDataFileVersion {
-		String testFile = Data.DATA_FOLDER + "/test_data/bad_dat_1";
-		assertTrue(new File(testFile).exists());
+		String testFile = "test_data/bad_dat_1";
+		assertTrue(new File(Data.DATA_FOLDER + "/" + testFile).exists());
 		Data data = Data.readMetaFile(testFile);
 		data.readMatrices();
 	}
 
 	@Test(expected = NumberFormatException.class)
 	public void badFormatTest() throws NumberFormatException, UnknownMetaDataFileVersion, IOException {
-		String testFile = Data.DATA_FOLDER + "/test_data/bad_dat_2";
+		String testFile = "test_data/bad_dat_2";
 		Data.readMetaFile(testFile);
 	}
 
