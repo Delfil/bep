@@ -88,11 +88,11 @@ public class ResultUtil {
 	 * @param filler
 	 *            the filler which should fill the table its cells.
 	 */
-	public static void generateCSV(int epochs, CSVFiller filler) {
+	public static void generateCSV(int epochs, CSVFiller filler, String fileName) {
 		List<String> networkList = getNetworkList();
 		List<String> dataList = getDataList();
 		try {
-			PrintWriter writer = new PrintWriter(new File("results.csv"));
+			PrintWriter writer = new PrintWriter(new File(fileName + ".csv"));
 			writer.write(new Date().toString());
 			writer.write(",");
 			writer.write(dataList.stream().collect(Collectors.joining(",")));

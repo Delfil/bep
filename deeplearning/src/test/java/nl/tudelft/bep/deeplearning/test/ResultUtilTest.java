@@ -44,7 +44,8 @@ public class ResultUtilTest {
 		Set<String> networks = new HashSet<>(ResultUtil.getNetworkList());
 		Set<String> dataSets = new HashSet<>(ResultUtil.getDataList());
 		int epochs = 1;
-		ResultUtil.generateCSV(epochs, countFiller);
+		ResultUtil.generateCSV(epochs, countFiller, "toRemove");
+		toRemove.add("toRemove.csv");
 		assertEquals(networks.size() * dataSets.size(), countFiller.getCount());
 		assertEquals(networks, countFiller.getNetworks());
 		assertEquals(dataSets, countFiller.getDataSets());
