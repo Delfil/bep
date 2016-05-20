@@ -15,10 +15,15 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.nd4j.linalg.io.ClassPathResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import nl.tudelft.bep.deeplearning.clustering.exception.MinimumNotPossibleException;
 
 public class Mapping {
 	
 	private static int outputNum;
+	private static final Logger log = LoggerFactory.getLogger(Mapping.class);
 
 	public static void main(String[] args) throws IOException {
 		String pointFile = args[0];
@@ -61,11 +66,17 @@ public class Mapping {
 		}
 
 		int layer = 0;
-		while (layerSize(layer2[0], layer) < imgSize) {
-			layer++;
-		}
+		
 
-		return layer(layer2[0], layer);
+		try {
+			while (layerSize(layer2[0], layer) < imgSize) {
+				layer++;
+			}
+			return layer(layer2[0], layer);
+		} catch (MinimumNotPossibleException e) {
+			log.info("Minimum not possible, all points are selected");
+			return createList(layer2[0]);
+		}
 
 	}
 
@@ -78,12 +89,13 @@ public class Mapping {
 	 * @param layer
 	 *            which layer you want the size of.
 	 * @return the size of the layer.
+	 * @throws MinimumNotPossibleException 
 	 */
-	public static int layerSize(Cluster root, int layer) {
+	public static int layerSize(Cluster root, int layer) throws MinimumNotPossibleException {
 		if (layer == 0) {
 			return 1;
 		} else if (root.getList().isEmpty() && layer != 1) {
-			throw new RuntimeException();
+			throw new MinimumNotPossibleException();
 		} else if (layer > 1) {
 			int res = 0;
 			for (Cluster c : root.getList()) {
@@ -108,14 +120,15 @@ public class Mapping {
 	 * @param layer
 	 *            which layer you wish to return
 	 * @return Layer as List
+	 * @throws MinimumNotPossibleException 
 	 */
-	public static List<Cluster> layer(Cluster root, int layer) {
+	public static List<Cluster> layer(Cluster root, int layer) throws MinimumNotPossibleException {
 		if (layer == 0) {
 			List<Cluster> res = new ArrayList<Cluster>();
 			res.add(root);
 			return res;
 		} else if (root.getList().isEmpty() && layer != 1) {
-			return null;
+			throw new MinimumNotPossibleException();
 		} else if (layer > 1) {
 			List<Cluster> res = new ArrayList<Cluster>();
 			for (Cluster c : root.getList()) {
@@ -212,8 +225,8 @@ public class Mapping {
 	 *            Root cluster of the cluster tree.
 	 * @return List with the points sorted for insertion into the matrix.
 	 */
-	public static ArrayList<Integer> createList(Cluster cluster) {
-		ArrayList<Integer> list = new ArrayList<Integer>();
+	public static List<Cluster> createList(Cluster cluster) {
+		ArrayList<Cluster> list = new ArrayList<Cluster>();
 
 		if (!cluster.getList().isEmpty()) {
 			for (Cluster c : cluster.getList()) {
@@ -222,7 +235,7 @@ public class Mapping {
 			}
 			return list;
 		} else {
-			list.add(cluster.getID());
+			list.add(cluster);
 			return list;
 		}
 	}

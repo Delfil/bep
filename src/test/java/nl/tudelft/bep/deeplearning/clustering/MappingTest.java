@@ -14,6 +14,8 @@ import java.util.Scanner;
 import org.junit.Test;
 import org.nd4j.linalg.io.ClassPathResource;
 
+import nl.tudelft.bep.deeplearning.clustering.exception.MinimumNotPossibleException;
+
 public class MappingTest {
 
 	public Cluster distanceRoot() {
@@ -119,19 +121,19 @@ public class MappingTest {
 		deep2.addCluster(new Cluster(6,7,34));
 		deep2.addCluster(new Cluster(8,9,35));
 		cluster.addCluster(deep2);
-		ArrayList<Integer> result = Mapping.createList(cluster);
+		List<Cluster> result = Mapping.createList(cluster);
 		
-		ArrayList<Integer> expect = new ArrayList<Integer>();
-		expect.add(87);
-		expect.add(88);
-		expect.add(34);
-		expect.add(35);
+		ArrayList<Cluster> expect = new ArrayList<Cluster>();
+		expect.add(new Cluster(4,5,87));
+		expect.add(new Cluster(6,5,88));
+		expect.add(new Cluster(6,7,34));
+		expect.add(new Cluster(8,9,35));
 		
 		assertEquals(expect, result);	
 	}
 	
 	@Test 
-	public void testLayerSize() throws FileNotFoundException, IOException {
+	public void testLayerSize() throws FileNotFoundException, IOException, MinimumNotPossibleException {
 		Cluster[] input = Mapping.read(new FileInputStream(new ClassPathResource("points.in").getFile()));
 		Cluster[] result = Mapping.createClusters(input);
 		result = Mapping.createClusters(result);	
@@ -143,7 +145,7 @@ public class MappingTest {
 	}
 	
 	@Test 
-	public void testLayer() throws FileNotFoundException, IOException {
+	public void testLayer() throws FileNotFoundException, IOException, MinimumNotPossibleException {
 		Cluster[] input = Mapping.read(new FileInputStream(new ClassPathResource("points.in").getFile()));
 		Cluster[] result = Mapping.createClusters(input);
 		result = Mapping.createClusters(result);
@@ -260,7 +262,29 @@ public class MappingTest {
 		assertEquals(3, scanner.nextInt());
 		assertEquals(1, scanner.nextInt());
 		assertEquals(4, scanner.nextInt());
-		assertEquals(4, scanner.nextInt());	
+		assertEquals(4, scanner.nextInt());
+		scanner.close();
+	}
+	
+	@Test
+	public void testToLargeMin() throws FileNotFoundException, IOException {
+		List<ArrayList<Double>> matrix = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("test_patient.in").getFile()),4);
+		Cluster[] points = Mapping.read(new FileInputStream(new ClassPathResource("pointsdistances.in").getFile()));
+		List<Cluster> listLayer = Mapping.map(points, matrix, 100);
+		
+		Cluster point1 = new Cluster(1,2,0);
+		Cluster point2 = new Cluster(4,5.5,1);
+		Cluster point3 = new Cluster(1,3,2);
+		Cluster point4 = new Cluster(4,6,3);
+		List<Cluster> expected = new ArrayList<Cluster>();
+		expected.add(point2);
+		expected.add(point4);
+		expected.add(point1);
+		expected.add(point3);
+		
+		
+		assertEquals(4, listLayer.size());
+		assertEquals(expected, listLayer);	
 	}
 	
 	
