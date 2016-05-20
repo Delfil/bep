@@ -15,6 +15,9 @@ import org.junit.Test;
 import org.nd4j.linalg.io.ClassPathResource;
 
 import nl.tudelft.bep.deeplearning.clustering.exception.MinimumNotPossibleException;
+import nl.tudelft.bep.deeplearning.clustering.Cluster;
+import nl.tudelft.bep.deeplearning.clustering.Mapping;
+
 
 public class MappingTest {
 
