@@ -35,7 +35,7 @@ public class Mapping {
 		
 		List<Cluster> listLayer = map(points, matrix, minimum);
 		
-		writeAvgFile(matrix, listLayer, datFile);
+		writeFile(matrix, listLayer, datFile);
 		writeMetaFile(listLayer.size(), matrix.size(),dimensions, metaFile);
 	}
 
@@ -133,34 +133,6 @@ public class Mapping {
 	}
 
 	/**
-	 * Creates a file with the gene activation data of each patient based on the
-	 * indices found by the clustering.
-	 * 
-	 * @param matrix
-	 *            Gene activation of patients
-	 * @param indices
-	 *            were in the matrix those activations should be
-	 * @throws FileNotFoundException
-	 *             file not found.
-	 * @throws UnsupportedEncodingException
-	 *             unsupported encoding,
-	 */
-	public static void writeFile(List<ArrayList<Double>> matrix, List<Integer> indices, String outputFile)
-			throws FileNotFoundException, UnsupportedEncodingException {
-		PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
-		for (int i = 0; i < matrix.size(); i++) {
-			for (int j = 0; j < indices.size(); j++) {
-				writer.print(matrix.get(i).get(indices.get(j)));
-				if (j != indices.size() - 1) {
-					writer.print(",");
-				}
-			}
-			writer.print("\n");
-		}
-		writer.close();
-	}
-
-	/**
 	 * Creates a output file based on which layer is representing the pixels of
 	 * the matrix.
 	 * 
@@ -171,7 +143,7 @@ public class Mapping {
 	 * @throws FileNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static void writeAvgFile(List<ArrayList<Double>> matrix, List<Cluster> listLayer, String outputFile)
+	public static void writeFile(List<ArrayList<Double>> matrix, List<Cluster> listLayer, String outputFile)
 			throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
 		for (int i = 0; i < matrix.size(); i++) {
