@@ -3,11 +3,13 @@ package nl.tudelft.bep.deeplearning.clustering;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.junit.Test;
 import org.nd4j.linalg.io.ClassPathResource;
@@ -231,5 +233,35 @@ public class MappingTest {
 		assertEquals(1, listLayer.size());
 		assertEquals(root, listLayer.get(0));
 	}
+	
+	@Test
+	public void testMain() throws IOException {
+		String[] args = new String[5];
+		args[0] = "pointsdistances.in";
+		args[1] = "test_patient.in";
+		args[2] = "testMainMapping";
+		args[3] = "4";
+		args[4] = "true";
+		Mapping.main(args);
+		
+		File dataFile = new File(args[2] + ".dat");
+		Scanner scanner = new Scanner(dataFile);
+		scanner.useDelimiter(",|\n");
+
+		Double[] expected = new Double[]{2.0, 4.0, 1.0, 3.0, 6.0, 8.0, 5.0, 7.0, 10.0, 12.0, 9.0, 11.0};
+		for(int i = 0; i < expected.length; i++) {
+			Double test = scanner.nextDouble();
+			assertEquals(expected[i], test, 0.001);
+		}
+		scanner.close();
+		
+		File metaFile = new File(args[2] + ".meta");
+		scanner = new Scanner(metaFile);
+		assertEquals(3, scanner.nextInt());
+		assertEquals(1, scanner.nextInt());
+		assertEquals(4, scanner.nextInt());
+		assertEquals(4, scanner.nextInt());	
+	}
+	
 	
 }
