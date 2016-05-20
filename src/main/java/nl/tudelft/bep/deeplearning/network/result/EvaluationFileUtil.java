@@ -32,6 +32,20 @@ public class EvaluationFileUtil {
 		return new StringBuilder(builder.getPathName()).append(F).append(data.getTimeStamp()).append(F).toString();
 	}
 
+	/**
+	 * Load a evaluation file from the disk.
+	 * 
+	 * @param seed
+	 *            the initialization seed used to compute this evaluation
+	 * @param epoch
+	 *            the number of epochs used to compute this evaluation
+	 * @param data
+	 *            the data used to compute this evaluation
+	 * @param builder
+	 *            the network configuration used to compute this evaluation
+	 * @return the requested evaluation file if it exists<br>
+	 *         {@code null} if it doesn't exists
+	 */
 	public static Evaluation<Double> load(long seed, int epoch, Data data, FNNCBuilder builder) {
 		File file = new File(getEvalPathName(data, builder) + getEvalFileName(seed, epoch));
 		if (file.exists()) {
@@ -52,6 +66,19 @@ public class EvaluationFileUtil {
 		}
 	}
 
+	/**
+	 * Load all saved evaluations which are generated with the same data,
+	 * network configuration and epoch count.
+	 * 
+	 * @param epoch
+	 *            the number of epochs used to compute these evaluations
+	 * @param data
+	 *            the data used to compute these evaluations
+	 * @param builder
+	 *            the network configuration used to compute these evaluations
+	 * @return a list of all saved evaluations which satisfy the given
+	 *         conditions
+	 */
 	public static List<Evaluation<Double>> load(int epoch, Data data, FNNCBuilder builder) {
 		File folder = new File(getEvalPathName(data, builder));
 		if (!folder.exists() || folder.isFile()) {
@@ -81,6 +108,21 @@ public class EvaluationFileUtil {
 		return new File(getEvalPathName(data, builder) + getEvalFileName(seed, epoch)).exists();
 	}
 
+	/**
+	 * Save a evaluation to the disk.
+	 * 
+	 * @param eval
+	 *            the evaluation to save
+	 * @param seed
+	 *            the initialization seed used to compute this evaluation
+	 * @param epoch
+	 *            the number of epochs used to compute this evaluation
+	 * @param data
+	 *            the data used to compute this evaluation
+	 * @param builder
+	 *            the network configuration used to compute this evaluation
+	 * 
+	 */
 	public static void save(Evaluation<Double> eval, long seed, int epoch, Data data, FNNCBuilder builder) {
 		String pathName = getEvalPathName(data, builder);
 		File file = new File(pathName);
