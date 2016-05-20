@@ -46,8 +46,7 @@ public class BuilderTest {
 	public void similairNetworkTest() {
 		FNNCBuilder builder2 = getTestBuilder().backprop(false).finish();
 		String fileName = builder2.getFileName();
-		assertTrue(testFile.contains("0"));
-		assertTrue(fileName.contains("1"));
+		assertFalse(testFile.equals(fileName));
 		FNNCBuilder builder1 = builder.finish();
 		System.out.println(builder1.pathName);
 		System.out.println(builder2.pathName);
