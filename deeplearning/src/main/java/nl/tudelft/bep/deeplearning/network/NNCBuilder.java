@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.NeuralNetConfiguration.ListBuilder;
 import org.deeplearning4j.nn.conf.layers.Layer;
 
 public class NNCBuilder extends NeuralNetConfiguration.Builder {
@@ -17,12 +16,6 @@ public class NNCBuilder extends NeuralNetConfiguration.Builder {
 
 	public void add(Layer layer) {
 		layers.add(layer);
-	}
-
-	@Override
-	@Deprecated
-	public ListBuilder list(int size) {
-		return super.list(size);
 	}
 
 	@Override

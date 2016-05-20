@@ -82,6 +82,7 @@ public class Data {
 		double[][] matrix = this.readMatrices();
 		int[] labels = this.readLabels();
 
+		@SuppressWarnings("unchecked")
 		List<DataSet>[] toConvert = new List[this.numOutcomes];
 		for (int i = 0; i < this.numOutcomes; i++) {
 			toConvert[i] = new ArrayList<>(this.examples);

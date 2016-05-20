@@ -38,6 +38,7 @@ public class EvaluationFileUtil {
 			try {
 				FileInputStream fileIn = new FileInputStream(file);
 				ObjectInputStream in = new ObjectInputStream(fileIn);
+				@SuppressWarnings("unchecked")
 				Evaluation<Double> eval = (Evaluation<Double>) in.readObject();
 				in.close();
 				fileIn.close();
@@ -63,6 +64,7 @@ public class EvaluationFileUtil {
 				if (file.getName().endsWith(suffix)) {
 					FileInputStream fileIn = new FileInputStream(file);
 					ObjectInputStream in = new ObjectInputStream(fileIn);
+					@SuppressWarnings("unchecked")
 					Evaluation<Double> eval = (Evaluation<Double>) in.readObject();
 					in.close();
 					fileIn.close();
