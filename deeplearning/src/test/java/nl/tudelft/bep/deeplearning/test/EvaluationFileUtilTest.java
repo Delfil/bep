@@ -30,10 +30,9 @@ public class EvaluationFileUtilTest {
 	public void before() {
 		data = Data.readDataSet("test_data/correct_1");
 		builder = CNN.BuildExampleCNN().finish();
-		builder.getFileName();
 		toRemove.add(builder.getPathName());
-		toRemove.add(
-				EvaluationFileUtil.getEvalPathName(data, builder) + EvaluationFileUtil.getEvalFileName(SEED, EPOCH));
+		toRemove.add(builder.getFileName());
+		toRemove.add(EvaluationFileUtil.getEvalPathName(data, builder));
 	}
 
 	@Test
@@ -57,7 +56,7 @@ public class EvaluationFileUtilTest {
 		assertEquals(1, EvaluationFileUtil.load(EPOCH, data, builder).size());
 		EvaluationFileUtil.save(ev, SEED + 1, EPOCH, data, builder);
 		assertEquals(2, EvaluationFileUtil.load(EPOCH, data, builder).size());
-		
+
 	}
 
 	@After
@@ -66,14 +65,16 @@ public class EvaluationFileUtilTest {
 			File file = new File(name);
 			if (!file.exists())
 				return;
-			if (file.isFile())
+			if (file.isFile()) {
 				file.delete();
-			else
+			} else {
 				try {
 					FileUtils.cleanDirectory(file);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				file.delete();
+			}
 		});
 	}
 
