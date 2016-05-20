@@ -121,15 +121,4 @@ public class Cluster implements Comparable<Cluster> {
 			return res;
 		}
 	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("[mean: " + id + " = (" + x + "," + y + ") \n \t set: {");
-		for (Cluster c : this.list) {
-			builder.append(c.toString() + ", ");
-		}
-		builder.append("}]");
-		return builder.toString();
-	}
 }
