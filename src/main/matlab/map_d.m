@@ -11,8 +11,8 @@ end
 M = [0];
 
 %outer borders of the raster
-ma = max(P);
-mi = min(P);
+ma = max(P,1);
+mi = min(P,1);
 
 % devide up the x and y values of the raster
 x = linspace(mi(1),ma(1),size(M,2));
