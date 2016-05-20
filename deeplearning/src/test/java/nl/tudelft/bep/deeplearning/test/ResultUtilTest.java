@@ -1,6 +1,6 @@
 package nl.tudelft.bep.deeplearning.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.deeplearning4j.datasets.DataSets;
 import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.junit.After;
@@ -22,8 +21,6 @@ import nl.tudelft.bep.deeplearning.network.FNNCBuilder;
 
 public class ResultUtilTest {
 
-	private static final int EPOCH = 0;
-	private static final long SEED = 0;
 	private List<String> toRemove = new ArrayList<>();
 	private FNNCBuilder builder;
 	private Data data;
@@ -51,6 +48,19 @@ public class ResultUtilTest {
 		assertEquals(dataSets, countFiller.getDataSets());
 		assertEquals(1, countFiller.getEpochs().size());
 		assertEquals(epochs, countFiller.getEpochs().iterator().next().intValue());
+	}
+	
+	@Test
+	public void getTTestTest(){
+		new Tester(builder.getFileName(), data.getName()).start(4, 1);
+		assertEquals(Double.NaN, ResultUtil.getTTest(builder.getFileName(), data.getName(), 1), 0.0);
+		
+		Data data2 = Data.readDataSet("test_data/correct_2");
+		toRemove.add(EvaluationFileUtil.getEvalPathName(data2, builder));
+		
+		new Tester(builder.getFileName(), data2.getName()).start(2, 1);
+		
+		assertEquals(Double.NaN, ResultUtil.getTTest(builder.getFileName(), data.getName(), 1, builder.getFileName(), data2.getName(), 1), 0.0);
 	}
 
 	@Test

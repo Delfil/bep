@@ -54,7 +54,7 @@ public class EvaluationFileUtil {
 	public static List<Evaluation<Double>> load(int epoch, Data data, FNNCBuilder builder) {
 		File folder = new File(getEvalPathName(data, builder));
 		if (!folder.exists() || folder.isFile()) {
-			return null;
+			return new ArrayList<>();
 		}
 		List<Evaluation<Double>> results = new ArrayList<>();
 		String suffix = EPOCH_FORMATER.format(epoch) + EVAL_EXTENTION;
