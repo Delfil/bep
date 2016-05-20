@@ -14,6 +14,26 @@ import org.nd4j.linalg.io.ClassPathResource;
 
 public class MappingTest {
 
+	public Cluster distanceRoot() {
+		Cluster point1 = new Cluster(1,2,0);
+		Cluster point2 = new Cluster(4,5.5,1);
+		Cluster point3 = new Cluster(1,3,2);
+		Cluster point4 = new Cluster(4,6,3);
+		
+		Cluster layer1_1 = new Cluster(0);
+		Cluster layer1_2 = new Cluster(1);
+		
+		layer1_1.addCluster(point2);
+		layer1_1.addCluster(point4);
+		layer1_2.addCluster(point1);
+		layer1_2.addCluster(point3);
+		
+		Cluster root = new Cluster(0);
+		root.addCluster(layer1_1);
+		root.addCluster(layer1_2);
+		return root;
+	}
+	
 	@Test
 	public void testRead() throws FileNotFoundException, IOException {
 		Cluster[] result = Mapping.read(new FileInputStream(new ClassPathResource("points.in").getFile()));
@@ -160,23 +180,8 @@ public class MappingTest {
 		Cluster[] result = Mapping.createClusters(input);
 		result = Mapping.createClusters(result);
 		
-		Cluster point1 = new Cluster(1,2,0);
-		Cluster point2 = new Cluster(4,5.5,1);
-		Cluster point3 = new Cluster(1,3,2);
-		Cluster point4 = new Cluster(4,6,3);
-		
-		Cluster layer1_1 = new Cluster(0);
-		Cluster layer1_2 = new Cluster(1);
-		
-		layer1_1.addCluster(point2);
-		layer1_1.addCluster(point4);
-		layer1_2.addCluster(point1);
-		layer1_2.addCluster(point3);
-		
-		Cluster root = new Cluster(0);
-		root.addCluster(layer1_1);
-		root.addCluster(layer1_2);
-		
+		Cluster root = distanceRoot();
+	
 		assertEquals(root, result[0]);
 		
 	}
@@ -200,6 +205,31 @@ public class MappingTest {
 		assertEquals(expect_root_1, Mapping.avgActivation(matrix, result[0], 0));
 		Double expect_root_2 = 6.5;
 		assertEquals(expect_root_2, Mapping.avgActivation(matrix, result[0], 1));
+	}
+	
+	@Test
+	public void testOverallMapping() throws FileNotFoundException, IOException {
+		List<ArrayList<Double>> matrix = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("test_patient.in").getFile()),4);
+		Cluster[] points = Mapping.read(new FileInputStream(new ClassPathResource("pointsdistances.in").getFile()));
+		List<Cluster> listLayer = Mapping.map(points, matrix, 1);
+		
+		List<Cluster> leafs = Mapping.map(points, matrix, 4);
+		
+		Cluster point1 = new Cluster(1,2,0);
+		Cluster point2 = new Cluster(4,5.5,1);
+		Cluster point3 = new Cluster(1,3,2);
+		Cluster point4 = new Cluster(4,6,3);
+		
+		assertEquals(4, leafs.size());
+		assertEquals(point2, leafs.get(0));
+		assertEquals(point4, leafs.get(1));
+		assertEquals(point1, leafs.get(2));
+		assertEquals(point3, leafs.get(3));
+		
+		Cluster root = distanceRoot();
+		
+		assertEquals(1, listLayer.size());
+		assertEquals(root, listLayer.get(0));
 	}
 	
 }
