@@ -1,11 +1,12 @@
 #Ignore for java
-*/.classpath
+*.classpath
 *.class
-*/target/*
-*/bin/*
+*target/*
+*bin/*
 
 #Ignore for Eclipse
-*/.settings/*
+*.settings/*
+*.project
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
