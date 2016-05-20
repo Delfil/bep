@@ -90,17 +90,9 @@ public class Data {
 			for (int j = 0; j < matrix[i].length; j++) {
 				in.putScalar(j, matrix[i][j]);
 			}
-
-			System.out.println(labels[i] + " ~ " + this.numOutcomes);
-			if (labels[i] < 0 || labels[i] > 4 || i < 0) {
-				System.out.println("erltgfhoijfrieofrjgvjdrekfgjbnfkdnfjkdsnfbgjkfdtrnbgjkfdjn");
-				System.out.println(labels[i]);
-				System.out.println(i);
-			}
 			INDArray out = FeatureUtil.toOutcomeVector(labels[i], this.numOutcomes);
 			toConvert[labels[i]].add(new DataSet(in, out));
 		}
-		System.out.println("wertj komen ergens..");
 		this.data = new DataSet[this.numOutcomes][];
 		for (int i = 0; i < this.numOutcomes; i++) {
 			this.data[i] = toConvert[i].toArray(new DataSet[toConvert[i].size()]);
