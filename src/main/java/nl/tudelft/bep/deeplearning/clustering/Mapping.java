@@ -41,13 +41,12 @@ public class Mapping {
 
 	/**
 	 * Function which takes files containing points and a matrix of gene
-	 * activation and outputs a file with correlating genes next to each other
+	 * activation and returns a list of the cluster we would like to put inside the matrix
 	 * 
 	 * @param points string of the file name containing the points
 	 * @param geneAct string of the file name containing the gene activation data.
 	 * @param imgSize the minimum image we would like to create
-	 * @param outputFile the string representing the outputfile name
-	 * @throws IOException for when a file isn't found
+	 * @return A list of the cluster we would like to put inside the matrix.
 	 */
 	public static List<Cluster> map(Cluster[] points, List<ArrayList<Double>> geneAct, int imgSize) {
 		int n = points.length;
@@ -102,7 +101,7 @@ public class Mapping {
 
 	/**
 	 * Returns for each layer the clusters in a List. Layer 0 is the root
-	 * cluster
+	 * cluster.
 	 * 
 	 * @param root
 	 *            The root cluster
