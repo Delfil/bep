@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import nl.tudelft.bep.deeplearning.clustering.Cluster;
+
 public class ClusterTest {
 	
 	Cluster point1 = new Cluster(1,2,0);

@@ -30,19 +30,6 @@ public class Cluster implements Comparable<Cluster> {
 		return Double.compare(x, o.getX());
 	}
 
-	@Override
-	public boolean equals(Object other) {
-		if (other instanceof Cluster) {
-			Cluster o = (Cluster) other;
-			if (this.getX() == o.getX() && this.getY() == o.getY() && this.getID() == o.getID()
-					&& this.getList().equals(o.getList())) {
-				return true;
-			}
-			return false;
-		}
-		return false;
-	}
-
 	public double getX() {
 		return x;
 	}
@@ -131,5 +118,42 @@ public class Cluster implements Comparable<Cluster> {
 		}
 		builder.append("}]");
 		return builder.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		result = prime * result + ((list == null) ? 0 : list.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(x);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(y);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cluster other = (Cluster) obj;
+		if (id != other.id)
+			return false;
+		if (list == null) {
+			if (other.list != null)
+				return false;
+		} else if (!list.equals(other.list))
+			return false;
+		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
+			return false;
+		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
+			return false;
+		return true;
 	}
 }
