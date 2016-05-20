@@ -70,7 +70,7 @@ public class FNNCBuilder {
 	 *            the {@link NNCBuilder} instance to convert
 	 * @return a {@link String}
 	 */
-	 protected static String toJSON(NNCBuilder loadBuilder) {
+	protected static String toJSON(NNCBuilder loadBuilder) {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			return mapper.writeValueAsString(loadBuilder);
