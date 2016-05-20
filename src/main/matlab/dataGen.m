@@ -8,7 +8,11 @@ function dataGen(data, labels, varargin)
 %     load the default values
     a = defaults;
     a.observations = size(data,1);
+    
+    assert(min(labels,1) == 1)
     a.classes = max(labels);
+    labels = labels-1;
+    
     
     options = fieldnames(a);
     
@@ -37,7 +41,6 @@ function dataGen(data, labels, varargin)
     end
     write_meta_file(version, a);
     write_data_files(a.name, data, labels);
-
 end
 
 function v = version
@@ -77,12 +80,19 @@ function write_data_files(file_name, data, labels)
 	data_file = fopen([file_name '.dat'], 'w');
 	label_file = fopen([file_name '.lab'], 'w');
 
-	for person = N;
-		fprintf(label_file, '%u\r\n' , labels(person));
-		fprintf(data_file, '%.4f,' ,data(person, genes(1:end-1)));
-		fprintf(data_file, '%.4f' ,data(person, genes(end)));
-		fprintf(data_file, '\r\n');
-	end
+    if size(data,2) ~=1
+        for person = N;
+            fprintf(label_file, '%u\r\n' , labels(person));
+            fprintf(data_file, '%.4f,' ,data(person, genes(1:end-1)));
+            fprintf(data_file, '%.4f' ,data(person, genes(end)));
+            fprintf(data_file, '\r\n');
+        end
+    else
+        for person = N;
+            fprintf(label_file, '%u\r\n' , labels(person));
+            fprintf(data_file, '%.4f\r\n' ,data(person, genes(end)));
+        end
+    end
 	fclose(data_file);
 	fclose(label_file);
 end
