@@ -6,6 +6,6 @@ notifications:
   email: false
 
 notifications:
-  slack:
+  slack: 'Travis CI:WjhFbOLjXBgnIgmMWN9dCnKd'
     on_success: always
     on_failure: always
