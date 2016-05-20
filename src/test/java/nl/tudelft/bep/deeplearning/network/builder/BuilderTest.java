@@ -1,4 +1,4 @@
-package nl.tudelft.bep.deeplearning.network.network;
+package nl.tudelft.bep.deeplearning.network.builder;
 
 import static org.junit.Assert.*;
 
