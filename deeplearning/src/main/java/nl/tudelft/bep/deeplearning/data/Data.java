@@ -26,6 +26,7 @@ public class Data {
 	protected static final String F = "/";
 
 	protected final String path;
+	protected final String name;
 	protected final int version;
 	protected final long timeStamp;
 	protected final int examples;
@@ -36,9 +37,10 @@ public class Data {
 	protected final double trainPercentage;
 	protected DataSet[][] data;
 
-	protected Data(String path, int version, long timeStamp, int examples, int width, int height, int numOutcomes,
-			int batchSize, double trainPercentage) {
+	protected Data(String path, String name, int version, long timeStamp, int examples, int width, int height,
+			int numOutcomes, int batchSize, double trainPercentage) {
 		this.path = path;
+		this.name = name;
 		this.version = version;
 		this.timeStamp = timeStamp;
 		this.examples = examples;
@@ -60,7 +62,7 @@ public class Data {
 	public static Data readDataSet(String folderName) {
 		Data data = null;
 		try {
-			data = readMetaFile(DATA_FOLDER + F + folderName);
+			data = readMetaFile(folderName);
 			data.importData();
 		} catch (IOException | NumberFormatException | UnknownMetaDataFileVersion | MetaDataMatchException e) {
 			e.printStackTrace();
@@ -128,8 +130,9 @@ public class Data {
 	 * @throws IOException
 	 *             If an I/O error occurs
 	 */
-	protected static Data readMetaFile(String pathName)
+	protected static Data readMetaFile(String name)
 			throws UnknownMetaDataFileVersion, NumberFormatException, IOException {
+		String pathName = DATA_FOLDER + F + name;
 		BufferedReader reader = new BufferedReader(findFile(pathName, META_SUFFIX));
 		int version = Integer.parseInt(reader.readLine());
 
@@ -141,7 +144,7 @@ public class Data {
 			int numOutcomes = Integer.parseInt(reader.readLine());
 			double trainPercentage = Double.parseDouble(reader.readLine());
 			int batchSize = Integer.parseInt(reader.readLine());
-			return new Data(pathName, version, timeStamp, examples, width, height, numOutcomes, batchSize,
+			return new Data(pathName, name, version, timeStamp, examples, width, height, numOutcomes, batchSize,
 					trainPercentage);
 		} else {
 			throw new UnknownMetaDataFileVersion();
@@ -235,7 +238,7 @@ public class Data {
 		}
 		return subset;
 	}
-	
+
 	public String getPath() {
 		return path;
 	}
@@ -270,6 +273,10 @@ public class Data {
 
 	public double getTrainPercentage() {
 		return trainPercentage;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 }

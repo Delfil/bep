@@ -118,15 +118,16 @@ public class ResultUtil {
 	 * 
 	 * @return a list of file names
 	 */
-	private static List<String> getNetworkList() {
+	public static List<String> getNetworkList() {
 		List<String> networkList = new ArrayList<>();
 		for (File file : new File(FNNCBuilder.NETWORK_FOLDER).listFiles()) {
 			if (file.isDirectory()) {
 				for (File file2 : file.listFiles()) {
 					if (file2.isFile()) {
-						if (file2.getName().endsWith(FNNCBuilder.MULTI_LAYER_NETWORK)
-								&& file2.getName().endsWith(FNNCBuilder.NETWORK_SUFFIX)) {
-							networkList.add(file2.getPath());
+						if (file2.getName().startsWith(FNNCBuilder.MULTI_LAYER_NETWORK)){
+							if (file2.getName().endsWith(FNNCBuilder.NETWORK_SUFFIX)) {
+								networkList.add(file2.getPath());
+							}
 						}
 					}
 				}
@@ -140,7 +141,7 @@ public class ResultUtil {
 	 * 
 	 * @return a list of file names
 	 */
-	protected static List<String> getDataList() {
+	public static List<String> getDataList() {
 		List<String> dataList = new ArrayList<>();
 		for (File file : new File(Data.DATA_FOLDER).listFiles()) {
 			if (file.isDirectory()) {
