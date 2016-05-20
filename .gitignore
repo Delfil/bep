@@ -1,6 +1,7 @@
 #Ignore for java
 *.classpath
 *.class
+*.project
 *target/*
 *bin/*
 
