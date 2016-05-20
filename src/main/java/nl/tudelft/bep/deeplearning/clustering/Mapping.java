@@ -21,7 +21,22 @@ public class Mapping {
 	private static int outputNum;
 
 	public static void main(String[] args) throws IOException {
-		map("100points.in", "geneact.in", 100, "cluster_1x100");
+		String pointFile = args[0];
+		String geneAct = args[1];
+		String datFile = args[2] + ".dat";
+		String metaFile = args[2] + ".meta";
+		String min = args[3];
+		Integer minimum = Integer.valueOf(min);
+		String dim = args[4];
+		Boolean dimensions = Boolean.valueOf(dim);
+				
+		Cluster[] points = read(new FileInputStream(new ClassPathResource(pointFile).getFile()));
+		List<ArrayList<Double>> matrix = readGeneAct(new FileInputStream(new ClassPathResource(geneAct).getFile()), points.length);
+		
+		List<Cluster> listLayer = map(points, matrix, minimum);
+		
+		writeAvgFile(matrix, listLayer, datFile);
+		writeMetaFile(listLayer.size(), matrix.size(),dimensions, metaFile);
 	}
 
 	/**
@@ -34,15 +49,12 @@ public class Mapping {
 	 * @param outputFile the string representing the outputfile name
 	 * @throws IOException for when a file isn't found
 	 */
-	public static void map(String points, String geneAct, int imgSize, String outputFile) throws IOException {
-		// Reading file containing points
-		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource(points).getFile()));
-		int n = layer1.length;
-		List<ArrayList<Double>> matrix = readGeneAct(new FileInputStream(new ClassPathResource(geneAct).getFile()), n);
+	public static List<Cluster> map(Cluster[] points, List<ArrayList<Double>> geneAct, int imgSize) {
+		int n = points.length;
 		// Initialize the temporary array representing a layer and run the
 		// createCluster for the first time on the input.
 		Cluster[] layer2 = new Cluster[n];
-		layer2 = createClusters(layer1);
+		layer2 = createClusters(points);
 
 		// Keep looping until one cluster is left.
 		while (layer2.length != 1) {
@@ -53,11 +65,9 @@ public class Mapping {
 		while (layerSize(layer2[0], layer) < imgSize) {
 			layer++;
 		}
-		String datFile = outputFile + ".dat";
-		String metaFile = outputFile + ".meta";
-		List<Cluster> listLayer = layer(layer2[0], layer);
-		writeAvgFile(matrix, listLayer, datFile);
-		writeMetaFile(listLayer.size(), matrix.size(),true, metaFile);
+
+		return layer(layer2[0], layer);
+
 	}
 
 	/**
