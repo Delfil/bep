@@ -237,7 +237,26 @@ public class MappingTest {
 	}
 	
 	@Test
-	public void testMain() throws IOException {
+	public void testMain1D() throws IOException {
+		String[] args = new String[5];
+		args[0] = "pointsdistances.in";
+		args[1] = "test_patient.in";
+		args[2] = "testMainMapping";
+		args[3] = "4";
+		args[4] = "false";
+		Mapping.main(args);
+			
+		File metaFile = new File(args[2] + ".meta");
+		Scanner scanner = new Scanner(metaFile);
+		assertEquals(3, scanner.nextInt());
+		assertEquals(2, scanner.nextInt());
+		assertEquals(2, scanner.nextInt());
+		assertEquals(4, scanner.nextInt());
+		scanner.close();
+	}
+	
+	@Test
+	public void testMainNot1D() throws IOException {
 		String[] args = new String[5];
 		args[0] = "pointsdistances.in";
 		args[1] = "test_patient.in";
