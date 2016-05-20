@@ -5,7 +5,7 @@
 *bin/*
 
 #Ignore for Eclipse
-*.settings/*
+*.settings*
 *.project
 
 # Mobile Tools for Java (J2ME)
@@ -28,6 +28,3 @@ hs_err_pid*
 
 # Linux locks
 *~
-
-#Git errors
-deeplearning/.gitignore

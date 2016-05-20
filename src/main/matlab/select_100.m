@@ -1,7 +1,7 @@
 %select the 100 genes with the highest standard deviation calculate
 %correlations and run tsne on it
 
-if ~exist('Gene_Expression','var')
+if ~exist('Gene_Expression','var') || ~exist('CancerTypeIndex','var')
     disp('Loading the database.');
     load('GE.mat');
 end
@@ -19,4 +19,4 @@ end
     data = GEt(:,genes+1);
     clear GEt;
     
-    sample_data(0,0,data, CancerTypeIndex, '100_Genes', size(M));
+    dataGen(data, CancerTypeIndex, 'name', '100_Genes', 'height', size(M,1), 'width', size(M,2));

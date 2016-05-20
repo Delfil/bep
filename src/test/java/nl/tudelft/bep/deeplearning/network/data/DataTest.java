@@ -1,4 +1,4 @@
-package nl.tudelft.bep.deeplearning.data;
+package nl.tudelft.bep.deeplearning.network.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
