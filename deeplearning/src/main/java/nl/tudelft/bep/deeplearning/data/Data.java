@@ -167,12 +167,9 @@ public class Data {
 	 */
 	protected static BufferedReader findFile(String pathName, String suffix) {
 		File dir = new File(pathName);
-<<<<<<< Updated upstream:deeplearning/src/main/java/nl/tudelft/bep/deeplearning/data/Data.java
 		if (!dir.exists()) {
 			return null;
 		}
-=======
->>>>>>> Stashed changes:deeplearning/src/main/java/nl/tudelft/bep/deeplearning/datafetcher/DataPath.java
 		for (File file : dir.listFiles()) {
 			if (file.getName().endsWith(suffix))
 				try {

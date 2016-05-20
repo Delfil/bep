@@ -25,16 +25,34 @@ public class ResultUtil {
 
 	public static double getTTest(FNNCBuilder builder1, Data data1, int epoch1, FNNCBuilder builder2, Data data2,
 			int epoch2) {
-		return get(EvaluationFileUtil.load(epoch1, data1, builder1), EvaluationFileUtil.load(epoch2, data2, builder2));
+		return getTTest(EvaluationFileUtil.load(epoch1, data1, builder1),
+				EvaluationFileUtil.load(epoch2, data2, builder2));
 	}
 
-	public static double get(List<Evaluation<Double>> sample1, List<Evaluation<Double>> sample2) {
-		return get(getAccuracyArray(sample1), getAccuracyArray(sample2));
+	public static double getTTest(List<Evaluation<Double>> sample1, List<Evaluation<Double>> sample2) {
+		return getTTest(getAccuracyArray(sample1), getAccuracyArray(sample2));
 	}
 
-	public static double get(double[] sample1, double[] sample2) {
+	public static double getTTest(double[] sample1, double[] sample2) {
 		int min = Math.min(sample1.length, sample2.length);
 		return new TTest().pairedTTest(Arrays.copyOf(sample1, min), Arrays.copyOf(sample2, min));
+	}
+
+	public static double getTTest(String builder1, String data1, int epoch1) {
+		return getTTest(FNNCBuilder.load(builder1), Data.readDataSet(data1), epoch1);
+	}
+
+	public static double getTTest(FNNCBuilder builder1, Data data1, int epoch1) {
+		return getTTest(EvaluationFileUtil.load(epoch1, data1, builder1));
+	}
+
+	public static double getTTest(List<Evaluation<Double>> sample1) {
+		return getTTest(getAccuracyArray(sample1));
+	}
+
+	public static double getTTest(double[] sample1) {
+		int min = sample1.length / 2;
+		return new TTest().pairedTTest(Arrays.copyOf(sample1, min), Arrays.copyOfRange(sample1, min, min * 2));
 	}
 
 	public static double[] getAccuracyArray(List<Evaluation<Double>> sample) {
