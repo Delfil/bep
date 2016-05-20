@@ -5,6 +5,8 @@ import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Test;
 
+import nl.tudelft.bep.deeplearning.clustering.NeighborDistance;
+
 public class NeighborDistanceTest {
 
 	@Test

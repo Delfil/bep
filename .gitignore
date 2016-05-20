@@ -5,8 +5,8 @@
 *bin/*
 
 #Ignore for Eclipse
-*.settings/*
-.project
+*.settings*
+*.project
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
