@@ -24,12 +24,12 @@ public class App {
 
 		System.out.println("Start Data creation");
 		test(network1, data1, 10, epochs1);
-		test(network2, data2, 10, epochs2);
+//		test(network2, data2, 10, epochs2);
 
 		System.out.println("Start TTest...");
-		System.out.println("TTest: " + ResultUtil.getTTest(network1, data1, epochs1, network2, data2, epochs2));
+//		System.out.println("TTest: " + ResultUtil.getTTest(network1, data1, epochs1, network2, data2, epochs2));
 		System.out.println("Average accuracy1:" + ResultUtil.getAverageAccuracy(network1, data1, epochs1));
-		System.out.println("Average accuracy2:" + ResultUtil.getAverageAccuracy(network2, data2, epochs2));
+//		System.out.println("Average accuracy2:" + ResultUtil.getAverageAccuracy(network2, data2, epochs2));
 	}
 
 	private static String saveNetworks() {

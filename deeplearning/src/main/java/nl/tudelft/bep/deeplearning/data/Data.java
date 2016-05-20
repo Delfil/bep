@@ -91,10 +91,16 @@ public class Data {
 				in.putScalar(j, matrix[i][j]);
 			}
 
+			System.out.println(labels[i] + " ~ " + this.numOutcomes);
+			if (labels[i] < 0 || labels[i] > 4 || i < 0) {
+				System.out.println("erltgfhoijfrieofrjgvjdrekfgjbnfkdnfjkdsnfbgjkfdtrnbgjkfdjn");
+				System.out.println(labels[i]);
+				System.out.println(i);
+			}
 			INDArray out = FeatureUtil.toOutcomeVector(labels[i], this.numOutcomes);
 			toConvert[labels[i]].add(new DataSet(in, out));
 		}
-
+		System.out.println("wertj komen ergens..");
 		this.data = new DataSet[this.numOutcomes][];
 		for (int i = 0; i < this.numOutcomes; i++) {
 			this.data[i] = toConvert[i].toArray(new DataSet[toConvert[i].size()]);
@@ -161,9 +167,12 @@ public class Data {
 	 */
 	protected static BufferedReader findFile(String pathName, String suffix) {
 		File dir = new File(pathName);
+<<<<<<< Updated upstream:deeplearning/src/main/java/nl/tudelft/bep/deeplearning/data/Data.java
 		if (!dir.exists()) {
 			return null;
 		}
+=======
+>>>>>>> Stashed changes:deeplearning/src/main/java/nl/tudelft/bep/deeplearning/datafetcher/DataPath.java
 		for (File file : dir.listFiles()) {
 			if (file.getName().endsWith(suffix))
 				try {
@@ -237,7 +246,7 @@ public class Data {
 		}
 		return subset;
 	}
-
+	
 	public String getPath() {
 		return path;
 	}
