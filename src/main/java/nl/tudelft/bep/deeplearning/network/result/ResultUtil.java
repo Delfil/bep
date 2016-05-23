@@ -145,9 +145,12 @@ public class ResultUtil {
 		List<String> dataList = new ArrayList<>();
 		for (File file : new File(Data.DATA_FOLDER).listFiles()) {
 			if (file.isDirectory()) {
-				Set<String> set = Arrays.stream(file.listFiles()).map(File::getName).map(s -> s.split(","))
-						.map(a -> a[a.length - 1]).collect(Collectors.toSet());
-				if (set.contains("meta") && set.contains("dat") && set.contains("lab")) {
+				System.out.println(file.getName());
+				List<String> list = Arrays.stream(file.listFiles()).filter(File::isFile).map(File::getName)
+						.map(s -> s.split("\\.")).filter(a -> a.length > 0).map(a -> a[a.length - 1])
+						.filter(a -> a.equals("meta") || a.equals("dat") || a.equals("lab"))
+						.collect(Collectors.toList());
+				if (list.contains("meta") && list.contains("dat") && list.contains("lab") && list.size() == 3) {
 					String[] path = file.getName().split("/");
 					dataList.add(path[path.length - 1]);
 				}
