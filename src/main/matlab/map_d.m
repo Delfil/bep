@@ -1,14 +1,18 @@
-function M = map_d(P)
+function M = map_d(P, verbose)
 % MAP maps an m by 2 set of 2d points P to a matrix containing the index of
 % that point.
+
+if ~exist('verbose', 'var')
+    verbose = false;
+end
 
 %M, the raster containing P indices
 % M = zeros(ceil(sqrt(size(P,1))));
 M = [0];
 
 %outer borders of the raster
-ma = max(P);
-mi = min(P);
+ma = max(P,1);
+mi = min(P,1);
 
 % devide up the x and y values of the raster
 x = linspace(mi(1),ma(1),size(M,2));
@@ -120,9 +124,11 @@ while point_ind <= numel(points)
     
     %show progress
     iters = iters +1;
-    if mod(iters, 1000) == 0
+    if mod(iters, 1000) == 0 && verbose
         disp(sprintf('Iteration\t%s:\t%s%% done.', num2str(iters-1), num2str(floor(100*point_ind/numel(points)))))
     end
 end
-disp(sprintf('Iteration\t%s:\t%s%% done.', num2str(iters-1), num2str(floor(100*(point_ind-1)/numel(points)))))
+if verbose
+    disp(sprintf('Iteration\t%s:\t%s%% done.', num2str(iters-1), num2str(floor(100*(point_ind-1)/numel(points)))))
+end
 end
