@@ -25,17 +25,17 @@ public class Data {
 	public static final String DATA_FOLDER = "datasets";
 	protected static final String F = "/";
 
-	protected final String path;
-	protected final String name;
-	protected final int version;
-	protected final long timeStamp;
-	protected final int examples;
-	protected final int width;
-	protected final int height;
-	protected final int numOutcomes;
-	protected final int batchSize;
-	protected final double trainPercentage;
-	protected DataSet[][] data;
+	private final String path;
+	private final String name;
+	private final int version;
+	private final long timeStamp;
+	private final int examples;
+	private final int width;
+	private final int height;
+	private final int numOutcomes;
+	private final int batchSize;
+	private final double trainPercentage;
+	private DataSet[][] data;
 
 	protected Data(String path, String name, int version, long timeStamp, int examples, int width, int height,
 			int numOutcomes, int batchSize, double trainPercentage) {
