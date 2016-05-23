@@ -67,6 +67,7 @@ end
 %histogram(std_avg)
 
 t_test_correct = sum(h_array)/100
+TOTAL_MEAN_ONE_GENE = mean(total_mean_1)
 TOTAL_MEAN_AVG_GENE = mean(total_mean_avg)
 
 
