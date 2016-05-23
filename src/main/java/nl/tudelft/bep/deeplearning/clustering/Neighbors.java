@@ -17,15 +17,15 @@ public class Neighbors implements Comparable<Neighbors>  {
 		return this.distance.compareTo(o.getDistance());
 	}
 	
-	public Double getDistance() {
+	private Double getDistance() {
 		return this.distance;
 	}
 	
-	public Cluster getCluster() {
+	protected Cluster getCluster() {
 		return this.c;
 	}
 	
-	public Cluster getNeighbor() {
+	protected Cluster getNeighbor() {
 		return this.neighbor;
 	}
 }
