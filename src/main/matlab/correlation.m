@@ -1,20 +1,27 @@
-geneAct = Gene_Expression;
-label = CancerTypeIndex == 2;
+ges = std(Gene_Expression);
+select = ges >1.2982;
+geneAct = Gene_Expression(:,select);
+%geneAct = Gene_Expression;
+label = CancerTypeIndex == 3;
 absCorr = abs(corr(geneAct));
 %absCorr = corr(geneAct);
-numGenes = 5000;
+numGenes = 100;
 numPatients = 25;
 numGroupPatients = 50;
 
+h_array = zeros(1,100);
+p_array = zeros(1,100);
+
+for t = 1:100
 counter = 1;
 total_acc_1 = zeros(1,numGroupPatients*numGenes);
 total_acc_avg = zeros(1,numGroupPatients*numGenes);
 std_1 = zeros(1,numGenes);
 std_avg = zeros(1,numGenes);
-
+genes = randperm(size(absCorr,1),numGenes);
 
 for i = 1:numGenes
-    point = ceil(size(absCorr,1)*rand());
+    point = genes(i);
 
     column = absCorr(:,point);
     [sortedValues, sortedIndex] = sort(column,'descend');
@@ -22,15 +29,15 @@ for i = 1:numGenes
     fourpoints = sortedIndex(1:4);
     avg_act = mean(geneAct(:,fourpoints),2);
     g1_act = geneAct(:,sortedIndex(1));
-    temp = horzcat(g1_act,avg_act);
-    temp = horzcat(temp,label);
+    temp = [g1_act,avg_act,label];
     group_acc_1 = zeros(1,numGroupPatients);
     group_acc_avg = zeros(1,numGroupPatients);
     for j = 1:numGroupPatients
-        indexes = randperm(size(temp,1),numPatients);
-        activations = temp(indexes,:);
+        indeces = randperm(size(temp,1),numPatients);
+        activations = temp(indeces,:);
         acc_1 = threshold(activations(:,1),activations(:,3));
         acc_avg = threshold(activations(:,2),activations(:,3));
+        
         total_acc_1(1,counter) = acc_1;
         total_acc_avg(1,counter) = acc_avg;
         group_acc_1(j) = acc_1;
@@ -45,7 +52,11 @@ end
 
 std_total_1 = std(total_acc_1/100);
 std_total_avg = std(total_acc_avg/100);
-[h,p] = ttest(std_1,std_avg)
+[h,p] = ttest(std_1,std_avg);
+h_array(t) = h;
+p_array(t) = p;
+
+end
 subplot(2,1,1);
 histogram(std_1)
 subplot(2,1,2);
