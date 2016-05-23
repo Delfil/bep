@@ -11,8 +11,9 @@ public class NNCBuilder extends NeuralNetConfiguration.Builder {
 	protected boolean backprop = false;
 	protected boolean pretrain = false;
 	protected List<Layer> layers = new ArrayList<>();
-	
-	public NNCBuilder(){}
+
+	public NNCBuilder() {
+	}
 
 	public void add(Layer layer) {
 		layers.add(layer);
@@ -35,7 +36,11 @@ public class NNCBuilder extends NeuralNetConfiguration.Builder {
 	}
 
 	public FNNCBuilder finish() {
-		return new FNNCBuilder(this);
+		return this.finish("");
+	}
+
+	public FNNCBuilder finish(String description) {
+		return new FNNCBuilder(this, description);
 	}
 
 	public List<Layer> getLayers() {
@@ -58,6 +63,4 @@ public class NNCBuilder extends NeuralNetConfiguration.Builder {
 	public boolean isPretrain() {
 		return pretrain;
 	}
-	
-	
 }

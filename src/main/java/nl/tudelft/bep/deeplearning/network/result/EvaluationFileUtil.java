@@ -139,4 +139,8 @@ public class EvaluationFileUtil {
 			e.printStackTrace();
 		}
 	}
+
+	public static List<Evaluation<Double>> load(int epochs, String data, String network) {
+		return load(epochs, Data.readDataSet(data), FNNCBuilder.load(network));
+	}
 }

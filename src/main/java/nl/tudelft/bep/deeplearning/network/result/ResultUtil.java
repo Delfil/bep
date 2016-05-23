@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
@@ -53,7 +54,7 @@ public class ResultUtil {
 
 	public static double getTTest(double[] sample1) {
 		int min = sample1.length / 2;
-		return new TTest().pairedTTest(Arrays.copyOf(sample1, min), Arrays.copyOfRange(sample1, min, min * 2));
+		return new TTest().tTest(Arrays.copyOf(sample1, min), Arrays.copyOfRange(sample1, min, min * 2));
 	}
 
 	public static double[] getAccuracyArray(List<Evaluation<Double>> sample) {
@@ -95,12 +96,13 @@ public class ResultUtil {
 		try {
 			PrintWriter writer = new PrintWriter(new File(fileName + ".csv"));
 			writer.write(new Date().toString());
-			writer.write(",");
+			writer.write(",,");
 			writer.write(dataList.stream().collect(Collectors.joining(",")));
 			writer.write("\n");
 			for (int y = 0; y < networkList.size(); y++) {
 				StringJoiner sj = new StringJoiner(",");
 				sj.add(networkList.get(y));
+				sj.add(FNNCBuilder.getDescription(networkList.get(y)));
 				for (int x = 0; x < dataList.size(); x++) {
 					sj.add(filler.fill(networkList.get(y), dataList.get(x), epochs));
 				}
@@ -143,8 +145,15 @@ public class ResultUtil {
 		List<String> dataList = new ArrayList<>();
 		for (File file : new File(Data.DATA_FOLDER).listFiles()) {
 			if (file.isDirectory()) {
-				String[] path = file.getName().split("/");
-				dataList.add(path[path.length - 1]);
+				System.out.println(file.getName());
+				List<String> list = Arrays.stream(file.listFiles()).filter(File::isFile).map(File::getName)
+						.map(s -> s.split("\\.")).filter(a -> a.length > 0).map(a -> a[a.length - 1])
+						.filter(a -> a.equals("meta") || a.equals("dat") || a.equals("lab"))
+						.collect(Collectors.toList());
+				if (list.contains("meta") && list.contains("dat") && list.contains("lab") && list.size() == 3) {
+					String[] path = file.getName().split("/");
+					dataList.add(path[path.length - 1]);
+				}
 			}
 		}
 		return dataList;

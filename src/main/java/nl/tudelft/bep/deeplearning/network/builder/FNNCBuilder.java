@@ -1,7 +1,11 @@
 package nl.tudelft.bep.deeplearning.network.builder;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,15 +23,26 @@ public class FNNCBuilder {
 	public final static String MULTI_LAYER_NETWORK = "MLN_";
 	protected final static String F = "/";
 	public static final String NETWORK_SUFFIX = ".NNConf.json";
+	public static final String DESCRIPTION_SUFFIX = ".txt";
 
 	protected final String fileName;
 	protected final String pathName;
 	protected final NNCBuilder builder;
+	private String description;
+
+	public FNNCBuilder(NNCBuilder nncBuilder, String description) {
+		this.builder = nncBuilder.clone();
+		this.pathName = this.computePathName();
+		this.fileName = this.pathName + NETWORK_SUFFIX;
+		this.description = description;
+		this.save();
+	}
 
 	public FNNCBuilder(NNCBuilder nncBuilder) {
 		this.builder = nncBuilder.clone();
 		this.pathName = this.computePathName();
 		this.fileName = this.pathName + NETWORK_SUFFIX;
+		this.description = getDescription(fileName);
 		this.save();
 	}
 
@@ -35,8 +50,7 @@ public class FNNCBuilder {
 	 * Compute the path name that should be used to save or load this
 	 * {@link FNNCBuilder}.
 	 * 
-	 * @return the path name corresponding to this {@link FNNCBuilder}
-	 *         instance
+	 * @return the path name corresponding to this {@link FNNCBuilder} instance
 	 */
 	protected String computePathName() {
 		String fileName = new StringBuilder(NETWORK_FOLDER).append(F).append(this.getShortDescription()).append(F)
@@ -49,8 +63,7 @@ public class FNNCBuilder {
 		for (File f : files) {
 			String fn = f.getName();
 			if (fn.endsWith(NETWORK_SUFFIX) && fn.startsWith(MULTI_LAYER_NETWORK)) {
-				if (FNNCBuilder.toJSON(FNNCBuilder.loadBuilder(f.getAbsolutePath()))
-						.equals(thisBuilderString)) {
+				if (FNNCBuilder.toJSON(FNNCBuilder.loadBuilder(f.getAbsolutePath())).equals(thisBuilderString)) {
 					String string = f.getAbsolutePath();
 					return string.substring(0, string.length() - NETWORK_SUFFIX.length());
 				} else {
@@ -59,8 +72,7 @@ public class FNNCBuilder {
 				}
 			}
 		}
-		return new StringBuilder(fileName).append(MULTI_LAYER_NETWORK).append(Integer.toString(++max))
-				.toString();
+		return new StringBuilder(fileName).append(MULTI_LAYER_NETWORK).append(Integer.toString(++max)).toString();
 	}
 
 	/**
@@ -89,14 +101,18 @@ public class FNNCBuilder {
 		try {
 			Files.write(Paths.get(this.fileName),
 					mapper.writeValueAsString(this.builder).replaceAll(",", ",\n").getBytes(StandardCharsets.UTF_8));
+
+			PrintWriter pw = new PrintWriter(new File(this.pathName + DESCRIPTION_SUFFIX));
+			pw.println(this.description);
+			pw.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 	}
 
 	/**
-	 * Initialize a {@link FNNCBuilder} instance from a saved
-	 * {@link NNCBuilder}.
+	 * Initialize a {@link FNNCBuilder} instance from a saved {@link NNCBuilder}
+	 * .
 	 * 
 	 * @param fileName
 	 *            the fileName of the instance to load
@@ -164,5 +180,18 @@ public class FNNCBuilder {
 
 	public String getFileName() {
 		return this.fileName;
+	}
+
+	public static String getDescription(String builderFileName) {
+		try {
+			BufferedReader bufferedReader = new BufferedReader(
+					new FileReader(builderFileName.substring(0, builderFileName.length() - NETWORK_SUFFIX.length())
+							+ DESCRIPTION_SUFFIX));
+			String r = bufferedReader.readLine();
+			bufferedReader.close();
+			return r;
+		} catch (IOException e) {
+			return "";
+		}
 	}
 }
