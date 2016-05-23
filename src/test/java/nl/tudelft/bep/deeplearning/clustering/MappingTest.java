@@ -3,20 +3,44 @@ package nl.tudelft.bep.deeplearning.clustering;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.junit.Test;
 import org.nd4j.linalg.io.ClassPathResource;
 
+import nl.tudelft.bep.deeplearning.clustering.exception.MinimumNotPossibleException;
 import nl.tudelft.bep.deeplearning.clustering.Cluster;
 import nl.tudelft.bep.deeplearning.clustering.Mapping;
 
+
 public class MappingTest {
 
+	public Cluster distanceRoot() {
+		Cluster point1 = new Cluster(1,2,0);
+		Cluster point2 = new Cluster(4,5.5,1);
+		Cluster point3 = new Cluster(1,3,2);
+		Cluster point4 = new Cluster(4,6,3);
+		
+		Cluster layer1_1 = new Cluster(0);
+		Cluster layer1_2 = new Cluster(1);
+		
+		layer1_1.addCluster(point2);
+		layer1_1.addCluster(point4);
+		layer1_2.addCluster(point1);
+		layer1_2.addCluster(point3);
+		
+		Cluster root = new Cluster(0);
+		root.addCluster(layer1_1);
+		root.addCluster(layer1_2);
+		return root;
+	}
+	
 	@Test
 	public void testRead() throws FileNotFoundException, IOException {
 		Cluster[] result = Mapping.read(new FileInputStream(new ClassPathResource("points.in").getFile()));
@@ -33,7 +57,7 @@ public class MappingTest {
 	
 	@Test
 	public void testReadGeneAct() throws FileNotFoundException, IOException {
-		List<ArrayList<Double>> result = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("patient.in").getFile()),4);
+		List<ArrayList<Double>> result = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("test_patient.in").getFile()),4);
 		
 		ArrayList<Double> patient1 = new ArrayList<Double>();
 		patient1.add(1.0);
@@ -100,19 +124,19 @@ public class MappingTest {
 		deep2.addCluster(new Cluster(6,7,34));
 		deep2.addCluster(new Cluster(8,9,35));
 		cluster.addCluster(deep2);
-		ArrayList<Integer> result = Mapping.createList(cluster);
+		List<Cluster> result = Mapping.createList(cluster);
 		
-		ArrayList<Integer> expect = new ArrayList<Integer>();
-		expect.add(87);
-		expect.add(88);
-		expect.add(34);
-		expect.add(35);
+		ArrayList<Cluster> expect = new ArrayList<Cluster>();
+		expect.add(new Cluster(4,5,87));
+		expect.add(new Cluster(6,5,88));
+		expect.add(new Cluster(6,7,34));
+		expect.add(new Cluster(8,9,35));
 		
 		assertEquals(expect, result);	
 	}
 	
 	@Test 
-	public void testLayerSize() throws FileNotFoundException, IOException {
+	public void testLayerSize() throws FileNotFoundException, IOException, MinimumNotPossibleException {
 		Cluster[] input = Mapping.read(new FileInputStream(new ClassPathResource("points.in").getFile()));
 		Cluster[] result = Mapping.createClusters(input);
 		result = Mapping.createClusters(result);	
@@ -124,7 +148,7 @@ public class MappingTest {
 	}
 	
 	@Test 
-	public void testLayer() throws FileNotFoundException, IOException {
+	public void testLayer() throws FileNotFoundException, IOException, MinimumNotPossibleException {
 		Cluster[] input = Mapping.read(new FileInputStream(new ClassPathResource("points.in").getFile()));
 		Cluster[] result = Mapping.createClusters(input);
 		result = Mapping.createClusters(result);
@@ -158,8 +182,20 @@ public class MappingTest {
 	}
 	
 	@Test
+	public void testSorting() throws FileNotFoundException, IOException {
+		Cluster[] input = Mapping.read(new FileInputStream(new ClassPathResource("pointsdistances.in").getFile()));
+		Cluster[] result = Mapping.createClusters(input);
+		result = Mapping.createClusters(result);
+		
+		Cluster root = distanceRoot();
+	
+		assertEquals(root, result[0]);
+		
+	}
+	
+	@Test
 	public void testAvgActivation() throws FileNotFoundException, IOException {
-		List<ArrayList<Double>> matrix = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("patient.in").getFile()),4);
+		List<ArrayList<Double>> matrix = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("test_patient.in").getFile()),4);
 		Cluster[] input = Mapping.read(new FileInputStream(new ClassPathResource("points.in").getFile()));
 		Cluster[] result = Mapping.createClusters(input);
 		result = Mapping.createClusters(result);
@@ -177,5 +213,105 @@ public class MappingTest {
 		Double expect_root_2 = 6.5;
 		assertEquals(expect_root_2, Mapping.avgActivation(matrix, result[0], 1));
 	}
+	
+	@Test
+	public void testOverallMapping() throws FileNotFoundException, IOException {
+		List<ArrayList<Double>> matrix = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("test_patient.in").getFile()),4);
+		Cluster[] points = Mapping.read(new FileInputStream(new ClassPathResource("pointsdistances.in").getFile()));
+		List<Cluster> listLayer = Mapping.map(points, matrix, 1);
+		
+		List<Cluster> leafs = Mapping.map(points, matrix, 4);
+		
+		Cluster point1 = new Cluster(1,2,0);
+		Cluster point2 = new Cluster(4,5.5,1);
+		Cluster point3 = new Cluster(1,3,2);
+		Cluster point4 = new Cluster(4,6,3);
+		
+		assertEquals(4, leafs.size());
+		assertEquals(point2, leafs.get(0));
+		assertEquals(point4, leafs.get(1));
+		assertEquals(point1, leafs.get(2));
+		assertEquals(point3, leafs.get(3));
+		
+		Cluster root = distanceRoot();
+		
+		assertEquals(1, listLayer.size());
+		assertEquals(root, listLayer.get(0));
+	}
+	
+	@Test
+	public void testMain1D() throws IOException {
+		String[] args = new String[5];
+		args[0] = "pointsdistances.in";
+		args[1] = "test_patient.in";
+		args[2] = "testMainMapping";
+		args[3] = "4";
+		args[4] = "false";
+		Mapping.main(args);
+			
+		File metaFile = new File(args[2] + ".meta");
+		Scanner scanner = new Scanner(metaFile);
+		scanner.nextInt();
+		scanner.next();
+		assertEquals(3, scanner.nextInt());
+		assertEquals(2, scanner.nextInt());
+		assertEquals(2, scanner.nextInt());
+		assertEquals(4, scanner.nextInt());
+		scanner.close();
+	}
+	
+	@Test
+	public void testMainNot1D() throws IOException {
+		String[] args = new String[5];
+		args[0] = "pointsdistances.in";
+		args[1] = "test_patient.in";
+		args[2] = "testMainMapping";
+		args[3] = "4";
+		args[4] = "true";
+		Mapping.main(args);
+		
+		File dataFile = new File(args[2] + ".dat");
+		Scanner scanner = new Scanner(dataFile);
+		scanner.useDelimiter(",|\n");
+
+		Double[] expected = new Double[]{2.0, 4.0, 1.0, 3.0, 6.0, 8.0, 5.0, 7.0, 10.0, 12.0, 9.0, 11.0};
+		for(int i = 0; i < expected.length; i++) {
+			Double test = scanner.nextDouble();
+			assertEquals(expected[i], test, 0.001);
+		}
+		scanner.close();
+		
+		File metaFile = new File(args[2] + ".meta");
+		scanner = new Scanner(metaFile);
+		scanner.nextInt();
+		scanner.next();
+		assertEquals(3, scanner.nextInt());
+		assertEquals(1, scanner.nextInt());
+		assertEquals(4, scanner.nextInt());
+		assertEquals(4, scanner.nextInt());
+		scanner.close();
+	}
+	
+	@Test
+	public void testToLargeMin() throws FileNotFoundException, IOException {
+		List<ArrayList<Double>> matrix = Mapping.readGeneAct(new FileInputStream(new ClassPathResource("test_patient.in").getFile()),4);
+		Cluster[] points = Mapping.read(new FileInputStream(new ClassPathResource("pointsdistances.in").getFile()));
+		List<Cluster> listLayer = Mapping.map(points, matrix, 100);
+		
+		Cluster point1 = new Cluster(1,2,0);
+		Cluster point2 = new Cluster(4,5.5,1);
+		Cluster point3 = new Cluster(1,3,2);
+		Cluster point4 = new Cluster(4,6,3);
+		List<Cluster> expected = new ArrayList<Cluster>();
+		expected.add(point2);
+		expected.add(point4);
+		expected.add(point1);
+		expected.add(point3);
+		
+		
+		assertEquals(4, listLayer.size());
+		assertEquals(expected, listLayer);	
+	}
+	
 	
 }

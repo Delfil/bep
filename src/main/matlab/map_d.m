@@ -8,11 +8,11 @@ end
 
 %M, the raster containing P indices
 % M = zeros(ceil(sqrt(size(P,1))));
-M = [0];
+M = 0;
 
 %outer borders of the raster
-ma = max(P,1);
-mi = min(P,1);
+ma = max(P,[],1);
+mi = min(P,[],1);
 
 % devide up the x and y values of the raster
 x = linspace(mi(1),ma(1),size(M,2));
@@ -21,7 +21,6 @@ y = linspace(mi(2),ma(2),size(M,1));
 % start with some point in P
 points = randperm(size(P,1));
 point_ind = 1;
-same = 0;
 iters = 1;
 
 while point_ind <= numel(points)
@@ -65,7 +64,7 @@ while point_ind <= numel(points)
         %         if the distance is zero
         if dist(1) == dist(2) && dist(1) == 0
 %             yet to be determined
-            disp('Todo: fix this!');
+            assert(false)
             
         else
             

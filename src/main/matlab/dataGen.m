@@ -9,7 +9,7 @@ function dataGen(data, labels, varargin)
     a = defaults;
     a.observations = size(data,1);
     
-    assert(min(labels,1) == 1)
+    assert(min(labels,[],1) == 1)
     a.classes = max(labels);
     labels = labels-1;
     
