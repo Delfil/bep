@@ -2,6 +2,7 @@
 *.classpath
 *.class
 *target/*
+/target/
 *bin/*
 
 #Ignore for Eclipse
@@ -25,6 +26,10 @@ hs_err_pid*
 *.dat
 *.txt
 *.mat
+*.csv
 
 # Linux locks
+*#
 *~
+
+/target/
