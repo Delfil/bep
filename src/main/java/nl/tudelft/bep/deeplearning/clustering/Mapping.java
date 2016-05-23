@@ -69,10 +69,10 @@ public class Mapping {
 		
 
 		try {
-			while (layerSize(layer2[0], layer) < imgSize) {
+			while (layer2[0].layerSize(layer) < imgSize) {
 				layer++;
 			}
-			return layer(layer2[0], layer);
+			return layer2[0].layer(layer);
 		} catch (MinimumNotPossibleException e) {
 			log.info("Minimum not possible, all points are selected");
 			return createList(layer2[0]);
@@ -80,69 +80,7 @@ public class Mapping {
 
 	}
 
-	/**
-	 * Returns for each layer the amount of clusters contained. Layer 0 is the
-	 * root cluster
-	 * 
-	 * @param root
-	 *            The root cluster of the tree.
-	 * @param layer
-	 *            which layer you want the size of.
-	 * @return the size of the layer.
-	 * @throws MinimumNotPossibleException 
-	 */
-	public static int layerSize(Cluster root, int layer) throws MinimumNotPossibleException {
-		if (layer == 0) {
-			return 1;
-		} else if (root.getList().isEmpty() && layer != 1) {
-			throw new MinimumNotPossibleException();
-		} else if (layer > 1) {
-			int res = 0;
-			for (Cluster c : root.getList()) {
-				res += layerSize(c, layer - 1);
-			}
-			return res;
-		} else {
-			int res = 0;
-			for (int i = 0; i < root.getList().size(); i++) {
-				res += 1;
-			}
-			return res;
-		}
-	}
 
-	/**
-	 * Returns for each layer the clusters in a List. Layer 0 is the root
-	 * cluster.
-	 * 
-	 * @param root
-	 *            The root cluster
-	 * @param layer
-	 *            which layer you wish to return
-	 * @return Layer as List
-	 * @throws MinimumNotPossibleException 
-	 */
-	public static List<Cluster> layer(Cluster root, int layer) throws MinimumNotPossibleException {
-		if (layer == 0) {
-			List<Cluster> res = new ArrayList<Cluster>();
-			res.add(root);
-			return res;
-		} else if (root.getList().isEmpty() && layer != 1) {
-			throw new MinimumNotPossibleException();
-		} else if (layer > 1) {
-			List<Cluster> res = new ArrayList<Cluster>();
-			for (Cluster c : root.getList()) {
-				res.addAll(layer(c, layer - 1));
-			}
-			return res;
-		} else {
-			List<Cluster> res = new ArrayList<Cluster>();
-			for (int i = 0; i < root.getList().size(); i++) {
-				res.add(root.getList().get(i));
-			}
-			return res;
-		}
-	}
 
 	/**
 	 * Creates a output file based on which layer is representing the pixels of

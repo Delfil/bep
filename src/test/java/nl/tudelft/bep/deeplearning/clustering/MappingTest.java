@@ -14,7 +14,6 @@ import java.util.Scanner;
 import org.junit.Test;
 import org.nd4j.linalg.io.ClassPathResource;
 
-import nl.tudelft.bep.deeplearning.clustering.exception.MinimumNotPossibleException;
 import nl.tudelft.bep.deeplearning.clustering.Cluster;
 import nl.tudelft.bep.deeplearning.clustering.Mapping;
 
@@ -133,52 +132,6 @@ public class MappingTest {
 		expect.add(new Cluster(8,9,35));
 		
 		assertEquals(expect, result);	
-	}
-	
-	@Test 
-	public void testLayerSize() throws FileNotFoundException, IOException, MinimumNotPossibleException {
-		Cluster[] input = Mapping.read(new FileInputStream(new ClassPathResource("points.in").getFile()));
-		Cluster[] result = Mapping.createClusters(input);
-		result = Mapping.createClusters(result);	
-		
-		assertEquals(1, Mapping.layerSize(result[0], 0));
-		assertEquals(2, Mapping.layerSize(result[0], 1));
-		assertEquals(4, Mapping.layerSize(result[0], 2));
-		
-	}
-	
-	@Test 
-	public void testLayer() throws FileNotFoundException, IOException, MinimumNotPossibleException {
-		Cluster[] input = Mapping.read(new FileInputStream(new ClassPathResource("points.in").getFile()));
-		Cluster[] result = Mapping.createClusters(input);
-		result = Mapping.createClusters(result);
-		
-		Cluster point1 = new Cluster(1,2,0);
-		Cluster point2 = new Cluster(4,5,1);
-		Cluster point3 = new Cluster(1,3,2);
-		Cluster point4 = new Cluster(4,6,3);
-		
-		Cluster layer1_1 = new Cluster(1,2.5,0);
-		Cluster layer1_2 = new Cluster(4,5.5,1);
-		
-		layer1_1.addCluster(point1);
-		layer1_1.addCluster(point3);
-		layer1_2.addCluster(point2);
-		layer1_2.addCluster(point4);
-		
-		ArrayList<Cluster> expectLayer1 = new ArrayList<Cluster>(2);
-		expectLayer1.add(layer1_1);
-		expectLayer1.add(layer1_2);
-		
-		ArrayList<Cluster> expectLayer2 = new ArrayList<Cluster>(4);
-		expectLayer2.add(point1);
-		expectLayer2.add(point3);
-		expectLayer2.add(point2);
-		expectLayer2.add(point4);
-		
-		assertEquals(expectLayer1, Mapping.layer(result[0], 1));
-		assertEquals(expectLayer2, Mapping.layer(result[0], 2));
-		
 	}
 	
 	@Test
