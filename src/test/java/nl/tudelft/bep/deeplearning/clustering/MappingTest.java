@@ -251,6 +251,8 @@ public class MappingTest {
 			
 		File metaFile = new File(args[2] + ".meta");
 		Scanner scanner = new Scanner(metaFile);
+		scanner.nextInt();
+		scanner.next();
 		assertEquals(3, scanner.nextInt());
 		assertEquals(2, scanner.nextInt());
 		assertEquals(2, scanner.nextInt());
@@ -281,6 +283,8 @@ public class MappingTest {
 		
 		File metaFile = new File(args[2] + ".meta");
 		scanner = new Scanner(metaFile);
+		scanner.nextInt();
+		scanner.next();
 		assertEquals(3, scanner.nextInt());
 		assertEquals(1, scanner.nextInt());
 		assertEquals(4, scanner.nextInt());
