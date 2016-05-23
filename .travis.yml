@@ -3,9 +3,4 @@ jdk:
   - oraclejdk8
 
 notifications:
-  email: false
-
-notifications:
-  slack: 'Travis CI:WjhFbOLjXBgnIgmMWN9dCnKd'
-    on_success: always
-    on_failure: always
+    email: false

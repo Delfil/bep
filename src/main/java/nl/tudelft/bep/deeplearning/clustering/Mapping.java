@@ -15,32 +15,50 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.nd4j.linalg.io.ClassPathResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import nl.tudelft.bep.deeplearning.clustering.exception.MinimumNotPossibleException;
 
 public class Mapping {
+	
+	private static int outputNum;
+	private static final Logger log = LoggerFactory.getLogger(Mapping.class);
 
 	public static void main(String[] args) throws IOException {
-		map("point.in", "patients.in", 50, "sample_dataAVG.dat");
+		String pointFile = args[0];
+		String geneAct = args[1];
+		String datFile = args[2] + ".dat";
+		String metaFile = args[2] + ".meta";
+		String min = args[3];
+		Integer minimum = Integer.valueOf(min);
+		String dim = args[4];
+		Boolean dimensions = Boolean.valueOf(dim);
+				
+		Cluster[] points = read(new FileInputStream(new ClassPathResource(pointFile).getFile()));
+		List<ArrayList<Double>> matrix = readGeneAct(new FileInputStream(new ClassPathResource(geneAct).getFile()), points.length);
+		
+		List<Cluster> listLayer = map(points, matrix, minimum);
+		
+		writeFile(matrix, listLayer, datFile);
+		writeMetaFile(listLayer.size(), matrix.size(),dimensions, metaFile);
 	}
-	
+
 	/**
 	 * Function which takes files containing points and a matrix of gene
-	 * activation and outputs a file with correlating genes next to each other
+	 * activation and returns a list of the cluster we would like to put inside the matrix
 	 * 
 	 * @param points string of the file name containing the points
 	 * @param geneAct string of the file name containing the gene activation data.
 	 * @param imgSize the minimum image we would like to create
-	 * @param outputFile the string representing the outputfile name
-	 * @throws IOException for when a file isn't found
+	 * @return A list of the cluster we would like to put inside the matrix.
 	 */
-	public static void map(String points, String geneAct, int imgSize, String outputFile) throws IOException {
-		// Reading file containing points
-		Cluster[] layer1 = read(new FileInputStream(new ClassPathResource(points).getFile()));
-		int n = layer1.length;
-		List<ArrayList<Double>> matrix = readGeneAct(new FileInputStream(new ClassPathResource(geneAct).getFile()), n);
+	public static List<Cluster> map(Cluster[] points, List<ArrayList<Double>> geneAct, int imgSize) {
+		int n = points.length;
 		// Initialize the temporary array representing a layer and run the
 		// createCluster for the first time on the input.
 		Cluster[] layer2 = new Cluster[n];
-		layer2 = createClusters(layer1);
+		layer2 = createClusters(points);
 
 		// Keep looping until one cluster is left.
 		while (layer2.length != 1) {
@@ -48,86 +66,103 @@ public class Mapping {
 		}
 
 		int layer = 0;
-		while(layerSize(layer2[0], layer) < imgSize) {
-			layer++;
+		
+
+		try {
+			while (layerSize(layer2[0], layer) < imgSize) {
+				layer++;
+			}
+			return layer(layer2[0], layer);
+		} catch (MinimumNotPossibleException e) {
+			log.info("Minimum not possible, all points are selected");
+			return createList(layer2[0]);
 		}
-		List<Cluster> listLayer = layer(layer2[0], layer);
-		writeAvgFile(matrix, listLayer, outputFile);
-	}	
-	
+
+	}
+
 	/**
-	 * Returns for each layer the amount of clusters contained. Layer 0 is the root cluster 
-	 * @param root The root cluster of the tree.
-	 * @param layer which layer you want the size of.
+	 * Returns for each layer the amount of clusters contained. Layer 0 is the
+	 * root cluster
+	 * 
+	 * @param root
+	 *            The root cluster of the tree.
+	 * @param layer
+	 *            which layer you want the size of.
 	 * @return the size of the layer.
+	 * @throws MinimumNotPossibleException 
 	 */
-	public static int layerSize(Cluster root, int layer) {
-		if(layer == 0) {
+	public static int layerSize(Cluster root, int layer) throws MinimumNotPossibleException {
+		if (layer == 0) {
 			return 1;
-		}
-		else if(root.getList().isEmpty() && layer != 1) {
-			return -1;
-		}
-		else if(layer > 1){
+		} else if (root.getList().isEmpty() && layer != 1) {
+			throw new MinimumNotPossibleException();
+		} else if (layer > 1) {
 			int res = 0;
-			for(Cluster c : root.getList()) {
+			for (Cluster c : root.getList()) {
 				res += layerSize(c, layer - 1);
 			}
 			return res;
-		}
-		else {
+		} else {
 			int res = 0;
-			for(int i = 0; i < root.getList().size(); i++) {
+			for (int i = 0; i < root.getList().size(); i++) {
 				res += 1;
 			}
 			return res;
 		}
 	}
-	
+
 	/**
-	 * Returns for each layer the clusters in a List. Layer 0 is the root cluster 
-	 * @param root The root cluster
-	 * @param layer which layer you wish to return
+	 * Returns for each layer the clusters in a List. Layer 0 is the root
+	 * cluster.
+	 * 
+	 * @param root
+	 *            The root cluster
+	 * @param layer
+	 *            which layer you wish to return
 	 * @return Layer as List
+	 * @throws MinimumNotPossibleException 
 	 */
-	public static List<Cluster> layer(Cluster root, int layer) {
-		if(layer == 0) {
-			ArrayList<Cluster> res = new ArrayList<Cluster>();
+	public static List<Cluster> layer(Cluster root, int layer) throws MinimumNotPossibleException {
+		if (layer == 0) {
+			List<Cluster> res = new ArrayList<Cluster>();
 			res.add(root);
 			return res;
-		}
-		else if(root.getList().isEmpty() && layer != 1) {
-			return null;
-		}
-		else if(layer > 1){
-			ArrayList<Cluster> res = new ArrayList<Cluster>();
-			for(Cluster c : root.getList()) {
-				res.addAll(layer(c, layer-1));
+		} else if (root.getList().isEmpty() && layer != 1) {
+			throw new MinimumNotPossibleException();
+		} else if (layer > 1) {
+			List<Cluster> res = new ArrayList<Cluster>();
+			for (Cluster c : root.getList()) {
+				res.addAll(layer(c, layer - 1));
 			}
 			return res;
-		}
-		else {
-			ArrayList<Cluster> res = new ArrayList<Cluster>();
-			for(int i = 0; i < root.getList().size(); i++) {
+		} else {
+			List<Cluster> res = new ArrayList<Cluster>();
+			for (int i = 0; i < root.getList().size(); i++) {
 				res.add(root.getList().get(i));
 			}
 			return res;
 		}
 	}
-	
+
 	/**
-	 * Creates a file with the gene activation data of each patient based on the indices found by the clustering.
-	 * @param matrix Gene activation of patients
-	 * @param indices were in the matrix those activations should be
-	 * @throws FileNotFoundException file not found.
-	 * @throws UnsupportedEncodingException unsupported encoding,
+	 * Creates a output file based on which layer is representing the pixels of
+	 * the matrix.
+	 * 
+	 * @param matrix
+	 *            the gene activation matrix
+	 * @param listLayer
+	 *            The layer representing the pixels
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
 	 */
-	public static void writeFile(ArrayList<ArrayList<Double>> matrix, ArrayList<Integer> indices, String outputFile) throws FileNotFoundException, UnsupportedEncodingException {	
+	public static void writeFile(List<ArrayList<Double>> matrix, List<Cluster> listLayer, String outputFile)
+			throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
-		for(int i = 0; i < matrix.size(); i++) {
-			for(int j = 0; j < indices.size(); j++) {
-				writer.print(matrix.get(i).get(indices.get(j)));
-				if(j != indices.size()-1) {
+		for (int i = 0; i < matrix.size(); i++) {
+			for (int j = 0; j < listLayer.size(); j++) {
+				Double res = avgActivation(matrix, listLayer.get(j), i);
+				writer.print(res);
+				if (j != listLayer.size() - 1) {
 					writer.print(",");
 				}
 			}
@@ -137,50 +172,65 @@ public class Mapping {
 	}
 	
 	/**
-	 * Creates a output file based on which layer is representing the pixels of the matrix.
-	 * @param matrix the gene activation matrix
-	 * @param listLayer The layer representing the pixels
-	 * @throws FileNotFoundException
-	 * @throws UnsupportedEncodingException
+	 * Creates the meta file needed for the neural networks.
+	 * @param x number of cells in the matrix
+	 * @param numPatients number of patients.
+	 * @param one boolean for creating a one by size of layer matrix, otherwise create square matrix.
+	 * @param metaOutputFile the name of the output .meta file.
+	 * @throws FileNotFoundException if file cannot be created.
+	 * @throws UnsupportedEncodingException if encoding isn't supported.
 	 */
-	public static void writeAvgFile(List<ArrayList<Double>> matrix, List<Cluster> listLayer, String outputFile) throws FileNotFoundException, UnsupportedEncodingException {
-		PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
-		writer.println(listLayer.size());
-		for(int i = 0; i < matrix.size(); i++) {
-			for(int j = 0; j < listLayer.size(); j++) {
-				Double res = avgActivation(matrix, listLayer.get(j), i);
-				writer.print(res);
-				if(j != listLayer.size()-1) {
-					writer.print(",");
-				}
-			}
-			writer.print("\n");
+	public static void writeMetaFile(int x, int numPatients, boolean one, String metaOutputFile) throws FileNotFoundException, UnsupportedEncodingException {
+		PrintWriter writer = new PrintWriter(metaOutputFile, "UTF-8");
+		writer.println(1);
+		writer.println(System.currentTimeMillis());
+		writer.println(numPatients);
+		if(one) {
+			writer.println(1);
+			writer.println(x);
 		}
-		writer.close();	
+		else {
+			int res = Double.valueOf(Math.ceil(Math.sqrt(x))).intValue();
+			writer.println(res);
+			writer.println(res);
+		}
+		writer.println(outputNum);
+		writer.println(0.7);
+		writer.println(32);
+		writer.close();
+		
 	}
-	
+
 	/**
-	 * Based on the matrix and the pixel at hand, return the average value of the cluster
-	 * @param matrix containing all the gene activation data
-	 * @param c Cluster representing the pixel we want to fill
-	 * @param patient which patient we wish to pick.
+	 * Based on the matrix and the pixel at hand, return the average value of
+	 * the cluster
+	 * 
+	 * @param matrix
+	 *            containing all the gene activation data
+	 * @param c
+	 *            Cluster representing the pixel we want to fill
+	 * @param patient
+	 *            which patient we wish to pick.
 	 * @return the average activation value of the cluster
 	 */
 	public static Double avgActivation(List<ArrayList<Double>> matrix, Cluster c, int patient) {
 		Double res = 0.0;
-		for(Integer i : c.listIndices()) {
+		for (Integer i : c.listIndices()) {
 			res += matrix.get(patient).get(i);
 		}
-		return res/c.listIndices().size();
+		return res / c.listIndices().size();
 	}
-	
+
 	/**
-	 * Given a root cluster this function will give a list of the correlating genes next to each other.
-	 * @param cluster Root cluster of the cluster tree.
+	 * Given a root cluster this function will give a list of the correlating
+	 * genes next to each other.
+	 * 
+	 * @param cluster
+	 *            Root cluster of the cluster tree.
 	 * @return List with the points sorted for insertion into the matrix.
 	 */
-	public static ArrayList<Integer> createList(Cluster cluster) {
-		ArrayList<Integer> list = new ArrayList<Integer>();
+	public static List<Cluster> createList(Cluster cluster) {
+		ArrayList<Cluster> list = new ArrayList<Cluster>();
 
 		if (!cluster.getList().isEmpty()) {
 			for (Cluster c : cluster.getList()) {
@@ -189,7 +239,7 @@ public class Mapping {
 			}
 			return list;
 		} else {
-			list.add(cluster.getID());
+			list.add(cluster);
 			return list;
 		}
 	}
@@ -205,51 +255,61 @@ public class Mapping {
 	 */
 	public static Cluster[] createClusters(Cluster[] layer1) {
 		// Run nearest neighbor algorithm.
-		NeighborDistance result1 = neighbour(layer1.clone());
-		// ArrayList for keeping track which cluster is already clustered.
-		List<Boolean> inCluster = new ArrayList<Boolean>(layer1.length);
-		for (int i = 0; i < layer1.length; i++) {
-			inCluster.add(false);
-		}
+		List<Neighbors> neighbors = neighbour(layer1);
 		// Temporary ArrayList for the newly created higher level clusters.
 		List<Cluster> layer2 = new ArrayList<Cluster>();
-		// Initialize the index for keeping track of where the cluster at hand
-		// is located in layer1
-		int index = 0;
-		// Keeping track of the id of the new high level clusters.
-		int id = 0;
-		// Temporary cluster.
-		Cluster cluster = new Cluster(id);
-		// We keep looping until each cluster is clustered
-		while (inCluster.contains(false)) {
-			// Case if the cluster isn't in a high level cluster
-			if (!inCluster.get(index)) {
-				cluster.addCluster(layer1[index]);
-				inCluster.set(index, true);
-				// Get closest neighbor and find the index in layer1.
-				int neighbor = result1.getResults()[index];
-				for (int i = 0; i < layer1.length; i++) {
-					if (layer1[i].getID() == neighbor) {
-						index = i;
-						break;
-					}
-				}
+		Collections.sort(neighbors);
 
-			}
-			// Case if the closest neighbor is already in a high level cluster.
-			else {
+		int id = 0;
+		Cluster cluster = new Cluster(id);
+		Neighbors temp = neighbors.remove(0);
+		while (!neighbors.isEmpty()) {
+			cluster.addCluster(temp.getCluster());
+			if (getIndexFromNeighbors(neighbors, temp.getNeighbor()) == -1) {
 				layer2.add(cluster);
 				id++;
-				// Create new high level cluster and find the next cluster not
-				// in a high level cluster.
 				cluster = new Cluster(id);
-				index = inCluster.indexOf(false);
+				temp = neighbors.remove(0);
+			} else {
+				temp = neighbors.remove(getIndexFromNeighbors(neighbors, temp.getNeighbor()));
 			}
 		}
+		cluster.addCluster(temp.getCluster());
 		layer2.add(cluster);
+
 		// Make from the ArrayList an Array.
 		Cluster[] res = layer2.toArray(new Cluster[layer2.size()]);
 		return res;
+	}
+
+	/**
+	 * Helper function which finds the cluster in an array based on its ID.
+	 * @param list list of clusters where we would like to find the cluster with ID id
+	 * @param id the id we would like to find
+	 * @return the index in the array
+	 */
+	public static int getIndexFromID(Cluster[] list, int id) {
+		for (int i = 0; i < list.length; i++) {
+			if (list[i].getID() == id) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * Helper function which finds the cluster in an list of Neighbors.class.
+	 * @param list list of neighbors where we would like to find the cluster c.
+	 * @param c the cluster we would like to find.
+	 * @return the index of cluster c. 
+	 */
+	public static int getIndexFromNeighbors(List<Neighbors> list, Cluster c) {
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getCluster().getID() == c.getID()) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	/**
@@ -274,7 +334,7 @@ public class Mapping {
 		return clusters;
 
 	}
-	
+
 	/**
 	 * Reads the gene activation data and returns a matrix represented as a 2 dimensional list
 	 * @param in inputstream of the file.
@@ -284,10 +344,10 @@ public class Mapping {
 	public static List<ArrayList<Double>> readGeneAct(InputStream in, int numGenes) {
 		List<ArrayList<Double>> matrix = new ArrayList<ArrayList<Double>>();
 		Scanner scanner = new Scanner(new InputStreamReader(in));
-		
-		while(scanner.hasNext()) {
+		outputNum = scanner.nextInt();
+		while (scanner.hasNext()) {
 			ArrayList<Double> tempPatient = new ArrayList<Double>(numGenes);
-			for(int i = 0; i < numGenes; i++) {
+			for (int i = 0; i < numGenes; i++) {
 				tempPatient.add(scanner.nextDouble());
 			}
 			matrix.add(tempPatient);
@@ -303,7 +363,7 @@ public class Mapping {
 	 *            The clusters we would like to know the nearest neighbors of.
 	 * @return Array of nearest neighbors
 	 */
-	public static NeighborDistance neighbour(Cluster[] clusters) {
+	public static List<Neighbors> neighbour(Cluster[] clusters) {
 		int[] result = new int[clusters.length];
 		// Distances is used to keep track of the closest distance found for
 		// each point.
@@ -311,8 +371,13 @@ public class Mapping {
 		for (int i = 0; i < clusters.length; i++) {
 			distances[i] = Double.MAX_VALUE;
 		}
-		closestClusters(clusters, result, distances);
-		return new NeighborDistance(result, distances);
+		closestClusters(clusters.clone(), result, distances);
+		List<Neighbors> neighbors = new ArrayList<Neighbors>();
+		for (int i = 0; i < clusters.length; i++) {
+			int index = getIndexFromID(clusters, result[i]);
+			neighbors.add(new Neighbors(clusters[i], clusters[index], distances[i]));
+		}
+		return neighbors;
 	}
 
 	/**
