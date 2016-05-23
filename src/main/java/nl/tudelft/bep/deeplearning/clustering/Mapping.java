@@ -182,6 +182,8 @@ public class Mapping {
 	 */
 	public static void writeMetaFile(int x, int numPatients, boolean one, String metaOutputFile) throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter(metaOutputFile, "UTF-8");
+		writer.println(1);
+		writer.println(System.currentTimeMillis());
 		writer.println(numPatients);
 		if(one) {
 			writer.println(1);
@@ -193,6 +195,8 @@ public class Mapping {
 			writer.println(res);
 		}
 		writer.println(outputNum);
+		writer.println(0.7);
+		writer.println(32);
 		writer.close();
 		
 	}
