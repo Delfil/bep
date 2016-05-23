@@ -6,11 +6,13 @@ label = CancerTypeIndex == 3;
 absCorr = abs(corr(geneAct));
 %absCorr = corr(geneAct);
 numGenes = 100;
-numPatients = 25;
-numGroupPatients = 50;
+numPatients = 16;
+numGroupPatients = 101;
 
 h_array = zeros(1,100);
 p_array = zeros(1,100);
+total_mean_1 = zeros(1,100);
+total_mean_avg = zeros(1,100);
 
 for t = 1:100
 counter = 1;
@@ -26,7 +28,7 @@ for i = 1:numGenes
     column = absCorr(:,point);
     [sortedValues, sortedIndex] = sort(column,'descend');
 
-    fourpoints = sortedIndex(1:4);
+    fourpoints = sortedIndex(1:9);
     avg_act = mean(geneAct(:,fourpoints),2);
     g1_act = geneAct(:,sortedIndex(1));
     temp = [g1_act,avg_act,label];
@@ -55,12 +57,17 @@ std_total_avg = std(total_acc_avg/100);
 [h,p] = ttest(std_1,std_avg);
 h_array(t) = h;
 p_array(t) = p;
+total_mean_1(t) = mean(std_1);
+total_mean_avg(t) = mean(std_avg);
 
 end
-subplot(2,1,1);
-histogram(std_1)
-subplot(2,1,2);
-histogram(std_avg)
+%subplot(2,1,1);
+%histogram(std_1)
+%subplot(2,1,2);
+%histogram(std_avg)
+
+t_test_correct = sum(h_array)/100
+TOTAL_MEAN_AVG_GENE = mean(total_mean_avg)
 
 
 
