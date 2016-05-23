@@ -9,11 +9,11 @@ import org.deeplearning4j.nn.conf.layers.SubsamplingLayer;
 import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
 
 import nl.tudelft.bep.deeplearning.network.builder.CNN;
-import nl.tudelft.bep.deeplearning.network.result.csv.ComputeAverageAccuracyAccurateFiller;
+import nl.tudelft.bep.deeplearning.network.result.csv.ComputeAverageAccuracyFiller;
 
 public class App {
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
-		ResultUtil.generateCSV(10, new ComputeAverageAccuracyAccurateFiller(10, 100, 0.1), "results");
+		ResultUtil.generateCSV(10, new ComputeAverageAccuracyFiller(20), "results");
 		CNN.BuildExampleCNN(
 				new ConvolutionLayer.Builder(5, 5).nIn(1).stride(1, 1).nOut(20).activation("identity").build(),
 				new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX).kernelSize(2, 2).stride(2, 2).build(),
