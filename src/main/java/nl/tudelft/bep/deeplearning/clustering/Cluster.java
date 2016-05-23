@@ -148,12 +148,7 @@ public class Cluster implements Comparable<Cluster> {
 			return false;
 		return true;
 	}
-	
-	@Override
-	public String toString() {
-		return "Cluster " + this.id + " (" + this.getX() +","+  this.getY() + ") List : " + this.getList().toString();
-	}
-	
+		
 	/**
 	 * Returns for each layer the amount of clusters contained. Layer 0 is the
 	 * root cluster
