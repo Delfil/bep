@@ -2,6 +2,9 @@ package nl.tudelft.bep.deeplearning.clustering;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
+import nl.tudelft.bep.deeplearning.clustering.exception.MinimumNotPossibleException;
 
 public class Cluster implements Comparable<Cluster> {
 
@@ -144,5 +147,60 @@ public class Cluster implements Comparable<Cluster> {
 		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
 			return false;
 		return true;
+	}
+		
+	/**
+	 * Returns for each layer the amount of clusters contained. Layer 0 is the
+	 * root cluster
+	 * 
+	 * @param root
+	 *            The root cluster of the tree.
+	 * @param layer
+	 *            which layer you want the size of.
+	 * @return the size of the layer.
+	 * @throws MinimumNotPossibleException 
+	 */
+	public int layerSize(int layer) throws MinimumNotPossibleException {
+		if (layer == 0) {
+			return 1;
+		} else if (getList().isEmpty() && layer != 1) {
+			throw new MinimumNotPossibleException();
+		} else {
+			int res = 0;
+			for (int i = 0 ; i < getList().size(); i++) {
+				res += layerSize(layer - 1);
+			}
+			return res;
+		} 
+	}
+	
+	/**
+	 * Returns for each layer the clusters in a List. Layer 0 is the root
+	 * cluster.
+	 * 
+	 * @param root
+	 *            The root cluster
+	 * @param layer
+	 *            which layer you wish to return
+	 * @return Layer as List
+	 * @throws MinimumNotPossibleException 
+	 */
+	public List<Cluster> layer(int layer) throws MinimumNotPossibleException {
+		if (layer == 0) {
+			List<Cluster> res = new ArrayList<Cluster>();
+			res.add(this);
+			return res;
+		} else if (this.getList().isEmpty() && layer != 1) {
+			throw new MinimumNotPossibleException();
+		} else {
+			List<Cluster> res = new ArrayList<Cluster>();
+			for (Cluster c : this.getList()) {
+				res.addAll(c.layer(layer - 1));
+			}
+			for(Cluster c : res) {
+				c.calculateMean();
+			}
+			return res;
+		} 
 	}
 }
