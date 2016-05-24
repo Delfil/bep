@@ -47,8 +47,8 @@ for i = 1:numGenes
         counter = counter + 1;
     end 
     
-    std_1(i) = std(group_acc_1/100);
-    std_avg(i) = std(group_acc_avg/100);
+    std_1(i) = std(group_acc_1/numPatients);
+    std_avg(i) = std(group_acc_avg/numPatients);
     
 end
 
