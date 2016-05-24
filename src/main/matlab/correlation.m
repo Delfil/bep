@@ -1,23 +1,24 @@
 ges = std(Gene_Expression);
 select = ges >1.2982;
 geneAct = Gene_Expression(:,select);
-%geneAct = Gene_Expression;
 label = CancerTypeIndex == 3;
 absCorr = abs(corr(geneAct));
-%absCorr = corr(geneAct);
+
+numRuns = 100;
 numGenes = 100;
 numPatients = 16;
 numGroupPatients = 101;
 
-h_array = zeros(1,100);
-p_array = zeros(1,100);
-total_mean_1 = zeros(1,100);
-total_mean_avg = zeros(1,100);
+h_array = zeros(1,numRuns);
+p_array = zeros(1,numRuns);
+total_mean_1 = zeros(1,numRuns);
+total_mean_avg = zeros(1,numRuns);
+total_acc_1 = zeros(1,numRuns*numGenes);
+total_acc_avg = zeros(1,numRuns*numGenes);
+counter_acc = 1;
 
-for t = 1:100
+for t = 1:numRuns
 counter = 1;
-total_acc_1 = zeros(1,numGroupPatients*numGenes);
-total_acc_avg = zeros(1,numGroupPatients*numGenes);
 std_1 = zeros(1,numGenes);
 std_avg = zeros(1,numGenes);
 genes = randperm(size(absCorr,1),numGenes);
@@ -39,9 +40,7 @@ for i = 1:numGenes
         activations = temp(indeces,:);
         acc_1 = threshold(activations(:,1),activations(:,3));
         acc_avg = threshold(activations(:,2),activations(:,3));
-        
-        total_acc_1(1,counter) = acc_1;
-        total_acc_avg(1,counter) = acc_avg;
+      
         group_acc_1(j) = acc_1;
         group_acc_avg(j) = acc_avg;
         counter = counter + 1;
@@ -49,11 +48,11 @@ for i = 1:numGenes
     
     std_1(i) = std(group_acc_1/numPatients);
     std_avg(i) = std(group_acc_avg/numPatients);
+    total_acc_1(counter_acc) = mean(group_acc_1);
+    total_acc_avg(counter_acc) = mean(group_acc_avg);
+    counter_acc = counter_acc + 1;
     
 end
-
-std_total_1 = std(total_acc_1/100);
-std_total_avg = std(total_acc_avg/100);
 [h,p] = ttest(std_1,std_avg);
 h_array(t) = h;
 p_array(t) = p;
@@ -69,7 +68,5 @@ end
 t_test_correct = sum(h_array)/100
 TOTAL_MEAN_ONE_GENE = mean(total_mean_1)
 TOTAL_MEAN_AVG_GENE = mean(total_mean_avg)
-
-
-
-
+TOTAL_ACC_ONE_GENE = mean(total_acc_1)
+TOTAL_ACC_AVG_GENE = mean(total_acc_avg)
