@@ -50,6 +50,7 @@ public class Tester {
 	 * @return a configured and initialized model
 	 */
 	protected MultiLayerNetwork setupModel(long seed) {
+		builder.setSeed(seed);
 		org.deeplearning4j.nn.conf.MultiLayerConfiguration.Builder listBuilder = builder.build();
 		new ConvolutionLayerSetup(listBuilder, this.data.getWidth(), this.data.getHeight(), 1);
 
