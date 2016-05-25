@@ -1,3 +1,4 @@
+%Function which calculates the maximum accuracy based on a simple threshold
 function t = threshold(act, label)
 stepsize = abs(max(act) - min(act))/100;
 thresh = min(act);
