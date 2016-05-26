@@ -22,6 +22,8 @@ import nl.tudelft.bep.deeplearning.clustering.exception.MinimumNotPossibleExcept
 
 public final class Mapping {
 
+	private static final int BATCH_SIZE = 32;
+	private static final double TRAINING_SET = 0.7;
 	private static int outputNum;
 	private static final Logger LOG = LoggerFactory.getLogger(Mapping.class);
 
@@ -149,8 +151,8 @@ public final class Mapping {
 			writer.println(res);
 		}
 		writer.println(outputNum);
-		writer.println(0.7);
-		writer.println(32);
+		writer.println(TRAINING_SET);
+		writer.println(BATCH_SIZE);
 		writer.close();
 
 	}
@@ -349,7 +351,7 @@ public final class Mapping {
 	 * Recursive function for finding the nearest neighbor for each
 	 * cluster/point.
 	 * 
-	 * @param Clusters
+	 * @param clusters
 	 *            Array containing the cluster we would like to know the nearest
 	 *            neighbor of.
 	 * @param result
@@ -358,23 +360,23 @@ public final class Mapping {
 	 * @param distances
 	 *            Array for keeping track of the distances of the result array.
 	 */
-	public static void closestClusters(final Cluster[] Clusters, final int[] result, final Double[] distances) {
+	public static void closestClusters(final Cluster[] clusters, final int[] result, final Double[] distances) {
 
-		int n = Clusters.length;
+		int n = clusters.length;
 
 		if (n == 1) {
 			return;
 		}
 
-		java.util.Arrays.sort(Clusters);
+		java.util.Arrays.sort(clusters);
 
-		int mid = Clusters.length / 2;
-		Cluster median = Clusters[mid];
+		int mid = clusters.length / 2;
+		Cluster median = clusters[mid];
 		Cluster[] part1 = new Cluster[mid];
 		Cluster[] part2 = new Cluster[n - mid];
 
-		part1 = Arrays.copyOfRange(Clusters, 0, mid);
-		part2 = Arrays.copyOfRange(Clusters, mid, n);
+		part1 = Arrays.copyOfRange(clusters, 0, mid);
+		part2 = Arrays.copyOfRange(clusters, mid, n);
 
 		closestClusters(part1, result, distances);
 		closestClusters(part2, result, distances);
@@ -383,15 +385,15 @@ public final class Mapping {
 
 		double max = 0;
 		for (int i = 0; i < n; i++) {
-			double distance = distances[Clusters[i].getID()];
+			double distance = distances[clusters[i].getID()];
 			if (distance > max) {
 				max = distance;
 			}
 		}
 
 		for (int i = 0; i < n; i++) {
-			if (Math.abs(median.getX() - Clusters[i].getX()) < max) {
-				strip.add(Clusters[i]);
+			if (Math.abs(median.getX() - clusters[i].getX()) < max) {
+				strip.add(clusters[i]);
 			}
 		}
 
