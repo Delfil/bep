@@ -20,12 +20,12 @@ import org.slf4j.LoggerFactory;
 
 import nl.tudelft.bep.deeplearning.clustering.exception.MinimumNotPossibleException;
 
-public class Mapping {
-	
-	private static int outputNum;
-	private static final Logger log = LoggerFactory.getLogger(Mapping.class);
+public final class Mapping {
 
-	public static void main(String[] args) throws IOException {
+	private static int outputNum;
+	private static final Logger LOG = LoggerFactory.getLogger(Mapping.class);
+
+	public static void main(final String[] args) throws IOException {
 		String pointFile = args[0];
 		String geneAct = args[1];
 		String datFile = args[2] + ".dat";
@@ -34,26 +34,37 @@ public class Mapping {
 		Integer minimum = Integer.valueOf(min);
 		String dim = args[4];
 		Boolean dimensions = Boolean.valueOf(dim);
-				
+
 		Cluster[] points = read(new FileInputStream(new ClassPathResource(pointFile).getFile()));
-		List<ArrayList<Double>> matrix = readGeneAct(new FileInputStream(new ClassPathResource(geneAct).getFile()), points.length);
-		
+		List<ArrayList<Double>> matrix = readGeneAct(new FileInputStream(new ClassPathResource(geneAct).getFile()),
+				points.length);
+
 		List<Cluster> listLayer = map(points, matrix, minimum);
-		
+
 		writeFile(matrix, listLayer, datFile);
-		writeMetaFile(listLayer.size(), matrix.size(),dimensions, metaFile);
+		writeMetaFile(listLayer.size(), matrix.size(), dimensions, metaFile);
+	}
+
+	/**
+	 * This utility class should not be constructed.
+	 */
+	private Mapping() {
 	}
 
 	/**
 	 * Function which takes files containing points and a matrix of gene
-	 * activation and returns a list of the cluster we would like to put inside the matrix
+	 * activation and returns a list of the cluster we would like to put inside
+	 * the matrix.
 	 * 
-	 * @param points string of the file name containing the points
-	 * @param geneAct string of the file name containing the gene activation data.
-	 * @param imgSize the minimum image we would like to create
+	 * @param points
+	 *            string of the file name containing the points
+	 * @param geneAct
+	 *            string of the file name containing the gene activation data.
+	 * @param imgSize
+	 *            the minimum image we would like to create
 	 * @return A list of the cluster we would like to put inside the matrix.
 	 */
-	public static List<Cluster> map(Cluster[] points, List<ArrayList<Double>> geneAct, int imgSize) {
+	public static List<Cluster> map(final Cluster[] points, final List<ArrayList<Double>> geneAct, final int imgSize) {
 		int n = points.length;
 		// Initialize the temporary array representing a layer and run the
 		// createCluster for the first time on the input.
@@ -66,7 +77,6 @@ public class Mapping {
 		}
 
 		int layer = 0;
-		
 
 		try {
 			while (layer2[0].layerSize(layer) < imgSize) {
@@ -74,13 +84,11 @@ public class Mapping {
 			}
 			return layer2[0].layer(layer);
 		} catch (MinimumNotPossibleException e) {
-			log.info("Minimum not possible, all points are selected");
+			LOG.info("Minimum not possible, all points are selected");
 			return createList(layer2[0]);
 		}
 
 	}
-
-
 
 	/**
 	 * Creates a output file based on which layer is representing the pixels of
@@ -93,8 +101,8 @@ public class Mapping {
 	 * @throws FileNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
-	public static void writeFile(List<ArrayList<Double>> matrix, List<Cluster> listLayer, String outputFile)
-			throws FileNotFoundException, UnsupportedEncodingException {
+	public static void writeFile(final List<ArrayList<Double>> matrix, final List<Cluster> listLayer,
+			final String outputFile) throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
 		for (int i = 0; i < matrix.size(); i++) {
 			for (int j = 0; j < listLayer.size(); j++) {
@@ -108,26 +116,34 @@ public class Mapping {
 		}
 		writer.close();
 	}
-	
+
 	/**
 	 * Creates the meta file needed for the neural networks.
-	 * @param x number of cells in the matrix
-	 * @param numPatients number of patients.
-	 * @param one boolean for creating a one by size of layer matrix, otherwise create square matrix.
-	 * @param metaOutputFile the name of the output .meta file.
-	 * @throws FileNotFoundException if file cannot be created.
-	 * @throws UnsupportedEncodingException if encoding isn't supported.
+	 * 
+	 * @param x
+	 *            number of cells in the matrix
+	 * @param numPatients
+	 *            number of patients.
+	 * @param one
+	 *            boolean for creating a one by size of layer matrix, otherwise
+	 *            create square matrix.
+	 * @param metaOutputFile
+	 *            the name of the output .meta file.
+	 * @throws FileNotFoundException
+	 *             if file cannot be created.
+	 * @throws UnsupportedEncodingException
+	 *             if encoding isn't supported.
 	 */
-	public static void writeMetaFile(int x, int numPatients, boolean one, String metaOutputFile) throws FileNotFoundException, UnsupportedEncodingException {
+	public static void writeMetaFile(final int x, final int numPatients, final boolean one, final String metaOutputFile)
+			throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter(metaOutputFile, "UTF-8");
 		writer.println(1);
 		writer.println(System.currentTimeMillis());
 		writer.println(numPatients);
-		if(one) {
+		if (one) {
 			writer.println(1);
 			writer.println(x);
-		}
-		else {
+		} else {
 			int res = Double.valueOf(Math.ceil(Math.sqrt(x))).intValue();
 			writer.println(res);
 			writer.println(res);
@@ -136,12 +152,12 @@ public class Mapping {
 		writer.println(0.7);
 		writer.println(32);
 		writer.close();
-		
+
 	}
 
 	/**
 	 * Based on the matrix and the pixel at hand, return the average value of
-	 * the cluster
+	 * the cluster.
 	 * 
 	 * @param matrix
 	 *            containing all the gene activation data
@@ -151,7 +167,7 @@ public class Mapping {
 	 *            which patient we wish to pick.
 	 * @return the average activation value of the cluster
 	 */
-	public static Double avgActivation(List<ArrayList<Double>> matrix, Cluster c, int patient) {
+	public static Double avgActivation(final List<ArrayList<Double>> matrix, final Cluster c, final int patient) {
 		Double res = 0.0;
 		for (Integer i : c.listIndices()) {
 			res += matrix.get(patient).get(i);
@@ -167,7 +183,7 @@ public class Mapping {
 	 *            Root cluster of the cluster tree.
 	 * @return List with the points sorted for insertion into the matrix.
 	 */
-	public static List<Cluster> createList(Cluster cluster) {
+	public static List<Cluster> createList(final Cluster cluster) {
 		ArrayList<Cluster> list = new ArrayList<Cluster>();
 
 		if (!cluster.getList().isEmpty()) {
@@ -191,7 +207,7 @@ public class Mapping {
 	 *            Array of clusters which we would like to cluster
 	 * @return Array containing the newly created higher level clusters.
 	 */
-	public static Cluster[] createClusters(Cluster[] layer1) {
+	public static Cluster[] createClusters(final Cluster[] layer1) {
 		// Run nearest neighbor algorithm.
 		List<Neighbors> neighbors = neighbour(layer1);
 		// Temporary ArrayList for the newly created higher level clusters.
@@ -222,11 +238,15 @@ public class Mapping {
 
 	/**
 	 * Helper function which finds the cluster in an array based on its ID.
-	 * @param list list of clusters where we would like to find the cluster with ID id
-	 * @param id the id we would like to find
+	 * 
+	 * @param list
+	 *            list of clusters where we would like to find the cluster with
+	 *            ID id
+	 * @param id
+	 *            the id we would like to find
 	 * @return the index in the array
 	 */
-	public static int getIndexFromID(Cluster[] list, int id) {
+	public static int getIndexFromID(final Cluster[] list, final int id) {
 		for (int i = 0; i < list.length; i++) {
 			if (list[i].getID() == id) {
 				return i;
@@ -237,11 +257,14 @@ public class Mapping {
 
 	/**
 	 * Helper function which finds the cluster in an list of Neighbors.class.
-	 * @param list list of neighbors where we would like to find the cluster c.
-	 * @param c the cluster we would like to find.
-	 * @return the index of cluster c. 
+	 * 
+	 * @param list
+	 *            list of neighbors where we would like to find the cluster c.
+	 * @param c
+	 *            the cluster we would like to find.
+	 * @return the index of cluster c.
 	 */
-	public static int getIndexFromNeighbors(List<Neighbors> list, Cluster c) {
+	public static int getIndexFromNeighbors(final List<Neighbors> list, final Cluster c) {
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getCluster().getID() == c.getID()) {
 				return i;
@@ -258,7 +281,7 @@ public class Mapping {
 	 *            Inputstream of the file
 	 * @return Array with the points represented by Cluster.class.
 	 */
-	public static Cluster[] read(InputStream in) {
+	public static Cluster[] read(final InputStream in) {
 		Scanner scanner = new Scanner(new InputStreamReader(in));
 		int n = scanner.nextInt();
 
@@ -274,12 +297,16 @@ public class Mapping {
 	}
 
 	/**
-	 * Reads the gene activation data and returns a matrix represented as a 2 dimensional list
-	 * @param in inputstream of the file.
-	 * @param numGenes the number of elements each row.
+	 * Reads the gene activation data and returns a matrix represented as a 2
+	 * dimensional list.
+	 * 
+	 * @param in
+	 *            inputstream of the file.
+	 * @param numGenes
+	 *            the number of elements each row.
 	 * @return matrix representation of the gene activation.
 	 */
-	public static List<ArrayList<Double>> readGeneAct(InputStream in, int numGenes) {
+	public static List<ArrayList<Double>> readGeneAct(final InputStream in, final int numGenes) {
 		List<ArrayList<Double>> matrix = new ArrayList<ArrayList<Double>>();
 		Scanner scanner = new Scanner(new InputStreamReader(in));
 		outputNum = scanner.nextInt();
@@ -301,7 +328,7 @@ public class Mapping {
 	 *            The clusters we would like to know the nearest neighbors of.
 	 * @return Array of nearest neighbors
 	 */
-	public static List<Neighbors> neighbour(Cluster[] clusters) {
+	public static List<Neighbors> neighbour(final Cluster[] clusters) {
 		int[] result = new int[clusters.length];
 		// Distances is used to keep track of the closest distance found for
 		// each point.
@@ -331,7 +358,7 @@ public class Mapping {
 	 * @param distances
 	 *            Array for keeping track of the distances of the result array.
 	 */
-	public static void closestClusters(Cluster[] Clusters, int[] result, Double[] distances) {
+	public static void closestClusters(final Cluster[] Clusters, final int[] result, final Double[] distances) {
 
 		int n = Clusters.length;
 
@@ -369,7 +396,7 @@ public class Mapping {
 		}
 
 		Collections.sort(strip, new Comparator<Cluster>() {
-			public int compare(Cluster p, Cluster p2) {
+			public int compare(final Cluster p, final Cluster p2) {
 				return Double.compare(p.getY(), p2.getY());
 			}
 		});
