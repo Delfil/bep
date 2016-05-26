@@ -2,7 +2,6 @@ package nl.tudelft.bep.deeplearning.network.builder;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,30 +18,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class FNNCBuilder {
-	public final static String NETWORK_FOLDER = "networks";
-	public final static String MULTI_LAYER_NETWORK = "MLN_";
-	protected final static String F = "/";
+	public static final String NETWORK_FOLDER = "networks";
+	public static final String MULTI_LAYER_NETWORK = "MLN_";
+	protected static final String F = "/";
 	public static final String NETWORK_SUFFIX = ".NNConf.json";
 	public static final String DESCRIPTION_SUFFIX = ".txt";
 
-	protected final String fileName;
-	protected final String pathName;
-	protected final NNCBuilder builder;
+	private final String fileName;
+	private final String pathName;
+	private final NNCBuilder builder;
 	private String description;
 
-	public FNNCBuilder(NNCBuilder nncBuilder, String description) {
+	public FNNCBuilder(final NNCBuilder nncBuilder, final String description) {
 		this.builder = nncBuilder.clone();
 		this.pathName = this.computePathName();
-		this.fileName = this.pathName + NETWORK_SUFFIX;
+		this.fileName = this.getPathName() + NETWORK_SUFFIX;
 		this.description = description;
 		this.save();
 	}
 
-	public FNNCBuilder(NNCBuilder nncBuilder) {
+	public FNNCBuilder(final NNCBuilder nncBuilder) {
 		this.builder = nncBuilder.clone();
 		this.pathName = this.computePathName();
-		this.fileName = this.pathName + NETWORK_SUFFIX;
-		this.description = getDescription(fileName);
+		this.fileName = this.getPathName() + NETWORK_SUFFIX;
+		this.description = FNNCBuilder.getDescription(this.getFileName());
 		this.save();
 	}
 
@@ -59,7 +58,7 @@ public class FNNCBuilder {
 		file.mkdirs();
 		File[] files = file.listFiles();
 		int max = -1;
-		String thisBuilderString = toJSON(this.builder);
+		String thisBuilderString = toJSON(this.getBuilder());
 		for (File f : files) {
 			String fn = f.getName();
 			if (fn.endsWith(NETWORK_SUFFIX) && fn.startsWith(MULTI_LAYER_NETWORK)) {
@@ -82,7 +81,7 @@ public class FNNCBuilder {
 	 *            the {@link NNCBuilder} instance to convert
 	 * @return a {@link String}
 	 */
-	protected static String toJSON(NNCBuilder loadBuilder) {
+	protected static String toJSON(final NNCBuilder loadBuilder) {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			return mapper.writeValueAsString(loadBuilder);
@@ -99,10 +98,10 @@ public class FNNCBuilder {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		try {
-			Files.write(Paths.get(this.fileName),
-					mapper.writeValueAsString(this.builder).replaceAll(",", ",\n").getBytes(StandardCharsets.UTF_8));
+			Files.write(Paths.get(this.getFileName()), mapper.writeValueAsString(this.getBuilder())
+					.replaceAll(",", ",\n").getBytes(StandardCharsets.UTF_8));
 
-			PrintWriter pw = new PrintWriter(new File(this.pathName + DESCRIPTION_SUFFIX));
+			PrintWriter pw = new PrintWriter(new File(this.getPathName() + DESCRIPTION_SUFFIX));
 			pw.println(this.description);
 			pw.close();
 		} catch (IOException e1) {
@@ -118,7 +117,7 @@ public class FNNCBuilder {
 	 *            the fileName of the instance to load
 	 * @return a {@link FNNCBuilder} instance
 	 */
-	public static FNNCBuilder load(String fileName) {
+	public static FNNCBuilder load(final String fileName) {
 		return new FNNCBuilder(loadBuilder(fileName));
 	}
 
@@ -129,7 +128,7 @@ public class FNNCBuilder {
 	 *            the fileName of the instance to load
 	 * @return the saved {@link NNCBuilder} instance
 	 */
-	protected static NNCBuilder loadBuilder(String fileName) {
+	protected static NNCBuilder loadBuilder(final String fileName) {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			return mapper.readValue(new File(fileName), NNCBuilder.class);
@@ -146,7 +145,7 @@ public class FNNCBuilder {
 	 * @return a {@link String} with a short description of the instance
 	 */
 	public String getShortDescription() {
-		return MULTI_LAYER_NETWORK + this.builder.getLayers().stream().map(Layer::getClass).map(Class::getName)
+		return MULTI_LAYER_NETWORK + this.getBuilder().getLayers().stream().map(Layer::getClass).map(Class::getName)
 				.map(name -> name.split("\\.")).map(array -> array[array.length - 1])
 				.map(name -> name.split("Layer")[0]).collect(Collectors.joining("_"));
 	}
@@ -160,18 +159,18 @@ public class FNNCBuilder {
 	 *         instance
 	 */
 	public org.deeplearning4j.nn.conf.MultiLayerConfiguration.Builder build() {
-		int layersC = this.builder.getLayers().size();
-		ListBuilder lb = this.builder.list(layersC);
+		int layersC = this.getBuilder().getLayers().size();
+		ListBuilder lb = this.getBuilder().list(layersC);
 		for (int i = 0; i < layersC; i++) {
-			lb.layer(i, this.builder.getLayers().get(i));
+			lb.layer(i, this.getBuilder().getLayers().get(i));
 		}
-		lb.setBackprop(this.builder.backprop);
-		lb.setPretrain(this.builder.pretrain);
+		lb.setBackprop(this.getBuilder().backprop);
+		lb.setPretrain(this.getBuilder().pretrain);
 		return lb;
 	}
 
-	public void setSeed(long seed) {
-		this.builder.seed(seed);
+	public void setSeed(final long seed) {
+		this.getBuilder().seed(seed);
 	}
 
 	public String getPathName() {
@@ -182,7 +181,7 @@ public class FNNCBuilder {
 		return this.fileName;
 	}
 
-	public static String getDescription(String builderFileName) {
+	public static String getDescription(final String builderFileName) {
 		try {
 			BufferedReader bufferedReader = new BufferedReader(
 					new FileReader(builderFileName.substring(0, builderFileName.length() - NETWORK_SUFFIX.length())
@@ -193,5 +192,12 @@ public class FNNCBuilder {
 		} catch (IOException e) {
 			return "";
 		}
+	}
+
+	/**
+	 * @return the builder
+	 */
+	public NNCBuilder getBuilder() {
+		return this.builder;
 	}
 }
