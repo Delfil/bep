@@ -164,8 +164,8 @@ public class FNNCBuilder {
 		for (int i = 0; i < layersC; i++) {
 			lb.layer(i, this.getBuilder().getLayers().get(i));
 		}
-		lb.setBackprop(this.getBuilder().backprop);
-		lb.setPretrain(this.getBuilder().pretrain);
+		lb.setBackprop(this.getBuilder().isBackprop());
+		lb.setPretrain(this.getBuilder().isPretrain());
 		return lb;
 	}
 
