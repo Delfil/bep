@@ -9,7 +9,7 @@ import nl.tudelft.bep.deeplearning.network.result.Tester;
  */
 public class ComputeAverageAccuracyFiller implements CSVFiller {
 
-	protected final int iterations;
+	private final int iterations;
 
 	/**
 	 * Initialize a {@link ComputeAverageAccuracyFiller}.
@@ -17,18 +17,25 @@ public class ComputeAverageAccuracyFiller implements CSVFiller {
 	 * @param iterations
 	 *            the number of iterations to make if a value isn't computed yet
 	 */
-	public ComputeAverageAccuracyFiller(int iterations) {
+	public ComputeAverageAccuracyFiller(final int iterations) {
 		this.iterations = iterations;
 	}
 
 	@Override
-	public String fill(String network, String data, int epochs) {
+	public String fill(final String network, final String data, final int epochs) {
 		double result = ResultUtil.getAverageAccuracy(network, data, epochs);
 		if (new Double(result).equals(Double.NaN)) {
-			new Tester(network, data).start(this.iterations, epochs);
+			new Tester(network, data).start(this.getIterations(), epochs);
 			return Double.toString(ResultUtil.getAverageAccuracy(network, data, epochs));
 		}
 		return Double.toString(result);
+	}
+
+	/**
+	 * @return the iterations
+	 */
+	public int getIterations() {
+		return iterations;
 	}
 
 }
