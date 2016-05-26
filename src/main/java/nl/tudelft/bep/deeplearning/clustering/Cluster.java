@@ -14,6 +14,7 @@ public class Cluster implements Comparable<Cluster> {
 	private double x, y;
 	private int id;
 	private ArrayList<Cluster> list;
+	private static final int DOUBLE_BITS = 32;
 
 	public Cluster(final double x, final double y, final int id) {
 		this(x, y, id, new ArrayList<Cluster>());
@@ -128,9 +129,9 @@ public class Cluster implements Comparable<Cluster> {
 		result = prime * result + ((this.list == null) ? 0 : this.list.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(this.x);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + (int) (temp ^ (temp >>> DOUBLE_BITS));
 		temp = Double.doubleToLongBits(this.y);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + (int) (temp ^ (temp >>> DOUBLE_BITS));
 		return result;
 	}
 
