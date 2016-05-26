@@ -3,6 +3,7 @@ package nl.tudelft.bep.deeplearning.network.result;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -157,5 +158,28 @@ public class ResultUtil {
 			}
 		}
 		return dataList;
+	}
+
+	public static void generateLists(int epoch, Lister lister, String pathName) {
+		List<String> networkList = getNetworkList();
+		List<String> dataList = getDataList();
+		try {
+			for (int y = 0; y < networkList.size(); y++) {
+				for (int x = 0; x < dataList.size(); x++) {
+					PrintWriter writer = new PrintWriter(
+							pathName + "/" + dataList.get(x) + "/" + networkList.get(y) + ".csv", "UTF-8");
+					writer.write(FNNCBuilder.getDescription(networkList.get(y)));
+					writer.write("\n");
+					writer.write(networkList.get(y));
+					writer.write("\n");
+					writer.write(dataList.get(x));
+					writer.write("\n");
+					writer.write(lister.list(epoch, dataList.get(x), networkList.get(y)));
+					writer.close();
+				}
+			}
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 }
