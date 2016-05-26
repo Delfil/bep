@@ -22,6 +22,7 @@ import nl.tudelft.bep.deeplearning.clustering.exception.MinimumNotPossibleExcept
 
 public final class Mapping {
 
+	private static final int NEIGHBORS_STRIP = 8;
 	private static final int BATCH_SIZE = 32;
 	private static final double TRAINING_SET = 0.7;
 	private static int outputNum;
@@ -405,8 +406,8 @@ public final class Mapping {
 
 		for (int i = 0; i < strip.size(); i++) {
 			int k = strip.size() - i - 1;
-			if (k > 8) {
-				k = 9 + i;
+			if (k > NEIGHBORS_STRIP) {
+				k = NEIGHBORS_STRIP + 1 + i;
 			} else {
 				k = strip.size();
 			}
