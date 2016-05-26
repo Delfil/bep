@@ -19,18 +19,18 @@ import nl.tudelft.bep.deeplearning.network.data.Data;
 import nl.tudelft.bep.deeplearning.network.data.MatrixDatasetIterator;
 
 public class Tester {
-	protected static final Logger log = LoggerFactory.getLogger(Tester.class);
+	protected static final Logger LOG = LoggerFactory.getLogger(Tester.class);
 	protected static final long SEEDER_SEED = 0;
 	protected static final DateFormat TIME_FORMATER = new SimpleDateFormat("HH:mm:ss:SSS");
 	protected static final DateFormat TIME_FORMATER_HM = new SimpleDateFormat("HH:mm");
 
-	protected Random seeder;
-	protected final FNNCBuilder builder;
-	protected final DataSetIterator trainIterator;
-	protected final DataSetIterator testIterator;
-	protected final Data data;
+	private Random seeder;
+	private final FNNCBuilder builder;
+	private final DataSetIterator trainIterator;
+	private final DataSetIterator testIterator;
+	private final Data data;
 
-	public Tester(FNNCBuilder builder, Data data) {
+	public Tester(final FNNCBuilder builder, final Data data) {
 		this.data = data;
 		this.builder = builder;
 
@@ -38,7 +38,7 @@ public class Tester {
 		this.testIterator = new MatrixDatasetIterator(this.data, this.data.getTrainPercentage(), 1.0);
 	}
 
-	public Tester(String networkFile, String dataFile) {
+	public Tester(final String networkFile, final String dataFile) {
 		this(FNNCBuilder.load(networkFile), Data.readDataSet(dataFile));
 	}
 
@@ -49,9 +49,9 @@ public class Tester {
 	 *            the seed to set
 	 * @return a configured and initialized model
 	 */
-	protected MultiLayerNetwork setupModel(long seed) {
-		builder.setSeed(seed);
-		org.deeplearning4j.nn.conf.MultiLayerConfiguration.Builder listBuilder = builder.build();
+	protected MultiLayerNetwork setupModel(final long seed) {
+		this.builder.setSeed(seed);
+		org.deeplearning4j.nn.conf.MultiLayerConfiguration.Builder listBuilder = this.builder.build();
 		new ConvolutionLayerSetup(listBuilder, this.data.getWidth(), this.data.getHeight(), 1);
 
 		MultiLayerConfiguration conf = listBuilder.build();
@@ -61,7 +61,7 @@ public class Tester {
 	}
 
 	/**
-	 * Start a {@link Tester}
+	 * Start a {@link Tester}.
 	 * 
 	 * @param iterations
 	 *            the number of iterations with different initialization seeds
@@ -69,23 +69,23 @@ public class Tester {
 	 * @param epochs
 	 *            the number of epochs to run each iteration
 	 */
-	public void start(int iterations, int epochs) {
+	public void start(final int iterations, final int epochs) {
 		this.seeder = new Random(SEEDER_SEED);
 		long startTime = System.currentTimeMillis();
 		for (int i = 1; i <= iterations; i++) {
-			if (iterate(seeder.nextLong(), epochs)) {
-				log.info("*** Completed iteration {}/{} ***", i, iterations);
-				log.info("*** Time remainding: {}/{} ***",
+			if (this.iterate(this.seeder.nextLong(), epochs)) {
+				LOG.info("*** Completed iteration {}/{} ***", i, iterations);
+				LOG.info("*** Time remainding: {}/{} ***",
 						TIME_FORMATER.format(new Date(System.currentTimeMillis() - startTime)),
 						TIME_FORMATER_HM.format(new Date((System.currentTimeMillis() - startTime) / i * iterations)));
 			} else {
-				log.info("*** Skiped iteration {}/{} ***", i, iterations);
+				LOG.info("*** Skiped iteration {}/{} ***", i, iterations);
 			}
 		}
 	}
 
 	/**
-	 * Start an iteration
+	 * Start an iteration.
 	 * 
 	 * @param seed
 	 *            the seed to run the iteration on
@@ -94,22 +94,22 @@ public class Tester {
 	 * @return {@code true} if the iteration successfully ran <br>
 	 *         {@code false} if the iteration was already ran
 	 */
-	protected boolean iterate(long seed, int epochs) {
+	protected boolean iterate(final long seed, final int epochs) {
 		if (EvaluationFileUtil.evalExistst(seed, epochs, this.data, this.builder)) {
 			return false;
 		}
 
-		MultiLayerNetwork model = setupModel(seed);
+		MultiLayerNetwork model = this.setupModel(seed);
 
-		log.info("Train model on seed {}", seed);
+		LOG.info("Train model on seed {}", seed);
 		for (int i = 1; i <= epochs; i++) {
-			model.fit(trainIterator);
-			log.info("*** Completed epoch {}/{} ***", i, epochs);
+			model.fit(this.trainIterator);
+			LOG.info("*** Completed epoch {}/{} ***", i, epochs);
 		}
-		Evaluation<Double> eval = evaluate(model);
+		Evaluation<Double> eval = this.evaluate(model);
 
 		EvaluationFileUtil.save(eval, seed, epochs, this.data, this.builder);
-		 log.info(eval.stats());
+		LOG.info(eval.stats());
 		return true;
 	}
 
@@ -120,9 +120,9 @@ public class Tester {
 	 *            the model to evaluate
 	 * @return a {@link Evaluation} of the given model
 	 */
-	protected Evaluation<Double> evaluate(MultiLayerNetwork model) {
-		log.info("Evaluate model....");
-		Evaluation<Double> eval = new Evaluation<>(data.getNumOutcomes());
+	protected Evaluation<Double> evaluate(final MultiLayerNetwork model) {
+		LOG.info("Evaluate model....");
+		Evaluation<Double> eval = new Evaluation<>(this.data.getNumOutcomes());
 		this.testIterator.reset();
 		while (this.testIterator.hasNext()) {
 			org.nd4j.linalg.dataset.DataSet ds = this.testIterator.next();
