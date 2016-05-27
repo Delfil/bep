@@ -1,3 +1,6 @@
+%Algorithm running 100 times two t-test on both accuracy and std based on
+%100 genes each with 101 groups of 16 patients.
+
 %Here we select our 100 genes
 ges = std(Gene_Expression);
 select = ges >1.2982;

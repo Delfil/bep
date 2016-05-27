@@ -1,3 +1,6 @@
+%In this file we plot four figures; two boxplots of the p-values of the two 
+%t-tests and two histograms. One containing std, the other accuracy.
+
 %Here we plot the p-values of both t-test we ran 100 times.
 figure;
 boxplot(-log(p_array));
