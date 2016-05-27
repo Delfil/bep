@@ -1,4 +1,4 @@
-package nl.tudelft.bep.deeplearning;
+package nl.tudelft.bep.deeplearning.network;
 
 import nl.tudelft.bep.deeplearning.network.result.ResultUtil;
 import nl.tudelft.bep.deeplearning.network.result.csv.ComputeAverageAccuracyFiller;
