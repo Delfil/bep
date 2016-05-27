@@ -1,18 +1,21 @@
-%Plot std
-h(1) = subplot(2,1,1);
-title(h(1),'Distribution of standard deviation of accurasy of one gene');
-histogram(total_mean_1);
-h(2) = subplot(2,1,2);
-title(h(2),'Distribution of standard deviation of accurasy of the average of four correlating genes');
-histogram(total_mean_avg);
-linkaxes(h);
-xlim([0.084 0.091]);
-%Plot acc
+%Here we plot the p-values of both t-test we ran 100 times.
 figure;
-g(1) = subplot(2,1,1);
-title(g(1),'Distribution of standard deviation of accurasy of one gene');
-histogram(total_acc_1, 40);
-g(2) = subplot(2,1,2);
-title(g(2),'Distribution of standard deviation of accurasy of the average of four correlating genes');
-histogram(total_acc_avg, 40);
-linkaxes(g, 'x');
+boxplot(-log(p_array));
+title('-log(p) of the total runs');
+figure;
+boxplot(-log(pacc_array));
+title('-log(p) of the total runs');
+
+%Plot of the standard deviation for both distributions as histogram. 
+figure;
+histogram(total_mean_1, 24);
+hold on; histogram(total_mean_avg, 24);
+title('Means standard deviation of the 100 runs');
+legend('Single gene', '4 correlating genes');
+
+%Plot of the accuracy for both distributions as histogram.
+figure;
+histogram(total_acc_1, 10);
+hold on; histogram(total_acc_avg, 10);
+title('Means accuracy of the 100 runs');
+legend('Single gene', '4 correlating genes');
