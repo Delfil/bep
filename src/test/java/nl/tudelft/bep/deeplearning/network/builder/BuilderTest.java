@@ -44,8 +44,8 @@ public class BuilderTest {
 	public void similairNetworkTest() {
 		FNNCBuilder builder2 = getTestBuilder().backprop(false).finish();
 		String fileName = builder2.getFileName();
-		assertFalse(testFile.equals(fileName));
-		FNNCBuilder builder1 = builder.finish();
+		assertFalse(this.testFile.equals(fileName));
+		FNNCBuilder builder1 = this.builder.finish();
 		assertTrue(builder1.getPathName().replaceAll("\\\\", "/")
 				.contains(builder2.getPathName().substring(0, builder2.getPathName().length() - 1).replaceAll("\\\\", "/")));
 
