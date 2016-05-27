@@ -50,8 +50,8 @@ public class BuilderTest {
 		FNNCBuilder builder1 = builder.finish();
 		System.out.println(builder1.pathName);
 		System.out.println(builder2.pathName);
-		assertTrue(builder1.getPathName()
-				.contains(builder2.getPathName().substring(0, builder2.getPathName().length() - 1)));
+		assertTrue(builder1.getPathName().replaceAll("\\\\", "/")
+				.contains(builder2.getPathName().substring(0, builder2.getPathName().length() - 1).replaceAll("\\\\", "/")));
 		new File(fileName).delete();
 	}
 	
