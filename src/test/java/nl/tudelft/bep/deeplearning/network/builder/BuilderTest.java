@@ -1,6 +1,8 @@
 package nl.tudelft.bep.deeplearning.network.builder;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
@@ -11,10 +13,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import nl.tudelft.bep.deeplearning.network.builder.CNN;
-import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
-import nl.tudelft.bep.deeplearning.network.builder.NNCBuilder;
-
 public class BuilderTest {
 
 	private String testFile;
@@ -22,24 +20,24 @@ public class BuilderTest {
 
 	@Before
 	public void init() {
-		builder = getTestBuilder();
-		testFile = builder.finish().getFileName();
-
+		this.builder = getTestBuilder();
+		this.testFile = this.builder.finish().getFileName();
 	}
 
 	@After
 	public void after() {
-		new File(testFile).delete();
+		new File(this.testFile).delete();
 	}
 
 	@Test
 	public void loadTest() {
-		assertEquals(FNNCBuilder.toJSON(builder), FNNCBuilder.toJSON(FNNCBuilder.load(testFile).builder));
+		assertEquals(FNNCBuilder.toJSON(this.builder),
+				FNNCBuilder.toJSON(FNNCBuilder.load(this.testFile).getBuilder()));
 	}
 
 	@Test
 	public void remakeTest() {
-		assertEquals(FNNCBuilder.toJSON(builder), FNNCBuilder.toJSON(getTestBuilder()));
+		assertEquals(FNNCBuilder.toJSON(this.builder), FNNCBuilder.toJSON(getTestBuilder()));
 	}
 
 	@Test
@@ -48,29 +46,27 @@ public class BuilderTest {
 		String fileName = builder2.getFileName();
 		assertFalse(testFile.equals(fileName));
 		FNNCBuilder builder1 = builder.finish();
-		System.out.println(builder1.pathName);
-		System.out.println(builder2.pathName);
 		assertTrue(builder1.getPathName().replaceAll("\\\\", "/")
 				.contains(builder2.getPathName().substring(0, builder2.getPathName().length() - 1).replaceAll("\\\\", "/")));
+
 		new File(fileName).delete();
 	}
-	
+
 	@Test
 	public void multipleBuildTest() {
-		FNNCBuilder fb = builder.finish();
+		FNNCBuilder fb = this.builder.finish();
 		fb.setSeed(1);
 		Builder build = fb.build();
 		assertTrue(build.isBackprop());
 		assertFalse(build.isPretrain());
 	}
-	
-	protected NNCBuilder getTestBuilder() {
-		NNCBuilder builder = CNN.BuildExampleCNN(new ConvolutionLayer.Builder().kernelSize(1, 1).stride(2, 2).build(),
+
+	protected static NNCBuilder getTestBuilder() {
+		NNCBuilder builder = CNN.buildExampleCNN(new ConvolutionLayer.Builder().kernelSize(1, 1).stride(2, 2).build(),
 				new OutputLayer.Builder().nOut(2).build());
 		builder.backprop(true);
 		builder.pretrain(false);
 		return builder;
 	}
 
-	
 }

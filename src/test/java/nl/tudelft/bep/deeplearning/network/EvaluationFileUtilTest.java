@@ -29,18 +29,18 @@ public class EvaluationFileUtilTest {
 
 	@Before
 	public void before() {
-		data = Data.readDataSet("test_data/correct_1");
-		builder = CNN.BuildExampleCNN().finish();
-		toRemove.add(builder.getPathName());
-		toRemove.add(builder.getFileName());
-		toRemove.add(EvaluationFileUtil.getEvalPathName(data, builder));
+		this.data = Data.readDataSet("test_data/correct_1");
+		this.builder = CNN.buildExampleCNN().finish();
+		this.toRemove.add(this.builder.getPathName());
+		this.toRemove.add(this.builder.getFileName());
+		this.toRemove.add(EvaluationFileUtil.getEvalPathName(this.data, this.builder));
 	}
 
 	@Test
 	public void evalExists() {
-		assertFalse(EvaluationFileUtil.evalExistst(SEED, EPOCH, data, builder));
-		EvaluationFileUtil.save(new Evaluation<>(), SEED, EPOCH, data, builder);
-		assertTrue(EvaluationFileUtil.evalExistst(SEED, EPOCH, data, builder));
+		assertFalse(EvaluationFileUtil.evalExistst(SEED, EPOCH, this.data, this.builder));
+		EvaluationFileUtil.save(new Evaluation<>(), SEED, EPOCH, this.data, this.builder);
+		assertTrue(EvaluationFileUtil.evalExistst(SEED, EPOCH, this.data, this.builder));
 	}
 
 	@Test
@@ -51,21 +51,22 @@ public class EvaluationFileUtilTest {
 		ev.eval(1, 1);
 		ev.eval(1, 1);
 		ev.eval(0, 0);
-		EvaluationFileUtil.save(ev, SEED, EPOCH, data, builder);
-		assertEquals(EvaluationFileUtil.load(SEED, EPOCH, data, builder).f1(), ev.f1(), 0.0);
-		EvaluationFileUtil.save(ev, SEED, EPOCH + 1, data, builder);
-		assertEquals(1, EvaluationFileUtil.load(EPOCH, data, builder).size());
-		EvaluationFileUtil.save(ev, SEED + 1, EPOCH, data, builder);
-		assertEquals(2, EvaluationFileUtil.load(EPOCH, data, builder).size());
+		EvaluationFileUtil.save(ev, SEED, EPOCH, this.data, this.builder);
+		assertEquals(EvaluationFileUtil.load(SEED, EPOCH, this.data, this.builder).f1(), ev.f1(), 0.0);
+		EvaluationFileUtil.save(ev, SEED, EPOCH + 1, this.data, this.builder);
+		assertEquals(1, EvaluationFileUtil.load(EPOCH, this.data, this.builder).size());
+		EvaluationFileUtil.save(ev, SEED + 1, EPOCH, this.data, this.builder);
+		assertEquals(2, EvaluationFileUtil.load(EPOCH, this.data, this.builder).size());
 
 	}
 
 	@After
 	public void after() {
-		toRemove.forEach(name -> {
+		this.toRemove.forEach(name -> {
 			File file = new File(name);
-			if (!file.exists())
+			if (!file.exists()) {
 				return;
+			}
 			if (file.isFile()) {
 				file.delete();
 			} else {

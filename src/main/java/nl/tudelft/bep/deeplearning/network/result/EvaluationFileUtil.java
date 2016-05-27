@@ -15,7 +15,7 @@ import org.deeplearning4j.eval.Evaluation;
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
 import nl.tudelft.bep.deeplearning.network.data.Data;
 
-public class EvaluationFileUtil {
+public final class EvaluationFileUtil {
 	protected static final DecimalFormat SEED_FORMATER = new DecimalFormat(
 			"S+0000000000000000000;S-0000000000000000000");
 	protected static final DecimalFormat EPOCH_FORMATER = new DecimalFormat("E000");
@@ -23,12 +23,18 @@ public class EvaluationFileUtil {
 	private static final String F = "/";
 	private static final Object EVAL_EXTENTION = ".eval";
 
-	public static String getEvalFileName(long seed, int epoch) {
+	/**
+	 * Utility-classes should not be initialized.
+	 */
+	private EvaluationFileUtil() {
+	}
+
+	public static String getEvalFileName(final long seed, final int epoch) {
 		return new StringBuilder(SEED_FORMATER.format(seed)).append(EPOCH_FORMATER.format(epoch)).append(EVAL_EXTENTION)
 				.toString();
 	}
 
-	public static String getEvalPathName(Data data, FNNCBuilder builder) {
+	public static String getEvalPathName(final Data data, final FNNCBuilder builder) {
 		return new StringBuilder(builder.getPathName()).append(F).append(data.getTimeStamp()).append(F).toString();
 	}
 
@@ -46,7 +52,8 @@ public class EvaluationFileUtil {
 	 * @return the requested evaluation file if it exists<br>
 	 *         {@code null} if it doesn't exists
 	 */
-	public static Evaluation<Double> load(long seed, int epoch, Data data, FNNCBuilder builder) {
+	public static Evaluation<Double> load(final long seed, final int epoch, final Data data,
+			final FNNCBuilder builder) {
 		File file = new File(getEvalPathName(data, builder) + getEvalFileName(seed, epoch));
 		if (file.exists()) {
 			try {
@@ -79,7 +86,7 @@ public class EvaluationFileUtil {
 	 * @return a list of all saved evaluations which satisfy the given
 	 *         conditions
 	 */
-	public static List<Evaluation<Double>> load(int epoch, Data data, FNNCBuilder builder) {
+	public static List<Evaluation<Double>> load(final int epoch, final Data data, final FNNCBuilder builder) {
 		File folder = new File(getEvalPathName(data, builder));
 		if (!folder.exists() || folder.isFile()) {
 			return new ArrayList<>();
@@ -104,7 +111,7 @@ public class EvaluationFileUtil {
 		return results;
 	}
 
-	public static boolean evalExistst(long seed, int epoch, Data data, FNNCBuilder builder) {
+	public static boolean evalExistst(final long seed, final int epoch, final Data data, final FNNCBuilder builder) {
 		return new File(getEvalPathName(data, builder) + getEvalFileName(seed, epoch)).exists();
 	}
 
@@ -123,7 +130,8 @@ public class EvaluationFileUtil {
 	 *            the network configuration used to compute this evaluation
 	 * 
 	 */
-	public static void save(Evaluation<Double> eval, long seed, int epoch, Data data, FNNCBuilder builder) {
+	public static void save(final Evaluation<Double> eval, final long seed, final int epoch, final Data data,
+			final FNNCBuilder builder) {
 		String pathName = getEvalPathName(data, builder);
 		File file = new File(pathName);
 		if (!file.exists()) {
@@ -140,7 +148,7 @@ public class EvaluationFileUtil {
 		}
 	}
 
-	public static List<Evaluation<Double>> load(int epochs, String data, String network) {
+	public static List<Evaluation<Double>> load(final int epochs, final String data, final String network) {
 		return load(epochs, Data.readDataSet(data), FNNCBuilder.load(network));
 	}
 }
