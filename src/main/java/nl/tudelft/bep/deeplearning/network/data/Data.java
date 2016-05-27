@@ -37,8 +37,9 @@ public class Data {
 	private final double trainPercentage;
 	private DataSet[][] data;
 
-	protected Data(String path, String name, int version, long timeStamp, int examples, int width, int height,
-			int numOutcomes, int batchSize, double trainPercentage) {
+	protected Data(final String path, final String name, final int version, final long timeStamp, final int examples,
+			final int width, final int height, final int numOutcomes, final int batchSize,
+			final double trainPercentage) {
 		this.path = path;
 		this.name = name;
 		this.version = version;
@@ -52,14 +53,14 @@ public class Data {
 	}
 
 	/**
-	 * Construct a {@link Data} from the files in the given path
+	 * Construct a {@link Data} from the files in the given path.
 	 * 
 	 * @param folderName
 	 *            the name of the folder to read
 	 * 
 	 * @return a {@link Data} constructed from the files in the given path
 	 */
-	public static Data readDataSet(String folderName) {
+	public static Data readDataSet(final String folderName) {
 		Data data = null;
 		try {
 			data = readMetaFile(folderName);
@@ -71,7 +72,7 @@ public class Data {
 	}
 
 	/**
-	 * Imports the data from the instance its files to its memory
+	 * Imports the data from the instance its files to its memory.
 	 * 
 	 * @throws IOException
 	 *             If an I/O error occurs
@@ -131,7 +132,7 @@ public class Data {
 	 * @throws IOException
 	 *             If an I/O error occurs
 	 */
-	protected static Data readMetaFile(String name)
+	protected static Data readMetaFile(final String name)
 			throws UnknownMetaDataFileVersion, NumberFormatException, IOException {
 		String pathName = DATA_FOLDER + F + name;
 		BufferedReader reader = new BufferedReader(findFile(pathName, META_SUFFIX));
@@ -153,7 +154,7 @@ public class Data {
 	}
 
 	/**
-	 * Finds a file with the given suffix in the given path
+	 * Finds a file with the given suffix in the given path.
 	 * 
 	 * @param pathName
 	 *            the path to search in
@@ -161,18 +162,19 @@ public class Data {
 	 *            the suffix to search for
 	 * @return a {@link BufferedReader}, reading the found file
 	 */
-	protected static BufferedReader findFile(String pathName, String suffix) {
+	protected static BufferedReader findFile(final String pathName, final String suffix) {
 		File dir = new File(pathName);
 		if (!dir.exists()) {
 			return null;
 		}
 		for (File file : dir.listFiles()) {
-			if (file.getName().endsWith(suffix))
+			if (file.getName().endsWith(suffix)) {
 				try {
 					return new BufferedReader(new FileReader(file));
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
+			}
 		}
 		return null;
 	}
@@ -189,12 +191,12 @@ public class Data {
 	protected double[][] readMatrices() throws IOException, MetaDataMatchException {
 		BufferedReader reader = findFile(this.path, DATA_SUFFIX);
 
-		double[][] matrix = new double[examples][];
+		double[][] matrix = new double[this.examples][];
 
-		for (int i = 0; i < examples; i++) {
+		for (int i = 0; i < this.examples; i++) {
 			matrix[i] = (Arrays.stream(reader.readLine().split(SEPERATOR))
 					.mapToDouble(val -> Math.min(1, Math.max(0, (Double.parseDouble(val) + 1) / 2))).toArray());
-			if (matrix[i].length != width * height) {
+			if (matrix[i].length != this.width * this.height) {
 				throw new MetaDataMatchException();
 			}
 		}
@@ -210,9 +212,9 @@ public class Data {
 	 *             If an I/O error occurs
 	 */
 	protected int[] readLabels() throws IOException {
-		BufferedReader reader = findFile(path, LABEL_SUFFIX);
-		int[] label = new int[examples];
-		for (int i = 0; i < examples; i++) {
+		BufferedReader reader = findFile(this.path, LABEL_SUFFIX);
+		int[] label = new int[this.examples];
+		for (int i = 0; i < this.examples; i++) {
 			label[i] = (int) Double.parseDouble(reader.readLine());
 		}
 		reader.close();
@@ -229,55 +231,55 @@ public class Data {
 	 *            The percentage of examples to skip from the right
 	 * @return a subset of the data
 	 */
-	public List<DataSet> getSubset(double start, double end) {
+	public List<DataSet> getSubset(final double start, final double end) {
 		List<DataSet> subset = new ArrayList<>();
 		for (int i = 0; i < this.numOutcomes; i++) {
-			int size = data[i].length;
+			int size = this.data[i].length;
 			for (int j = (int) (size * start), stop = (int) (size * end); j < stop; j++) {
-				subset.add(data[i][j]);
+				subset.add(this.data[i][j]);
 			}
 		}
 		return subset;
 	}
 
 	public String getPath() {
-		return path;
+		return this.path;
 	}
 
 	public int getVersion() {
-		return version;
+		return this.version;
 	}
 
 	public long getTimeStamp() {
-		return timeStamp;
+		return this.timeStamp;
 	}
 
 	public int getExamples() {
-		return examples;
+		return this.examples;
 	}
 
 	public int getWidth() {
-		return width;
+		return this.width;
 	}
 
 	public int getHeight() {
-		return height;
+		return this.height;
 	}
 
 	public int getNumOutcomes() {
-		return numOutcomes;
+		return this.numOutcomes;
 	}
 
 	public int getBatchSize() {
-		return batchSize;
+		return this.batchSize;
 	}
 
 	public double getTrainPercentage() {
-		return trainPercentage;
+		return this.trainPercentage;
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 }

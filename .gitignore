@@ -9,6 +9,7 @@
 #Ignore for Eclipse
 *.settings*
 *.project
+.checkstyle
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
