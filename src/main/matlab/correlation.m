@@ -18,24 +18,28 @@ numGroupPatients = 101;
 
 %Arrays for keeping track of h and p values of t-test
 h_array = zeros(1,numRuns);
+hacc_array = zeros(1,numRuns);
 p_array = zeros(1,numRuns);
+pacc_array = zeros(1,numRuns);
 %Arrays for keeping track of the stds
 total_mean_1 = zeros(1,numRuns);
 total_mean_avg = zeros(1,numRuns);
 %Arrays for keeping track of the overall accuracies.
-total_acc_1 = zeros(1,numRuns*numGenes);
-total_acc_avg = zeros(1,numRuns*numGenes);
-counter_acc = 1;
+total_acc_1 = zeros(1,numRuns);
+total_acc_avg = zeros(1,numRuns);
 
 for t = 1:numRuns
     counter = 1;
     %Arrays for the mean standard deviation of each of the genes.
     std_1 = zeros(1,numGenes);
     std_avg = zeros(1,numGenes);
+    acc_1 = zeros(1,numGenes);
+    acc_avg = zeros(1,numGenes);
     %Random order of the genes.
     genes = randperm(size(absCorr,1),numGenes);
+    runLabel = label(:,randperm(size(label,2),1));
     
-    for i = 1:numGenes
+    for i = 1:numGenes    
         point = genes(i);
         
         %Sort the points to find the three most correlating points
@@ -43,8 +47,8 @@ for t = 1:numRuns
         [sortedValues, sortedIndex] = sort(column,'descend');
         
         %Select four correlating points
-        ninepoints = sortedIndex(1:4);
-        avg_act = mean(geneAct(:,ninepoints),2);
+        fourpoints = sortedIndex(1:4);
+        avg_act = mean(geneAct(:,fourpoints),2);
         g1_act = geneAct(:,sortedIndex(1));
         %Array to pass on to easily split in groups
         temp = [g1_act,avg_act,label];
@@ -56,11 +60,11 @@ for t = 1:numRuns
             indeces = randperm(size(temp,1),numPatients);
             activations = temp(indeces,:);
             %Get maximum accuracies.
-            acc_1 = threshold(activations(:,1),activations(:,3));
-            acc_avg = threshold(activations(:,2),activations(:,3));
+            temp_acc_1 = threshold(activations(:,1),activations(:,3));
+            temp_acc_avg = threshold(activations(:,2),activations(:,3));
             %Add to array
-            group_acc_1(j) = acc_1;
-            group_acc_avg(j) = acc_avg;
+            group_acc_1(j) = temp_acc_1;
+            group_acc_avg(j) = temp_acc_avg;
             counter = counter + 1;
         end
         %Add the standard deviation of all the maximum accuracies to the
@@ -68,18 +72,25 @@ for t = 1:numRuns
         std_1(i) = std(group_acc_1/numPatients);
         std_avg(i) = std(group_acc_avg/numPatients);
         %Add the average accuracies to the arrays
-        total_acc_1(counter_acc) = mean(group_acc_1);
-        total_acc_avg(counter_acc) = mean(group_acc_avg);
-        counter_acc = counter_acc + 1;
+        acc_1(i) = mean(group_acc_1/numPatients);
+        acc_avg(i) = mean(group_acc_avg/numPatients);
+        
         
     end
-    %Run t-test
-    [h,p] = ttest(std_1,std_avg);
+    %Run left tail t-test on the accuracy as we hope to improve accuracy
+    [hacc,pacc] = ttest(acc_1,acc_avg, 'Tail', 'left');
+    %Run right tail t-test on the std as we hope to minimize std.
+    [h,p] = ttest(std_1,std_avg, 'Tail', 'right');
+    %Add to correct array
     h_array(t) = h;
     p_array(t) = p;
+    hacc_array(t) = hacc;
+    pacc_array(t) = pacc;
     %Keeping track of the average std for each run
     total_mean_1(t) = mean(std_1);
     total_mean_avg(t) = mean(std_avg);
+    total_acc_1(t) = mean(acc_1);
+    total_acc_avg(t) = mean(acc_avg);
     
 end
 
