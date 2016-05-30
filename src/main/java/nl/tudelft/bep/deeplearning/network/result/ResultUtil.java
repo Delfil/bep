@@ -168,6 +168,21 @@ public final class ResultUtil {
 		return dataList;
 	}
 
+	/**
+	 * Generate lists with the given lister, for each given data set network
+	 * combination.
+	 * 
+	 * @param epoch
+	 *            the number of epochs used
+	 * @param lister
+	 *            the lister to use
+	 * @param pathName
+	 *            the path name to save the lists in
+	 * @param networkList
+	 *            the list of networks to use
+	 * @param dataList
+	 *            the list of data sets to use
+	 */
 	public static void generateLists(final int epoch, final Lister lister, final String pathName,
 			final List<String> networkList, final List<String> dataList) {
 		try {
@@ -193,6 +208,17 @@ public final class ResultUtil {
 		}
 	}
 
+	/**
+	 * Generate lists with the given lister, for each existing data set network
+	 * combination.
+	 * 
+	 * @param epoch
+	 *            the number of epochs used
+	 * @param lister
+	 *            the lister to use
+	 * @param pathName
+	 *            the path name to save the lists in
+	 */
 	public static void generateLists(final int epoch, final ListAccurracy lister, final String pathName) {
 		generateLists(epoch, lister, pathName, getNetworkList(), getDataList());
 	}
