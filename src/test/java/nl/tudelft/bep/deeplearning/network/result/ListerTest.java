@@ -69,8 +69,10 @@ public class ListerTest {
 		File file = new File("test/test_data/correct_1/networks/MLN_Convolution_Output/MLN_0.NNConf.json.csv");
 		assertTrue(file.exists());
 		try {
-			assertEquals("\nnetworks/MLN_Convolution_Output/MLN_0.NNConf.json\ntest_data/correct_1\n1.0\n0.0",
-					new String(Files.readAllBytes(Paths.get(file.getAbsolutePath()))));
+			String string = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath().replace("\\", "/"))));
+			assertTrue(string.contains("\nnetworks/MLN_Convolution_Output/MLN_0.NNConf.json\ntest_data/correct_1"));
+			assertTrue(string.contains("\n0.0"));
+			assertTrue(string.contains("\n1.0"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
