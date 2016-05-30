@@ -120,15 +120,15 @@
       "kernelSize" : [ 16,
  1 ],
 
-      "stride" : [ 4,
+      "stride" : [ 1,
  1 ],
 
       "padding" : [ 0,
  0 ],
 
-      "nin" : 1,
+      "nout" : 20,
 
-      "nout" : 20
+      "nin" : 1
     }
   },
  {
@@ -173,9 +173,9 @@
 
       "gradientNormalizationThreshold" : "NaN",
 
-      "nin" : 0,
+      "nout" : 100,
 
-      "nout" : 20
+      "nin" : 0
     }
   },
  {
@@ -224,9 +224,9 @@
 
       "customLossFunction" : null,
 
-      "nin" : 0,
+      "nout" : 5,
 
-      "nout" : 5
+      "nin" : 0
     }
   } ]
 }
