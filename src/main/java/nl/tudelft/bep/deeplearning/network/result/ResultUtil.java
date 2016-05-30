@@ -168,16 +168,15 @@ public final class ResultUtil {
 		return dataList;
 	}
 
-	public static void generateLists(int epoch, Lister lister, String pathName) {
-		List<String> networkList = getNetworkList();
-		List<String> dataList = getDataList();
+	public static void generateLists(final int epoch, final Lister lister, final String pathName,
+			final List<String> networkList, final List<String> dataList) {
 		try {
 			for (int y = 0; y < networkList.size(); y++) {
 				for (int x = 0; x < dataList.size(); x++) {
 					String path = pathName + "/" + dataList.get(x) + "/" + networkList.get(y);
 					String[] split = path.split("/");
 					new File(path.substring(0, path.length() - split[split.length - 1].length())).mkdirs();
-					
+
 					PrintWriter writer = new PrintWriter(path + ".csv", "UTF-8");
 					writer.write(FNNCBuilder.getDescription(networkList.get(y)));
 					writer.write("\n");
@@ -192,5 +191,9 @@ public final class ResultUtil {
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void generateLists(final int epoch, final ListAccurracy lister, final String pathName) {
+		generateLists(epoch, lister, pathName, getNetworkList(), getDataList());
 	}
 }
