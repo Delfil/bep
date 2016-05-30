@@ -174,8 +174,11 @@ public final class ResultUtil {
 		try {
 			for (int y = 0; y < networkList.size(); y++) {
 				for (int x = 0; x < dataList.size(); x++) {
-					PrintWriter writer = new PrintWriter(
-							pathName + "/" + dataList.get(x) + "/" + networkList.get(y) + ".csv", "UTF-8");
+					String path = pathName + "/" + dataList.get(x) + "/" + networkList.get(y);
+					String[] split = path.split("/");
+					new File(path.substring(0, path.length() - split[split.length - 1].length())).mkdirs();
+					
+					PrintWriter writer = new PrintWriter(path + ".csv", "UTF-8");
 					writer.write(FNNCBuilder.getDescription(networkList.get(y)));
 					writer.write("\n");
 					writer.write(networkList.get(y));
