@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
@@ -19,54 +18,62 @@ import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
 import nl.tudelft.bep.deeplearning.network.data.Data;
 import nl.tudelft.bep.deeplearning.network.result.csv.CSVFiller;
 
-public class ResultUtil {
-	public static double getTTest(String builder1, String data1, int epoch1, String builder2, String data2,
-			int epoch2) {
+public final class ResultUtil {
+	private static final int EXPECTED_DATA_FILE_COUNT = 3;
+
+	/**
+	 * Utility-classes should not be initialized.
+	 */
+	private ResultUtil() {
+	}
+
+	public static double getTTest(final String builder1, final String data1, final int epoch1, final String builder2,
+			final String data2, final int epoch2) {
 		return getTTest(FNNCBuilder.load(builder1), Data.readDataSet(data1), epoch1, FNNCBuilder.load(builder2),
 				Data.readDataSet(data2), epoch2);
 	}
 
-	public static double getTTest(FNNCBuilder builder1, Data data1, int epoch1, FNNCBuilder builder2, Data data2,
-			int epoch2) {
+	public static double getTTest(final FNNCBuilder builder1, final Data data1, final int epoch1,
+			final FNNCBuilder builder2, final Data data2, final int epoch2) {
 		return getTTest(EvaluationFileUtil.load(epoch1, data1, builder1),
 				EvaluationFileUtil.load(epoch2, data2, builder2));
 	}
 
-	public static double getTTest(List<Evaluation<Double>> sample1, List<Evaluation<Double>> sample2) {
+	public static double getTTest(final List<Evaluation<Double>> sample1, final List<Evaluation<Double>> sample2) {
 		return getTTest(getAccuracyArray(sample1), getAccuracyArray(sample2));
 	}
 
-	public static double getTTest(double[] sample1, double[] sample2) {
+	public static double getTTest(final double[] sample1, final double[] sample2) {
 		int min = Math.min(sample1.length, sample2.length);
 		return new TTest().pairedTTest(Arrays.copyOf(sample1, min), Arrays.copyOf(sample2, min));
 	}
 
-	public static double getTTest(String builder1, String data1, int epoch1) {
+	public static double getTTest(final String builder1, final String data1, final int epoch1) {
 		return getTTest(FNNCBuilder.load(builder1), Data.readDataSet(data1), epoch1);
 	}
 
-	public static double getTTest(FNNCBuilder builder1, Data data1, int epoch1) {
+	public static double getTTest(final FNNCBuilder builder1, final Data data1, final int epoch1) {
 		return getTTest(EvaluationFileUtil.load(epoch1, data1, builder1));
 	}
 
-	public static double getTTest(List<Evaluation<Double>> sample1) {
+	public static double getTTest(final List<Evaluation<Double>> sample1) {
 		return getTTest(getAccuracyArray(sample1));
 	}
 
-	public static double getTTest(double[] sample1) {
+	public static double getTTest(final double[] sample1) {
 		int min = sample1.length / 2;
 		return new TTest().tTest(Arrays.copyOf(sample1, min), Arrays.copyOfRange(sample1, min, min * 2));
 	}
 
-	public static double[] getAccuracyArray(List<Evaluation<Double>> sample) {
+	public static double[] getAccuracyArray(final List<Evaluation<Double>> sample) {
 		return sample.stream().mapToDouble(Evaluation::accuracy).toArray();
 	}
 
-	public static double getAverageAccuracy(String builder1, String data, int epoch) {
+	public static double getAverageAccuracy(final String builder1, final String data, final int epoch) {
 		return getAverageAccuracy(FNNCBuilder.load(builder1), Data.readDataSet(data), epoch);
 	}
 
-	public static double getAverageAccuracy(FNNCBuilder builder, Data data, int epoch) {
+	public static double getAverageAccuracy(final FNNCBuilder builder, final Data data, final int epoch) {
 		List<Evaluation<Double>> a = EvaluationFileUtil.load(epoch, data, builder);
 		if (a == null || a.isEmpty()) {
 			return Double.NaN;
@@ -74,11 +81,11 @@ public class ResultUtil {
 		return getAverageAccuracy(getAccuracyArray(a));
 	}
 
-	public static double getAverageAccuracy(List<Evaluation<Double>> sample) {
+	public static double getAverageAccuracy(final List<Evaluation<Double>> sample) {
 		return getAverageAccuracy(getAccuracyArray(sample));
 	}
 
-	public static double getAverageAccuracy(double[] sample) {
+	public static double getAverageAccuracy(final double[] sample) {
 		return Arrays.stream(sample).reduce((a, b) -> a + b).getAsDouble() / sample.length;
 	}
 
@@ -91,7 +98,7 @@ public class ResultUtil {
 	 * @param filler
 	 *            the filler which should fill the table its cells.
 	 */
-	public static void generateCSV(int epochs, CSVFiller filler, String fileName) {
+	public static void generateCSV(final int epochs, final CSVFiller filler, final String fileName) {
 		List<String> networkList = getNetworkList();
 		List<String> dataList = getDataList();
 		try {
@@ -151,7 +158,8 @@ public class ResultUtil {
 						.map(s -> s.split("\\.")).filter(a -> a.length > 0).map(a -> a[a.length - 1])
 						.filter(a -> a.equals("meta") || a.equals("dat") || a.equals("lab"))
 						.collect(Collectors.toList());
-				if (list.contains("meta") && list.contains("dat") && list.contains("lab") && list.size() == 3) {
+				if (list.contains("meta") && list.contains("dat") && list.contains("lab")
+						&& list.size() == EXPECTED_DATA_FILE_COUNT) {
 					String[] path = file.getName().split("/");
 					dataList.add(path[path.length - 1]);
 				}

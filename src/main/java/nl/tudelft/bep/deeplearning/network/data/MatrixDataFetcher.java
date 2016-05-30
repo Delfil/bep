@@ -14,18 +14,18 @@ import org.nd4j.linalg.dataset.api.iterator.fetcher.BaseDataFetcher;
  */
 public class MatrixDataFetcher extends BaseDataFetcher {
 	protected static final long TRAIN_SEED = 63775512; // Should never change
-	protected final static String SEPERATOR = ",";
+	protected static final String SEPERATOR = ",";
 
-	protected int[] order;
-	protected Random random;
-	protected int[] label;
-	protected DataSet[] data;
-	protected int width;
-	protected int height;
-	protected int startIndex;
+	private int[] order;
+	private Random random;
+	private int[] label;
+	private DataSet[] data;
+	private int width;
+	private int height;
+	private int startIndex;
 
 	/**
-	 * Initialize a MatrixDataFetcher
+	 * Initialize a MatrixDataFetcher.
 	 * 
 	 * @param data
 	 *            The {@link Data} instance to fetch from
@@ -34,7 +34,7 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 	 * @param end
 	 *            The percentage of examples to skip from the right
 	 */
-	public MatrixDataFetcher(Data data, double start, double end) {
+	public MatrixDataFetcher(final Data data, final double start, final double end) {
 		List<DataSet> dataList = data.getSubset(start, end);
 
 		this.data = dataList.toArray(new DataSet[dataList.size()]);
@@ -43,22 +43,22 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 		this.inputColumns = data.getWidth() * data.getHeight();
 		this.numOutcomes = data.getNumOutcomes();
 
-		order = new int[totalExamples];
-		for (int i = 0; i < order.length; i++) {
-			order[i] = i;
+		this.order = new int[this.totalExamples];
+		for (int i = 0; i < this.order.length; i++) {
+			this.order[i] = i;
 		}
-		random = new Random(TRAIN_SEED);
-		reset();
+		this.random = new Random(TRAIN_SEED);
+		this.reset();
 	}
 
 	@Override
-	public void fetch(int batch) {
+	public void fetch(final int batch) {
 		if (!hasMore()) {
 			throw new IllegalStateException("Unable to getFromOrigin more; there are no more images");
 		}
 		List<DataSet> result = new ArrayList<>();
 		for (int i = 0; i < batch && cursor < this.totalExamples; i++) {
-			result.add(data[order[cursor++]]);
+			result.add(this.data[this.order[this.cursor++]]);
 		}
 		initializeCurrFromList(result);
 	}
@@ -68,5 +68,33 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 		this.cursor = 0;
 		this.curr = null;
 		MathUtils.shuffleArray(this.order, this.random);
+	}
+
+	protected int[] getOrder() {
+		return this.order;
+	}
+
+	protected Random getRandom() {
+		return this.random;
+	}
+
+	protected int[] getLabel() {
+		return this.label;
+	}
+
+	protected DataSet[] getData() {
+		return this.data;
+	}
+
+	protected int getWidth() {
+		return this.width;
+	}
+
+	protected int getHeight() {
+		return this.height;
+	}
+
+	protected int getStartIndex() {
+		return this.startIndex;
 	}
 }

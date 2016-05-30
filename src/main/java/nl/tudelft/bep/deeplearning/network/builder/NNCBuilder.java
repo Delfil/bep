@@ -8,15 +8,15 @@ import org.deeplearning4j.nn.conf.layers.Layer;
 
 public class NNCBuilder extends NeuralNetConfiguration.Builder {
 
-	protected boolean backprop = false;
-	protected boolean pretrain = false;
-	protected List<Layer> layers = new ArrayList<>();
+	private boolean backprop = false;
+	private boolean pretrain = false;
+	private List<Layer> layers = new ArrayList<>();
 
 	public NNCBuilder() {
 	}
 
-	public void add(Layer layer) {
-		layers.add(layer);
+	public void add(final Layer layer) {
+		this.getLayers().add(layer);
 	}
 
 	@Override
@@ -25,13 +25,13 @@ public class NNCBuilder extends NeuralNetConfiguration.Builder {
 		return super.build();
 	}
 
-	public NNCBuilder backprop(boolean backprop) {
+	public NNCBuilder backprop(final boolean backprop) {
 		this.backprop = backprop;
 		return this;
 	}
 
-	public NNCBuilder pretrain(boolean pretrain) {
-		this.pretrain = pretrain;
+	public NNCBuilder pretrain(final boolean pretrain) {
+		this.setPretrain(pretrain);
 		return this;
 	}
 
@@ -39,28 +39,44 @@ public class NNCBuilder extends NeuralNetConfiguration.Builder {
 		return this.finish("");
 	}
 
-	public FNNCBuilder finish(String description) {
+	public FNNCBuilder finish(final String description) {
 		return new FNNCBuilder(this, description);
 	}
 
 	public List<Layer> getLayers() {
-		return layers;
+		return this.layers;
 	}
 
 	@Override
 	public NNCBuilder clone() {
 		NNCBuilder builder = (NNCBuilder) super.clone();
 		builder.backprop = this.backprop;
-		builder.pretrain = this.pretrain;
-		builder.layers = new ArrayList<>(this.layers);
+		builder.setPretrain(this.isPretrain());
+		builder.layers = new ArrayList<>(this.getLayers());
 		return builder;
 	}
 
 	public boolean isBackprop() {
-		return backprop;
+		return this.backprop;
 	}
 
 	public boolean isPretrain() {
-		return pretrain;
+		return this.pretrain;
+	}
+
+	/**
+	 * @param backprop
+	 *            the backprop to set
+	 */
+	public void setBackprop(final boolean backprop) {
+		this.backprop = backprop;
+	}
+
+	/**
+	 * @param pretrain
+	 *            the pretrain to set
+	 */
+	public void setPretrain(final boolean pretrain) {
+		this.pretrain = pretrain;
 	}
 }

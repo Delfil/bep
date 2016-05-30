@@ -6,14 +6,14 @@ public class Neighbors implements Comparable<Neighbors>  {
 	private Cluster neighbor;
 	private Double distance;
 	
-	public Neighbors(Cluster c, Cluster neighbor, Double distance) {
+	public Neighbors(final Cluster c, final Cluster neighbor, final Double distance) {
 		this.c = c;
 		this.neighbor = neighbor;
 		this.distance = distance;
 	}
 
 	@Override
-	public int compareTo(Neighbors o) {
+	public int compareTo(final Neighbors o) {
 		return this.distance.compareTo(o.getDistance());
 	}
 	
