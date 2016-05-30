@@ -168,14 +168,31 @@ public final class ResultUtil {
 		return dataList;
 	}
 
-	public static void generateLists(int epoch, Lister lister, String pathName) {
-		List<String> networkList = getNetworkList();
-		List<String> dataList = getDataList();
+	/**
+	 * Generate lists with the given lister, for each given data set network
+	 * combination.
+	 * 
+	 * @param epoch
+	 *            the number of epochs used
+	 * @param lister
+	 *            the lister to use
+	 * @param pathName
+	 *            the path name to save the lists in
+	 * @param networkList
+	 *            the list of networks to use
+	 * @param dataList
+	 *            the list of data sets to use
+	 */
+	public static void generateLists(final int epoch, final Lister lister, final String pathName,
+			final List<String> networkList, final List<String> dataList) {
 		try {
 			for (int y = 0; y < networkList.size(); y++) {
 				for (int x = 0; x < dataList.size(); x++) {
-					PrintWriter writer = new PrintWriter(
-							pathName + "/" + dataList.get(x) + "/" + networkList.get(y) + ".csv", "UTF-8");
+					String path = pathName + "/" + dataList.get(x) + "/" + networkList.get(y);
+					String[] split = path.split("/");
+					new File(path.substring(0, path.length() - split[split.length - 1].length())).mkdirs();
+
+					PrintWriter writer = new PrintWriter(path + ".csv", "UTF-8");
 					writer.write(FNNCBuilder.getDescription(networkList.get(y)));
 					writer.write("\n");
 					writer.write(networkList.get(y));
@@ -189,5 +206,20 @@ public final class ResultUtil {
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Generate lists with the given lister, for each existing data set network
+	 * combination.
+	 * 
+	 * @param epoch
+	 *            the number of epochs used
+	 * @param lister
+	 *            the lister to use
+	 * @param pathName
+	 *            the path name to save the lists in
+	 */
+	public static void generateLists(final int epoch, final ListAccuracy lister, final String pathName) {
+		generateLists(epoch, lister, pathName, getNetworkList(), getDataList());
 	}
 }

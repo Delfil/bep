@@ -1,5 +1,16 @@
 package nl.tudelft.bep.deeplearning.network.result;
 
 public interface Lister {
-	public String list(int epoch, String dataSet, String network);
+	/**
+	 * Generate a list.
+	 * 
+	 * @param epoch
+	 *            the epoch number to use
+	 * @param dataSet
+	 *            the data set to use
+	 * @param network
+	 *            the network to use
+	 * @return a list in form of a string
+	 */
+	String list(int epoch, String dataSet, String network);
 }
