@@ -9,6 +9,7 @@
 #Ignore for Eclipse
 *.settings*
 *.project
+.checkstyle
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -33,3 +34,6 @@ hs_err_pid*
 *#
 *~
 /target/
+
+# Local files
+local/*

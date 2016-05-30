@@ -6,28 +6,27 @@ import org.deeplearning4j.nn.conf.layers.Layer;
 import org.deeplearning4j.nn.weights.WeightInit;
 
 public abstract class CNN {
-	public static NNCBuilder BuildExampleCNN(Layer... layers){
+	private static final double MOMENTUM = 0.9;
+	private static final double LEARNING_RATE = 0.01;
+	private static final double L2 = 0.0005;
+
+	public static NNCBuilder buildExampleCNN(final Layer... layers) {
 		NNCBuilder builder = new NNCBuilder();
-				builder
+		builder
 				// Initialization
-				.weightInit(WeightInit.XAVIER)
-				.seed(0)
+				.weightInit(WeightInit.XAVIER).seed(0)
 				// Training
-				.iterations(1)
-				.learningRate(0.01)
-				.momentum(0.9)
-				.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-				.updater(Updater.NESTEROVS)
-				
+				.iterations(1).learningRate(LEARNING_RATE).momentum(MOMENTUM)
+				.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT).updater(Updater.NESTEROVS)
+
 				// Over fitting
-				.l2(0.0005)
-				.regularization(true);
-		
-		for(int i = 0 ; i < layers.length; i++) {
-			builder.add(layers[i]);
+				.l2(L2).regularization(true);
+
+		for (Layer layer : layers) {
+			builder.add(layer);
 		}
 		builder.backprop(true).pretrain(false);
-		
+
 		return builder;
 	}
 }

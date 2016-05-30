@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import nl.tudelft.bep.deeplearning.network.data.Data;
 import nl.tudelft.bep.deeplearning.network.data.exception.MetaDataMatchException;
 import nl.tudelft.bep.deeplearning.network.data.exception.UnknownMetaDataFileVersion;
 

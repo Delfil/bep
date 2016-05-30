@@ -32,12 +32,12 @@ public class ResultUtilTest {
 
 	@Before
 	public void before() {
-		data = Data.readDataSet("test_data/correct_1");
-		builder = CNN.BuildExampleCNN(new ConvolutionLayer.Builder().kernelSize(1, 1).stride(1, 1).nOut(2).build(),
+		this.data = Data.readDataSet("test_data/correct_1");
+		this.builder = CNN.buildExampleCNN(new ConvolutionLayer.Builder().kernelSize(1, 1).stride(1, 1).nOut(2).build(),
 				new OutputLayer.Builder().nOut(2).build()).finish();
-		toRemove.add(builder.getPathName());
-		toRemove.add(builder.getFileName());
-		toRemove.add(EvaluationFileUtil.getEvalPathName(data, builder));
+		this.toRemove.add(this.builder.getPathName());
+		this.toRemove.add(this.builder.getFileName());
+		this.toRemove.add(EvaluationFileUtil.getEvalPathName(this.data, this.builder));
 	}
 
 	@Test
@@ -47,39 +47,41 @@ public class ResultUtilTest {
 		Set<String> dataSets = new HashSet<>(ResultUtil.getDataList());
 		int epochs = 1;
 		ResultUtil.generateCSV(epochs, countFiller, "toRemove");
-		toRemove.add("toRemove.csv");
+		this.toRemove.add("toRemove.csv");
 		assertEquals(networks.size() * dataSets.size(), countFiller.getCount());
 		assertEquals(networks, countFiller.getNetworks());
 		assertEquals(dataSets, countFiller.getDataSets());
 		assertEquals(1, countFiller.getEpochs().size());
 		assertEquals(epochs, countFiller.getEpochs().iterator().next().intValue());
 	}
-	
+
 	@Test
-	public void getTTestTest(){
-		new Tester(builder.getFileName(), data.getName()).start(4, 1);
-		assertEquals(Double.NaN, ResultUtil.getTTest(builder.getFileName(), data.getName(), 1), 0.0);
-		
+	public void getTTestTest() {
+		new Tester(this.builder.getFileName(), this.data.getName()).start(4, 1);
+		assertEquals(Double.NaN, ResultUtil.getTTest(this.builder.getFileName(), this.data.getName(), 1), 0.0);
+
 		Data data2 = Data.readDataSet("test_data/correct_2");
-		toRemove.add(EvaluationFileUtil.getEvalPathName(data2, builder));
-		
-		new Tester(builder.getFileName(), data2.getName()).start(2, 1);
-		
-		assertEquals(Double.NaN, ResultUtil.getTTest(builder.getFileName(), data.getName(), 1, builder.getFileName(), data2.getName(), 1), 0.0);
+		this.toRemove.add(EvaluationFileUtil.getEvalPathName(data2, this.builder));
+
+		new Tester(this.builder.getFileName(), data2.getName()).start(2, 1);
+
+		assertEquals(Double.NaN, ResultUtil.getTTest(this.builder.getFileName(), this.data.getName(), 1,
+				this.builder.getFileName(), data2.getName(), 1), 0.0);
 	}
 
 	@Test
-	public void ComputeAverageAccuracyFillerTest() {
+	public void computeAverageAccuracyFillerTest() {
 		ComputeAverageAccuracyFiller caaf = new ComputeAverageAccuracyFiller(1);
 		assertEquals("0.5", caaf.fill(this.builder.getFileName(), this.data.getName(), 1));
 	}
 
 	@After
 	public void after() {
-		toRemove.forEach(name -> {
+		this.toRemove.forEach(name -> {
 			File file = new File(name);
-			if (!file.exists())
+			if (!file.exists()) {
 				return;
+			}
 			if (file.isFile()) {
 				file.delete();
 			} else {
@@ -100,28 +102,28 @@ public class ResultUtilTest {
 		private int count = 0;
 
 		@Override
-		public String fill(String network, String data, int epoch) {
-			networks.add(network);
-			dataSets.add(data);
-			epochs.add(epoch);
-			count++;
+		public String fill(final String network, final String data, final int epoch) {
+			this.networks.add(network);
+			this.dataSets.add(data);
+			this.epochs.add(epoch);
+			this.count++;
 			return "";
 		}
 
 		public Set<String> getNetworks() {
-			return networks;
+			return this.networks;
 		}
 
 		public Set<String> getDataSets() {
-			return dataSets;
+			return this.dataSets;
 		}
 
 		public Set<Integer> getEpochs() {
-			return epochs;
+			return this.epochs;
 		}
 
 		public int getCount() {
-			return count;
+			return this.count;
 		}
 	}
 }
