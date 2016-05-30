@@ -48,8 +48,9 @@ public class ListerTest {
 			EvaluationFileUtil.save(ev, i, 1, this.data, this.builder);
 		}
 		String string = new ListAccuracy().list(1, this.data.getName(), this.builder.getFileName());
-		assertTrue(string.contains("\n0.0"));
-		assertTrue(string.contains("\n1.0"));
+		
+		assertTrue(string.contains("0.0"));
+		assertTrue(string.contains("1.0"));
 	}
 
 	@Test
