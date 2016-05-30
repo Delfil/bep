@@ -47,7 +47,7 @@ public class ListerTest {
 
 			EvaluationFileUtil.save(ev, i, 1, this.data, this.builder);
 		}
-		assertEquals("1.0\n0.0", new ListAccurracy().list(1, this.data.getName(), this.builder.getFileName()));
+		assertEquals("1.0\n0.0", new ListAccuracy().list(1, this.data.getName(), this.builder.getFileName()));
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public class ListerTest {
 		dataSets.add(this.data.getName());
 
 		this.toRemove.add("test");
-		ResultUtil.generateLists(1, new ListAccurracy(), "test", networks, dataSets);
+		ResultUtil.generateLists(1, new ListAccuracy(), "test", networks, dataSets);
 		File file = new File("test/test_data/correct_1/networks/MLN_Convolution_Output/MLN_0.NNConf.json.csv");
 		assertTrue(file.exists());
 		try {
