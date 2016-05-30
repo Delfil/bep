@@ -219,7 +219,7 @@ public final class ResultUtil {
 	 * @param pathName
 	 *            the path name to save the lists in
 	 */
-	public static void generateLists(final int epoch, final ListAccurracy lister, final String pathName) {
+	public static void generateLists(final int epoch, final ListAccuracy lister, final String pathName) {
 		generateLists(epoch, lister, pathName, getNetworkList(), getDataList());
 	}
 }
