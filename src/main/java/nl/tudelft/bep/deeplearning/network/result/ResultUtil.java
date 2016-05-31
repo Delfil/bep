@@ -13,7 +13,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.math3.stat.inference.TTest;
 import org.deeplearning4j.eval.Evaluation;
-import org.jfree.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
 import nl.tudelft.bep.deeplearning.network.data.Data;
@@ -22,6 +23,8 @@ import nl.tudelft.bep.deeplearning.network.result.lister.Lister;
 
 public final class ResultUtil {
 	private static final int EXPECTED_DATA_FILE_COUNT = 3;
+
+	private static final Logger LOG = LoggerFactory.getLogger(ResultUtil.class);
 
 	/**
 	 * Utility-classes should not be initialized.
@@ -193,7 +196,7 @@ public final class ResultUtil {
 					String path = pathName + "/" + dataList.get(x) + "/" + networkList.get(y);
 					String[] split = path.split("/");
 					if (!new File(path).canWrite()) {
-						Log.warn("No access to folder " + path);
+						LOG.warn("No access to folder " + path);
 						break;
 					}
 					new File(new File(path).getParent()).mkdirs();
