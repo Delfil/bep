@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.math3.stat.inference.TTest;
 import org.deeplearning4j.eval.Evaluation;
+import org.jfree.util.Log;
 
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
 import nl.tudelft.bep.deeplearning.network.data.Data;
@@ -191,7 +192,11 @@ public final class ResultUtil {
 				for (int x = 0; x < dataList.size(); x++) {
 					String path = pathName + "/" + dataList.get(x) + "/" + networkList.get(y);
 					String[] split = path.split("/");
-					new File(path.substring(0, path.length() - split[split.length - 1].length())).mkdirs();
+					if (!new File(path).canWrite()) {
+						Log.warn("No access to folder " + path);
+						break;
+					}
+					new File(new File(path).getParent()).mkdirs();
 
 					PrintWriter writer = new PrintWriter(path + ".csv", "UTF-8");
 					writer.write(FNNCBuilder.getDescription(networkList.get(y)));
