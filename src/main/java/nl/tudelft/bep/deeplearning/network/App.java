@@ -37,7 +37,7 @@ public final class App {
 				.backprop(true).pretrain(false).finish("CNN");
 
 		CNN.buildExampleCNN(
-				new ConvolutionLayer.Builder(1, 1).nIn(1).stride(1, 1).padding(1).nOut(4).activation("identity")
+				new ConvolutionLayer.Builder(1, 1).nIn(1).stride(1, 1).nOut(4).activation("identity")
 						.build(),
 				new DenseLayer.Builder().activation("relu").nOut(100).build(),
 				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
