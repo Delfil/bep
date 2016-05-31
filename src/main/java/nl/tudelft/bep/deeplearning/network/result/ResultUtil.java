@@ -17,6 +17,7 @@ import org.deeplearning4j.eval.Evaluation;
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
 import nl.tudelft.bep.deeplearning.network.data.Data;
 import nl.tudelft.bep.deeplearning.network.result.csv.CSVFiller;
+import nl.tudelft.bep.deeplearning.network.result.lister.Lister;
 
 public final class ResultUtil {
 	private static final int EXPECTED_DATA_FILE_COUNT = 3;

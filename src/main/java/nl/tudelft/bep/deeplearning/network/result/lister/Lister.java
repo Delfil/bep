@@ -1,4 +1,4 @@
-package nl.tudelft.bep.deeplearning.network.result;
+package nl.tudelft.bep.deeplearning.network.result.lister;
 
 public interface Lister {
 	/**
