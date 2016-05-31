@@ -6,6 +6,7 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
 
 import nl.tudelft.bep.deeplearning.network.builder.CNN;
+import nl.tudelft.bep.deeplearning.network.result.ListAccuracy;
 import nl.tudelft.bep.deeplearning.network.result.ResultUtil;
 import nl.tudelft.bep.deeplearning.network.result.csv.ComputeAverageAccuracyFiller;
 
@@ -60,6 +61,7 @@ public final class App {
 	}
 
 	private static void run(final int epochs, final int iterations, final String fileName) {
-		ResultUtil.generateCSV(epochs, new ComputeAverageAccuracyFiller(iterations), fileName);
+		//ResultUtil.generateCSV(epochs, new ComputeAverageAccuracyFiller(iterations), fileName);
+		ResultUtil.generateLists(10, new ListAccuracy(), "dataList");
 	}
 }
