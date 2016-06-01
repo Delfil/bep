@@ -3,6 +3,7 @@ package nl.tudelft.bep.deeplearning.network.result;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -16,6 +17,7 @@ import org.deeplearning4j.eval.Evaluation;
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
 import nl.tudelft.bep.deeplearning.network.data.Data;
 import nl.tudelft.bep.deeplearning.network.result.csv.CSVFiller;
+import nl.tudelft.bep.deeplearning.network.result.lister.Lister;
 
 public final class ResultUtil {
 	private static final int EXPECTED_DATA_FILE_COUNT = 3;
@@ -165,5 +167,60 @@ public final class ResultUtil {
 			}
 		}
 		return dataList;
+	}
+
+	/**
+	 * Generate lists with the given lister, for each given data set network
+	 * combination.
+	 * 
+	 * @param epoch
+	 *            the number of epochs used
+	 * @param lister
+	 *            the lister to use
+	 * @param pathName
+	 *            the path name to save the lists in
+	 * @param networkList
+	 *            the list of networks to use
+	 * @param dataList
+	 *            the list of data sets to use
+	 */
+	public static void generateLists(final int epoch, final Lister lister, final String pathName,
+			final List<String> networkList, final List<String> dataList) {
+		try {
+			for (int y = 0; y < networkList.size(); y++) {
+				for (int x = 0; x < dataList.size(); x++) {
+					String path = pathName + "/" + dataList.get(x) + "/" + networkList.get(y);
+					String[] split = path.split("/");
+					new File(new File(path).getParent()).mkdirs();
+
+					PrintWriter writer = new PrintWriter(path + ".csv", "UTF-8");
+					writer.write(FNNCBuilder.getDescription(networkList.get(y)));
+					writer.write("\n");
+					writer.write(networkList.get(y));
+					writer.write("\n");
+					writer.write(dataList.get(x));
+					writer.write("\n");
+					writer.write(lister.list(epoch, dataList.get(x), networkList.get(y)));
+					writer.close();
+				}
+			}
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Generate lists with the given lister, for each existing data set network
+	 * combination.
+	 * 
+	 * @param epoch
+	 *            the number of epochs used
+	 * @param lister
+	 *            the lister to use
+	 * @param pathName
+	 *            the path name to save the lists in
+	 */
+	public static void generateLists(final int epoch, final Lister lister, final String pathName) {
+		generateLists(epoch, lister, pathName, getNetworkList(), getDataList());
 	}
 }
