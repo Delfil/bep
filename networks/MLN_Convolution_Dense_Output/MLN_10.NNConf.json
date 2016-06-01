@@ -1,0 +1,232 @@
+{
+  "activationFunction" : "sigmoid",
+
+  "weightInit" : "XAVIER",
+
+  "biasInit" : 0.0,
+
+  "dist" : {
+    "normal" : {
+      "mean" : 0.001,
+
+      "std" : 1.0
+    }
+  },
+
+  "learningRate" : 0.01,
+
+  "learningRateAfter" : { },
+
+  "lrScoreBasedDecay" : 0.0,
+
+  "momentum" : 0.9,
+
+  "momentumAfter" : { },
+
+  "l1" : 0.0,
+
+  "l2" : 5.0E-4,
+
+  "dropOut" : 0.0,
+
+  "updater" : "NESTEROVS",
+
+  "rho" : 0.0,
+
+  "rmsDecay" : 0.95,
+
+  "adamMeanDecay" : 0.9,
+
+  "adamVarDecay" : 0.999,
+
+  "layer" : null,
+
+  "miniBatch" : true,
+
+  "numIterations" : 1,
+
+  "maxNumLineSearchIterations" : 5,
+
+  "seed" : 0,
+
+  "useRegularization" : true,
+
+  "useSchedules" : false,
+
+  "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+
+  "constrainGradientToUnitNorm" : false,
+
+  "stepFunction" : null,
+
+  "useDropConnect" : false,
+
+  "minimize" : true,
+
+  "timeSeriesLength" : 1,
+
+  "gradientNormalization" : "None",
+
+  "gradientNormalizationThreshold" : 1.0,
+
+  "backprop" : true,
+
+  "pretrain" : false,
+
+  "layers" : [ {
+    "convolution" : {
+      "layerName" : "genisys",
+
+      "activationFunction" : "identity",
+
+      "weightInit" : null,
+
+      "biasInit" : "NaN",
+
+      "dist" : null,
+
+      "learningRate" : "NaN",
+
+      "learningRateAfter" : null,
+
+      "lrScoreBasedDecay" : "NaN",
+
+      "momentum" : "NaN",
+
+      "momentumAfter" : null,
+
+      "l1" : "NaN",
+
+      "l2" : "NaN",
+
+      "dropOut" : "NaN",
+
+      "updater" : null,
+
+      "rho" : "NaN",
+
+      "rmsDecay" : "NaN",
+
+      "adamMeanDecay" : "NaN",
+
+      "adamVarDecay" : "NaN",
+
+      "gradientNormalization" : null,
+
+      "gradientNormalizationThreshold" : "NaN",
+
+      "convolutionType" : "VALID",
+
+      "kernelSize" : [ 2,
+ 1 ],
+
+      "stride" : [ 1,
+ 1 ],
+
+      "padding" : [ 0,
+ 0 ],
+
+      "nout" : 20,
+
+      "nin" : 1
+    }
+  },
+ {
+    "dense" : {
+      "layerName" : "genisys",
+
+      "activationFunction" : "relu",
+
+      "weightInit" : null,
+
+      "biasInit" : "NaN",
+
+      "dist" : null,
+
+      "learningRate" : "NaN",
+
+      "learningRateAfter" : null,
+
+      "lrScoreBasedDecay" : "NaN",
+
+      "momentum" : "NaN",
+
+      "momentumAfter" : null,
+
+      "l1" : "NaN",
+
+      "l2" : "NaN",
+
+      "dropOut" : "NaN",
+
+      "updater" : null,
+
+      "rho" : "NaN",
+
+      "rmsDecay" : "NaN",
+
+      "adamMeanDecay" : "NaN",
+
+      "adamVarDecay" : "NaN",
+
+      "gradientNormalization" : null,
+
+      "gradientNormalizationThreshold" : "NaN",
+
+      "nout" : 100,
+
+      "nin" : 0
+    }
+  },
+ {
+    "output" : {
+      "layerName" : "genisys",
+
+      "activationFunction" : "softmax",
+
+      "weightInit" : null,
+
+      "biasInit" : "NaN",
+
+      "dist" : null,
+
+      "learningRate" : "NaN",
+
+      "learningRateAfter" : null,
+
+      "lrScoreBasedDecay" : "NaN",
+
+      "momentum" : "NaN",
+
+      "momentumAfter" : null,
+
+      "l1" : "NaN",
+
+      "l2" : "NaN",
+
+      "dropOut" : "NaN",
+
+      "updater" : null,
+
+      "rho" : "NaN",
+
+      "rmsDecay" : "NaN",
+
+      "adamMeanDecay" : "NaN",
+
+      "adamVarDecay" : "NaN",
+
+      "gradientNormalization" : null,
+
+      "gradientNormalizationThreshold" : "NaN",
+
+      "lossFunction" : "NEGATIVELOGLIKELIHOOD",
+
+      "customLossFunction" : null,
+
+      "nout" : 5,
+
+      "nin" : 0
+    }
+  } ]
+}
