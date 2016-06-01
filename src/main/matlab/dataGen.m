@@ -71,7 +71,8 @@ function write_data_files(file_name, data, labels)
 % write data and label file (.dat and .lab)
 
 % make sure the amount of labels corresponds to the amount of observations
-    assert(size(data,1) == size(labels,1) && size(labels,1) == numel(labels))
+    assert(size(data,1) == size(labels,1))
+    assert(size(labels,1) == numel(labels))
     
     N = 1:size(data,1);
     genes = 1:size(data,2);
