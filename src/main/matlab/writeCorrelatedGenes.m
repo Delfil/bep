@@ -6,13 +6,19 @@ function writeCorrelatedGenes(N)
     
     GE = selectNGenes(100);
     geneInd = selectCorrelatedGenes(N);
+
+    path = '../../../datasets';
     
     for i = 1:N
-        dataGen([mean(GE(:,geneInd(i,[1,3])),2), mean(GE(:,geneInd(i,[2,4])),2)], CancerTypeIndex,...
-            'name', ['genes_', sprintf('%i+%i_%i+%i',geneInd(i,[1,3,2,4]))]);
+        dir1 = sprintf('genes_A=%i; a=%i; B=%i; b=%i; Aa&Bb',geneInd(i,[1,3,2,4]));
+        dir2 = sprintf('genes_A=%i; a=%i; B=%i; b=%i; Ab&Ba',geneInd(i,[1,3,2,4]));
+        mkdir(path,dir1);
+        mkdir(path,dir2);
         
-        dataGen([mean(GE(:,geneInd(i,[1,4])),2), mean(GE(:,geneInd(i,[2,3])),2)], CancerTypeIndex,...
-            'name', ['genes_', sprintf('%i+%i_%i+%i',geneInd(i,[1,4,2,3]))]);
+        dataGen([mean(GE(:,geneInd(i,[1,3])),2), mean(GE(:,geneInd(i,[2,4])),2)], CancerTypeIndex,...
+           'name', [path, '/', dir1, '/', dir1]);
+       
+       dataGen([mean(GE(:,geneInd(i,[1,4])),2), mean(GE(:,geneInd(i,[2,3])),2)], CancerTypeIndex,...
+           'name', [path, '/', dir2, '/', dir2]);
     end
-
 end
