@@ -2,7 +2,7 @@ package nl.tudelft.bep.deeplearning.network.result.csv;
 
 public interface CSVFiller {
 	/**
-	 * Computes a {@link String} to fill in a cell in the csv table
+	 * Computes a {@link String} to fill in a cell in the csv table.
 	 * 
 	 * @param network
 	 *            the row of the cell
@@ -12,5 +12,5 @@ public interface CSVFiller {
 	 *            the epoch to use
 	 * @return a {@link String} to fill in a cell in the csv table
 	 */
-	public String fill(String network, String data, int epoch);
+	String fill(String network, String data, int epoch);
 }

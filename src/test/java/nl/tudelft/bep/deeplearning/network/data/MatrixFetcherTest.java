@@ -1,16 +1,14 @@
 package nl.tudelft.bep.deeplearning.network.data;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 import org.nd4j.linalg.dataset.api.DataSet;
-
-import nl.tudelft.bep.deeplearning.network.data.Data;
-import nl.tudelft.bep.deeplearning.network.data.MatrixDataFetcher;
-import nl.tudelft.bep.deeplearning.network.data.MatrixDatasetIterator;
 
 public class MatrixFetcherTest {
 
@@ -26,7 +24,7 @@ public class MatrixFetcherTest {
 		read(di);
 	}
 
-	private void read(MatrixDatasetIterator di) {
+	private static void read(final MatrixDatasetIterator di) {
 		List<DataSet> results = new ArrayList<>();
 		int count = 0;
 		while (di.hasNext()) {
