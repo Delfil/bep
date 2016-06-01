@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
@@ -141,7 +143,7 @@ public class Data {
 		if (version > 0) {
 			long timeStamp = Long.parseLong(reader.readLine());
 			int examples = Integer.parseInt(reader.readLine());
-			int width = Integer.parseInt(reader.readLine());
+			int width = Integer.parseInt(reader.readLine()) * 2;
 			int height = Integer.parseInt(reader.readLine());
 			int numOutcomes = Integer.parseInt(reader.readLine());
 			double trainPercentage = Double.parseDouble(reader.readLine());
@@ -194,8 +196,14 @@ public class Data {
 		double[][] matrix = new double[this.examples][];
 
 		for (int i = 0; i < this.examples; i++) {
-			matrix[i] = (Arrays.stream(reader.readLine().split(SEPERATOR))
-					.mapToDouble(val -> Math.min(1, Math.max(0, (Double.parseDouble(val) + 1) / 2))).toArray());
+			List<Double> al = new ArrayList<>();
+			List<Double> left = new ArrayList<Double>();
+			Arrays.stream(reader.readLine().split(SEPERATOR))
+					.mapToDouble(val -> Math.min(1, Math.max(0, (Double.parseDouble(val) + 1) / 2)))
+					.forEach(a -> left.add(a));
+			al.addAll(left);
+			left.stream().map(d -> 1.0 - d).forEach(a -> al.add(a));
+			matrix[i] = ArrayUtils.toPrimitive(al.toArray(new Double[al.size()]));
 			if (matrix[i].length != this.width * this.height) {
 				throw new MetaDataMatchException();
 			}

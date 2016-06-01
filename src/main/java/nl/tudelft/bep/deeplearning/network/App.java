@@ -9,7 +9,7 @@ import nl.tudelft.bep.deeplearning.network.result.ResultUtil;
 import nl.tudelft.bep.deeplearning.network.result.csv.ComputeAverageAccuracyFiller;
 
 public final class App {
-	private static final int DEFAULT_EPOCHS = 10;
+	private static final int DEFAULT_EPOCHS = 50;
 	private static final int DEFAULT_ITERATIONS = 20;
 	private static final String DEFAULT_FILE_NAME = "results";
 
