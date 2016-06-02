@@ -1,6 +1,8 @@
-package nl.tudelft.bep.deeplearning.network.result;
+package nl.tudelft.bep.deeplearning.network.result.lister;
 
 import java.util.stream.Collectors;
+
+import nl.tudelft.bep.deeplearning.network.result.EvaluationFileUtil;
 
 /**
  * A lister which lists all accuracies of the given network.

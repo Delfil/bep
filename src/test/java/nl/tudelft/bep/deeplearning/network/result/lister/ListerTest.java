@@ -1,4 +1,4 @@
-package nl.tudelft.bep.deeplearning.network.result;
+package nl.tudelft.bep.deeplearning.network.result.lister;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -21,6 +21,9 @@ import org.junit.Test;
 import nl.tudelft.bep.deeplearning.network.builder.CNN;
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
 import nl.tudelft.bep.deeplearning.network.data.Data;
+import nl.tudelft.bep.deeplearning.network.result.EvaluationFileUtil;
+import nl.tudelft.bep.deeplearning.network.result.ResultUtil;
+import nl.tudelft.bep.deeplearning.network.result.lister.ListAccuracy;
 
 public class ListerTest {
 
@@ -47,7 +50,10 @@ public class ListerTest {
 
 			EvaluationFileUtil.save(ev, i, 1, this.data, this.builder);
 		}
-		assertEquals("1.0\n0.0", new ListAccuracy().list(1, this.data.getName(), this.builder.getFileName()));
+		String string = new ListAccuracy().list(1, this.data.getName(), this.builder.getFileName());
+		
+		assertTrue(string.contains("0.0"));
+		assertTrue(string.contains("1.0"));
 	}
 
 	@Test

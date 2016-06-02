@@ -17,6 +17,7 @@ import org.deeplearning4j.eval.Evaluation;
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
 import nl.tudelft.bep.deeplearning.network.data.Data;
 import nl.tudelft.bep.deeplearning.network.result.csv.CSVFiller;
+import nl.tudelft.bep.deeplearning.network.result.lister.Lister;
 
 public final class ResultUtil {
 	private static final int EXPECTED_DATA_FILE_COUNT = 3;
@@ -190,7 +191,7 @@ public final class ResultUtil {
 				for (int x = 0; x < dataList.size(); x++) {
 					String path = pathName + "/" + dataList.get(x) + "/" + networkList.get(y);
 					String[] split = path.split("/");
-					new File(path.substring(0, path.length() - split[split.length - 1].length())).mkdirs();
+					new File(new File(path).getParent()).mkdirs();
 
 					PrintWriter writer = new PrintWriter(path + ".csv", "UTF-8");
 					writer.write(FNNCBuilder.getDescription(networkList.get(y)));
@@ -219,7 +220,7 @@ public final class ResultUtil {
 	 * @param pathName
 	 *            the path name to save the lists in
 	 */
-	public static void generateLists(final int epoch, final ListAccuracy lister, final String pathName) {
+	public static void generateLists(final int epoch, final Lister lister, final String pathName) {
 		generateLists(epoch, lister, pathName, getNetworkList(), getDataList());
 	}
 }
