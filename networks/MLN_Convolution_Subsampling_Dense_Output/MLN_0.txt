@@ -1,1 +1,0 @@
-conv without stride and pooling max 2x2 2x2
