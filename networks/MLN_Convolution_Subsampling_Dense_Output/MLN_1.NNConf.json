@@ -126,9 +126,9 @@
       "padding" : [ 0,
  0 ],
 
-      "nin" : 1,
+      "nout" : 20,
 
-      "nout" : 1
+      "nin" : 1
     }
   },
  {
@@ -173,7 +173,7 @@
 
       "gradientNormalizationThreshold" : "NaN",
 
-      "poolingType" : "MAX",
+      "poolingType" : "AVG",
 
       "kernelSize" : [ 2,
  2 ],
@@ -227,9 +227,9 @@
 
       "gradientNormalizationThreshold" : "NaN",
 
-      "nin" : 0,
+      "nout" : 100,
 
-      "nout" : 100
+      "nin" : 0
     }
   },
  {
@@ -278,9 +278,9 @@
 
       "customLossFunction" : null,
 
-      "nin" : 0,
+      "nout" : 5,
 
-      "nout" : 5
+      "nin" : 0
     }
   } ]
 }
