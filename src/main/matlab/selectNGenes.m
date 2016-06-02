@@ -5,7 +5,8 @@ if ~exist('Gene_Expression','var')
 end
 assert(N <=size(Gene_Expression,2));
 
-[~,select] = sort(std(Gene_Expression));
-select = sort(select);
-GE = Gene_Expression(:,select(1:N));
+
+[~,select] = sort(std(Gene_Expression),'descend');
+select = sort(select(1:N));
+GE = Gene_Expression(:,select);
 end
