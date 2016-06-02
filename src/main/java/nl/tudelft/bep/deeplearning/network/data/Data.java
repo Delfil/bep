@@ -143,7 +143,7 @@ public class Data {
 		if (version > 0) {
 			long timeStamp = Long.parseLong(reader.readLine());
 			int examples = Integer.parseInt(reader.readLine());
-			int width = Integer.parseInt(reader.readLine()) * 2;
+			int width = Integer.parseInt(reader.readLine());
 			int height = Integer.parseInt(reader.readLine());
 			int numOutcomes = Integer.parseInt(reader.readLine());
 			double trainPercentage = Double.parseDouble(reader.readLine());
@@ -202,7 +202,7 @@ public class Data {
 					.mapToDouble(val -> Math.min(1, Math.max(0, (Double.parseDouble(val) + 1) / 2)))
 					.forEach(a -> left.add(a));
 			al.addAll(left);
-			left.stream().map(d -> 1.0 - d).forEach(a -> al.add(a));
+//			left.stream().map(d -> 1.0 - d).forEach(a -> al.add(a));
 			matrix[i] = ArrayUtils.toPrimitive(al.toArray(new Double[al.size()]));
 			if (matrix[i].length != this.width * this.height) {
 				throw new MetaDataMatchException();

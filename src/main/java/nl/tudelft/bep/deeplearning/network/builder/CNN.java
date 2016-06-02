@@ -20,7 +20,7 @@ public abstract class CNN {
 				.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT).updater(Updater.NESTEROVS)
 
 				// Over fitting
-				.l2(L2).regularization(true);
+				.l2(L2).regularization(true).iterations(20);
 
 		for (Layer layer : layers) {
 			builder.add(layer);

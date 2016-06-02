@@ -9,7 +9,7 @@ import nl.tudelft.bep.deeplearning.network.result.ResultUtil;
 import nl.tudelft.bep.deeplearning.network.result.csv.ComputeAverageAccuracyFiller;
 
 public final class App {
-	private static final int DEFAULT_EPOCHS = 50;
+	private static final int DEFAULT_EPOCHS = 2;
 	private static final int DEFAULT_ITERATIONS = 20;
 	private static final String DEFAULT_FILE_NAME = "results";
 
@@ -29,9 +29,13 @@ public final class App {
 	 */
 	public static void main(final String[] args) {
 		CNN.buildExampleCNN(
-				new ConvolutionLayer.Builder(1, 1).nIn(1).stride(1, 1).nOut(1).activation("identity").build(),
+				new ConvolutionLayer.Builder(1, 2).nIn(1).stride(1, 1).nOut(1).activation("identity").build(),
 				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
-				.backprop(true).pretrain(false).finish("Test");
+				.backprop(true).pretrain(false).finish("1x2");
+		CNN.buildExampleCNN(
+				new ConvolutionLayer.Builder(2, 1).nIn(1).stride(1, 1).nOut(1).activation("identity").build(),
+				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
+				.backprop(true).pretrain(false).finish("2x1");
 
 		run((args.length >= 1 && isInteger(args[0])) ? Integer.parseInt(args[0]) : DEFAULT_EPOCHS,
 				(args.length >= 2 && isInteger(args[1])) ? Integer.parseInt(args[1]) : DEFAULT_ITERATIONS,
