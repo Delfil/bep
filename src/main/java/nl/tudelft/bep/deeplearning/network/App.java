@@ -30,80 +30,79 @@ public final class App {
 	 *            the file name to save to
 	 */
 	public static void main(final String[] args) {
+		//Determine kernelsize
+		CNN.buildExampleCNN(
+				new ConvolutionLayer.Builder(1, 1).nIn(1).stride(1, 1).nOut(20).activation("identity").build(),
+				new DenseLayer.Builder().activation("relu").nOut(100).build(),
+				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
+				.backprop(true).pretrain(false).finish("kernelsize 1x1 (baseline)");
+		CNN.buildExampleCNN(
+				new ConvolutionLayer.Builder(2, 2).nIn(1).stride(1, 1).nOut(20).activation("identity").build(),
+				new DenseLayer.Builder().activation("relu").nOut(100).build(),
+				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
+				.backprop(true).pretrain(false).finish("kernelsize 2x2");	
 		CNN.buildExampleCNN(
 				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(20).activation("identity").build(),
 				new DenseLayer.Builder().activation("relu").nOut(100).build(),
 				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
-				.backprop(true).pretrain(false).finish("only conv baseline");
+				.backprop(true).pretrain(false).finish("kernelsize 3x3");
+		CNN.buildExampleCNN(
+				new ConvolutionLayer.Builder(4, 4).nIn(1).stride(1, 1).nOut(20).activation("identity").build(),
+				new DenseLayer.Builder().activation("relu").nOut(100).build(),
+				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
+				.backprop(true).pretrain(false).finish("kernelsize 4x4");
 		
+		//Determine number of kernels.
+		CNN.buildExampleCNN(
+				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(1).activation("identity").build(),
+				new DenseLayer.Builder().activation("relu").nOut(100).build(),
+				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
+				.backprop(true).pretrain(false).finish("numKernels 1");
+		CNN.buildExampleCNN(
+				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(5).activation("identity").build(),
+				new DenseLayer.Builder().activation("relu").nOut(100).build(),
+				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
+				.backprop(true).pretrain(false).finish("numKernels 5");
+		CNN.buildExampleCNN(
+				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(10).activation("identity").build(),
+				new DenseLayer.Builder().activation("relu").nOut(100).build(),
+				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
+				.backprop(true).pretrain(false).finish("numKernels 10");
+		CNN.buildExampleCNN(
+				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(15).activation("identity").build(),
+				new DenseLayer.Builder().activation("relu").nOut(100).build(),
+				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
+				.backprop(true).pretrain(false).finish("numKernels 15");
+		CNN.buildExampleCNN(
+				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(25).activation("identity").build(),
+				new DenseLayer.Builder().activation("relu").nOut(100).build(),
+				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
+				.backprop(true).pretrain(false).finish("numKernels 25");
+		CNN.buildExampleCNN(
+				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(30).activation("identity").build(),
+				new DenseLayer.Builder().activation("relu").nOut(100).build(),
+				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
+				.backprop(true).pretrain(false).finish("numKernels 30");
+		
+		//Extra features
 		CNN.buildExampleCNN(
 				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(2, 2).nOut(20).activation("identity").build(),
 				new DenseLayer.Builder().activation("relu").nOut(100).build(),
 				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
-				.backprop(true).pretrain(false).finish("only conv with stride 2x2");
-		
-//		CNN.buildExampleCNN(
-//				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(2, 2).nOut(1).activation("identity").build(),
-//				new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX).kernelSize(2, 2).stride(2, 2).build(),
-//				new DenseLayer.Builder().activation("relu").nOut(100).build(),
-//				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
-//				.backprop(true).pretrain(false).finish("conv with stride 2x2 and pooling max 2x2 2x2");
-//		CNN.buildExampleCNN(
-//				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(2, 2).nOut(1).activation("identity").build(),
-//				new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.AVG).kernelSize(2, 2).stride(2, 2).build(),
-//				new DenseLayer.Builder().activation("relu").nOut(100).build(),
-//				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
-//				.backprop(true).pretrain(false).finish("conv with stride 2x2 and pooling avg 2x2 2x2");
-		
+				.backprop(true).pretrain(false).finish("Stride");	
 		CNN.buildExampleCNN(
 				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(20).activation("identity").build(),
 				new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX).kernelSize(2, 2).stride(2, 2).build(),
 				new DenseLayer.Builder().activation("relu").nOut(100).build(),
 				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
-				.backprop(true).pretrain(false).finish("conv without stride and pooling max 2x2 2x2");
+				.backprop(true).pretrain(false).finish("Max pooling");
 		CNN.buildExampleCNN(
 				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(20).activation("identity").build(),
 				new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.AVG).kernelSize(2, 2).stride(2, 2).build(),
 				new DenseLayer.Builder().activation("relu").nOut(100).build(),
 				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
-				.backprop(true).pretrain(false).finish("conv without stride and pooling avg 2x2 2x2");
+				.backprop(true).pretrain(false).finish("Avg pooling");
 		
-		CNN.buildExampleCNN(
-				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(1).activation("identity").build(),
-				new DenseLayer.Builder().activation("relu").nOut(100).build(),
-				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
-				.backprop(true).pretrain(false).finish("nout 1");
-		CNN.buildExampleCNN(
-				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(5).activation("identity").build(),
-				new DenseLayer.Builder().activation("relu").nOut(100).build(),
-				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
-				.backprop(true).pretrain(false).finish("nout 5");
-		CNN.buildExampleCNN(
-				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(10).activation("identity").build(),
-				new DenseLayer.Builder().activation("relu").nOut(100).build(),
-				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
-				.backprop(true).pretrain(false).finish("nout 10");
-		CNN.buildExampleCNN(
-				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(15).activation("identity").build(),
-				new DenseLayer.Builder().activation("relu").nOut(100).build(),
-				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
-				.backprop(true).pretrain(false).finish("nout 15");
-		CNN.buildExampleCNN(
-				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(25).activation("identity").build(),
-				new DenseLayer.Builder().activation("relu").nOut(100).build(),
-				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
-				.backprop(true).pretrain(false).finish("nout 25");
-		CNN.buildExampleCNN(
-				new ConvolutionLayer.Builder(3, 3).nIn(1).stride(1, 1).nOut(30).activation("identity").build(),
-				new DenseLayer.Builder().activation("relu").nOut(100).build(),
-				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
-				.backprop(true).pretrain(false).finish("nout 30");
-		CNN.buildExampleCNN(
-				new ConvolutionLayer.Builder(1, 1).nIn(1).stride(1, 1).nOut(20).activation("identity").build(),
-				new DenseLayer.Builder().activation("relu").nOut(100).build(),
-				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
-				.backprop(true).pretrain(false).finish("only conv baseline 2.0");
-
 		run((args.length >= 1 && isInteger(args[0])) ? Integer.parseInt(args[0]) : DEFAULT_EPOCHS,
 				(args.length >= 2 && isInteger(args[1])) ? Integer.parseInt(args[1]) : DEFAULT_ITERATIONS,
 				(args.length >= 3 ? args[2] : DEFAULT_FILE_NAME));
