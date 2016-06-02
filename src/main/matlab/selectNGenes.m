@@ -1,5 +1,5 @@
 function GE = selectNGenes(N, Gene_Expression, ~)
-if ~exist('Gene_Expression','var') || ~exist('CancerTypeIndex','var')
+if ~exist('Gene_Expression','var')
     fprintf('Loading the database.\n');
     load('GE.mat');
 end
