@@ -98,6 +98,11 @@ public final class App {
 				new DenseLayer.Builder().activation("relu").nOut(100).build(),
 				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
 				.backprop(true).pretrain(false).finish("nout 30");
+		CNN.buildExampleCNN(
+				new ConvolutionLayer.Builder(1, 1).nIn(1).stride(1, 1).nOut(20).activation("identity").build(),
+				new DenseLayer.Builder().activation("relu").nOut(100).build(),
+				new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).nOut(5).activation("softmax").build())
+				.backprop(true).pretrain(false).finish("only conv baseline 2.0");
 
 		run((args.length >= 1 && isInteger(args[0])) ? Integer.parseInt(args[0]) : DEFAULT_EPOCHS,
 				(args.length >= 2 && isInteger(args[1])) ? Integer.parseInt(args[1]) : DEFAULT_ITERATIONS,
