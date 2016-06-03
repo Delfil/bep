@@ -37,6 +37,6 @@ function TSNE_1D_inv_corrs_100_genes(in_matlab_folder)
 
     mkdir(path);
     
-    dataGen(GE(:,ind), CancerTypeIndex, 'width', 1, 'height', numel(ind),...
+    dataGen(GE(:,ind), CancerTypeIndex, 'height', 1, 'width', numel(ind),...
         'name', [path, name])
 end
