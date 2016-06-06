@@ -1,7 +1,10 @@
 package nl.tudelft.bep.deeplearning.network.result;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -189,22 +192,23 @@ public final class ResultUtil {
 		try {
 			for (int y = 0; y < networkList.size(); y++) {
 				for (int x = 0; x < dataList.size(); x++) {
-					String path = pathName + "/" + dataList.get(x) + "/" + networkList.get(y);
-					String[] split = path.split("/");
+					String path = pathName + "/" + networkList.get(y);
 					new File(new File(path).getParent()).mkdirs();
 
-					PrintWriter writer = new PrintWriter(path + ".csv", "UTF-8");
-					writer.write(FNNCBuilder.getDescription(networkList.get(y)));
-					writer.write("\n");
-					writer.write(networkList.get(y));
-					writer.write("\n");
-					writer.write(dataList.get(x));
+					FileWriter fw = new FileWriter(path + ".csv", true);
+					BufferedWriter bw = new BufferedWriter(fw);
+					PrintWriter writer = new PrintWriter(bw);
+//					writer.write(FNNCBuilder.getDescription(networkList.get(y)));
+//					writer.write("\n");
+//					writer.write(networkList.get(y));
+//					writer.write("\n");
+//					writer.write(dataList.get(x));
 					writer.write("\n");
 					writer.write(lister.list(epoch, dataList.get(x), networkList.get(y)));
 					writer.close();
 				}
 			}
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
