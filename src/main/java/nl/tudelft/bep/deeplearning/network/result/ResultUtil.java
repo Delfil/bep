@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
-import org.apache.commons.math3.stat.inference.TTest;
 import org.deeplearning4j.eval.Evaluation;
 
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
@@ -26,44 +25,6 @@ public final class ResultUtil {
 	 * Utility-classes should not be initialized.
 	 */
 	private ResultUtil() {
-	}
-
-	public static double getTTest(final String builder1, final String data1, final int epoch1, final String builder2,
-			final String data2, final int epoch2) {
-		return getTTest(FNNCBuilder.load(builder1), Data.readDataSet(data1), epoch1, FNNCBuilder.load(builder2),
-				Data.readDataSet(data2), epoch2);
-	}
-
-	public static double getTTest(final FNNCBuilder builder1, final Data data1, final int epoch1,
-			final FNNCBuilder builder2, final Data data2, final int epoch2) {
-		return getTTest(EvaluationFileUtil.load(epoch1, data1, builder1),
-				EvaluationFileUtil.load(epoch2, data2, builder2));
-	}
-
-	public static double getTTest(final List<Evaluation<Double>> sample1, final List<Evaluation<Double>> sample2) {
-		return getTTest(getAccuracyArray(sample1), getAccuracyArray(sample2));
-	}
-
-	public static double getTTest(final double[] sample1, final double[] sample2) {
-		int min = Math.min(sample1.length, sample2.length);
-		return new TTest().pairedTTest(Arrays.copyOf(sample1, min), Arrays.copyOf(sample2, min));
-	}
-
-	public static double getTTest(final String builder1, final String data1, final int epoch1) {
-		return getTTest(FNNCBuilder.load(builder1), Data.readDataSet(data1), epoch1);
-	}
-
-	public static double getTTest(final FNNCBuilder builder1, final Data data1, final int epoch1) {
-		return getTTest(EvaluationFileUtil.load(epoch1, data1, builder1));
-	}
-
-	public static double getTTest(final List<Evaluation<Double>> sample1) {
-		return getTTest(getAccuracyArray(sample1));
-	}
-
-	public static double getTTest(final double[] sample1) {
-		int min = sample1.length / 2;
-		return new TTest().tTest(Arrays.copyOf(sample1, min), Arrays.copyOfRange(sample1, min, min * 2));
 	}
 
 	public static double[] getAccuracyArray(final List<Evaluation<Double>> sample) {
@@ -190,7 +151,7 @@ public final class ResultUtil {
 			for (int y = 0; y < networkList.size(); y++) {
 				for (int x = 0; x < dataList.size(); x++) {
 					String path = pathName + "/" + dataList.get(x) + "/" + networkList.get(y);
-					String[] split = path.split("/");
+					
 					new File(new File(path).getParent()).mkdirs();
 
 					PrintWriter writer = new PrintWriter(path + ".csv", "UTF-8");

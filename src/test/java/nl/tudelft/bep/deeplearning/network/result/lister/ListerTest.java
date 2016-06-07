@@ -1,6 +1,5 @@
 package nl.tudelft.bep.deeplearning.network.result.lister;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -23,7 +22,6 @@ import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
 import nl.tudelft.bep.deeplearning.network.data.Data;
 import nl.tudelft.bep.deeplearning.network.result.EvaluationFileUtil;
 import nl.tudelft.bep.deeplearning.network.result.ResultUtil;
-import nl.tudelft.bep.deeplearning.network.result.lister.ListAccuracy;
 
 public class ListerTest {
 

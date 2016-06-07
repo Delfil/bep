@@ -17,7 +17,6 @@ import org.junit.Test;
 import nl.tudelft.bep.deeplearning.network.builder.CNN;
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
 import nl.tudelft.bep.deeplearning.network.data.Data;
-import nl.tudelft.bep.deeplearning.network.result.EvaluationFileUtil;
 
 public class EvaluationFileUtilTest {
 
