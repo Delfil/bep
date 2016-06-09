@@ -15,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
+import nl.tudelft.bep.deeplearning.network.data.LoadedGeneExpressionDatabase;
 import nl.tudelft.bep.deeplearning.network.data.GeneExpressionDatabase;
-import nl.tudelft.bep.deeplearning.network.data.GeneExpressionDatabaseI;
 import nl.tudelft.bep.deeplearning.network.data.MatrixDatasetIterator;
 
 public class Tester {
@@ -29,9 +29,9 @@ public class Tester {
 	private final FNNCBuilder builder;
 	private final DataSetIterator trainIterator;
 	private final DataSetIterator testIterator;
-	private final GeneExpressionDatabaseI data;
+	private final GeneExpressionDatabase data;
 
-	public Tester(final FNNCBuilder builder, final GeneExpressionDatabaseI data) {
+	public Tester(final FNNCBuilder builder, final GeneExpressionDatabase data) {
 		this.data = data;
 		this.builder = builder;
 
@@ -40,7 +40,7 @@ public class Tester {
 	}
 
 	public Tester(final String networkFile, final String dataFile) {
-		this(FNNCBuilder.load(networkFile), GeneExpressionDatabase.Loader.loadDataSet(dataFile));
+		this(FNNCBuilder.load(networkFile), LoadedGeneExpressionDatabase.Loader.load(dataFile));
 	}
 
 	/**
