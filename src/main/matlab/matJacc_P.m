@@ -1,4 +1,4 @@
-function [meann, maxx] = matJacc(correlations, Matrix, correlatingGenes, genesToCheck)
+function [meann, maxx] = matJacc_P(correlations, P, correlatingGenes, genesToCheck)
 
     assert(size(correlations,1) == size(correlations,2));
     assert(correlatingGenes>0);
@@ -17,7 +17,9 @@ function [meann, maxx] = matJacc(correlations, Matrix, correlatingGenes, genesTo
                 
         setTarget = I(2:correlatingGenes+1);
         
-        setMat = Matrix(matNClosest(Matrix,Matrix == I(1),correlatingGenes));
+        dists = pdist2(P(I(1),:),P);
+        [~,index] = sort(dists);
+        setMat = index(2:correlatingGenes+1);
         setMat = setMat(setMat ~= 0);
         
         

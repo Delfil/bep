@@ -1,4 +1,4 @@
-function [evaluation, interpretation, results] = detKSizeMatJacc(correlations, Matrix, correlatingGenes, genesToCheck)
+function [evaluation, interpretation, results] = detKSizeMatJacc_P(correlations, P, correlatingGenes, genesToCheck)
     if ~exist('genesToCheck', 'var')
         genesToCheck = 100;
     end
@@ -7,7 +7,7 @@ function [evaluation, interpretation, results] = detKSizeMatJacc(correlations, M
 
     i = 1;
     for NGenes = correlatingGenes;        
-        [results(i),~] = matJacc(correlations, Matrix, NGenes, genesToCheck);
+        [results(i),~] = matJacc_P(correlations, P, NGenes, genesToCheck);
 
         i = i + 1;
     end
