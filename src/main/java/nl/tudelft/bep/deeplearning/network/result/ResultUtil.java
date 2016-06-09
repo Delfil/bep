@@ -14,7 +14,8 @@ import java.util.stream.Collectors;
 import org.deeplearning4j.eval.Evaluation;
 
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
-import nl.tudelft.bep.deeplearning.network.data.Data;
+import nl.tudelft.bep.deeplearning.network.data.GeneExpressionDatabase;
+import nl.tudelft.bep.deeplearning.network.data.GeneExpressionDatabaseI;
 import nl.tudelft.bep.deeplearning.network.result.csv.CSVFiller;
 import nl.tudelft.bep.deeplearning.network.result.lister.Lister;
 
@@ -32,10 +33,11 @@ public final class ResultUtil {
 	}
 
 	public static double getAverageAccuracy(final String builder1, final String data, final int epoch) {
-		return getAverageAccuracy(FNNCBuilder.load(builder1), Data.readDataSet(data), epoch);
+		return getAverageAccuracy(FNNCBuilder.load(builder1), GeneExpressionDatabase.Loader.loadDataSet(data), epoch);
 	}
 
-	public static double getAverageAccuracy(final FNNCBuilder builder, final Data data, final int epoch) {
+	public static double getAverageAccuracy(final FNNCBuilder builder, final GeneExpressionDatabaseI data,
+			final int epoch) {
 		List<Evaluation<Double>> a = EvaluationFileUtil.load(epoch, data, builder);
 		if (a == null || a.isEmpty()) {
 			return Double.NaN;
@@ -113,7 +115,7 @@ public final class ResultUtil {
 	 */
 	public static List<String> getDataList() {
 		List<String> dataList = new ArrayList<>();
-		for (File file : new File(Data.DATA_FOLDER).listFiles()) {
+		for (File file : new File(GeneExpressionDatabase.Loader.DATA_FOLDER).listFiles()) {
 			if (file.isDirectory()) {
 				System.out.println(file.getName());
 				List<String> list = Arrays.stream(file.listFiles()).filter(File::isFile).map(File::getName)

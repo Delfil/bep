@@ -16,7 +16,8 @@ import org.junit.Test;
 
 import nl.tudelft.bep.deeplearning.network.builder.CNN;
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
-import nl.tudelft.bep.deeplearning.network.data.Data;
+import nl.tudelft.bep.deeplearning.network.data.GeneExpressionDatabase;
+import nl.tudelft.bep.deeplearning.network.data.GeneExpressionDatabaseI;
 
 public class EvaluationFileUtilTest {
 
@@ -24,11 +25,11 @@ public class EvaluationFileUtilTest {
 	private static final long SEED = 0;
 	private List<String> toRemove = new ArrayList<>();
 	private FNNCBuilder builder;
-	private Data data;
+	private GeneExpressionDatabaseI data;
 
 	@Before
 	public void before() {
-		this.data = Data.readDataSet("test_data/correct_1");
+		this.data = GeneExpressionDatabase.Loader.loadDataSet("test_data/correct_1");
 		this.builder = CNN.buildExampleCNN().finish();
 		this.toRemove.add(this.builder.getPathName());
 		this.toRemove.add(this.builder.getFileName());

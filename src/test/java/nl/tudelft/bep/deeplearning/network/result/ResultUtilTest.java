@@ -17,7 +17,8 @@ import org.junit.Test;
 
 import nl.tudelft.bep.deeplearning.network.builder.CNN;
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
-import nl.tudelft.bep.deeplearning.network.data.Data;
+import nl.tudelft.bep.deeplearning.network.data.GeneExpressionDatabase;
+import nl.tudelft.bep.deeplearning.network.data.GeneExpressionDatabaseI;
 import nl.tudelft.bep.deeplearning.network.result.csv.CSVFiller;
 import nl.tudelft.bep.deeplearning.network.result.csv.ComputeAverageAccuracyFiller;
 
@@ -25,11 +26,11 @@ public class ResultUtilTest {
 
 	private List<String> toRemove = new ArrayList<>();
 	private FNNCBuilder builder;
-	private Data data;
+	private GeneExpressionDatabaseI data;
 
 	@Before
 	public void before() {
-		this.data = Data.readDataSet("test_data/correct_1");
+		this.data = GeneExpressionDatabase.Loader.loadDataSet("test_data/correct_1");
 		this.builder = CNN.buildExampleCNN(new ConvolutionLayer.Builder().kernelSize(1, 1).stride(1, 1).nOut(2).build(),
 				new OutputLayer.Builder().nOut(2).build()).finish();
 		this.toRemove.add(this.builder.getPathName());

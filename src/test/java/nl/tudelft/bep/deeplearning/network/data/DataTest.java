@@ -17,13 +17,13 @@ public class DataTest {
 	@Test
 	public void correctReadTest() {
 		String testFile = "test_data/correct_1";
-		Data data = Data.readDataSet(testFile);
+		GeneExpressionDatabaseI data = GeneExpressionDatabase.Loader.loadDataSet(testFile);
 		assertEquals(1, data.getBatchSize());
 		assertEquals(3, data.getExamples());
 		assertEquals(3, data.getHeight());
 		assertEquals(2, data.getWidth());
 		assertEquals(129384957, data.getTimeStamp());
-		assertEquals(Data.DATA_FOLDER + "/" + testFile, data.getPath());
+		assertEquals(GeneExpressionDatabase.Loader.DATA_FOLDER + "/" + testFile, data.getPath());
 		assertEquals(1, data.getVersion());
 		assertEquals(0.5, data.getTrainPercentage(), 0);
 		assertEquals(2, data.getNumOutcomes());
@@ -32,7 +32,7 @@ public class DataTest {
 	@Test
 	public void subSetTest() {
 		String testFile = "test_data/correct_1";
-		Data data = Data.readDataSet(testFile);
+		GeneExpressionDatabaseI data = GeneExpressionDatabase.Loader.loadDataSet(testFile);
 		assertEquals(3, data.getSubset(0.0, 1.0).size());
 		assertEquals(1, data.getSubset(0.1, 0.9).size());
 		assertEquals(2, data.getSubset(0.9, 1.0).size());
@@ -43,36 +43,34 @@ public class DataTest {
 	public void nonexistingReadTest() {
 		String testFile = "test_data/nonexisting_data";
 		assertFalse(new File(testFile).exists());
-		assertNull(Data.findFile(testFile, ""));
+		assertNull(GeneExpressionDatabase.Loader.findFile(testFile, ""));
 	}
 
 	@Test
 	public void missingReadTest() {
 		String testFile = "test_data/correct_1";
-		assertTrue(new File(Data.DATA_FOLDER + "/" + testFile).exists());
-		assertNull(Data.findFile(testFile, ".missing"));
+		assertTrue(new File(GeneExpressionDatabase.Loader.DATA_FOLDER + "/" + testFile).exists());
+		assertNull(GeneExpressionDatabase.Loader.findFile(testFile, ".missing"));
 	}
 
 	@Test(expected = UnknownMetaDataFileVersion.class)
 	public void badMetaReadTest() throws NumberFormatException, UnknownMetaDataFileVersion, IOException {
 		String testFile = "test_data/bad_meta";
-		Data.readMetaFile(testFile);
+		GeneExpressionDatabase.Loader.readMetaFile(testFile);
 	}
 
 	@Test(expected = MetaDataMatchException.class)
 	public void badDatReadTest()
 			throws IOException, MetaDataMatchException, NumberFormatException, UnknownMetaDataFileVersion {
 		String testFile = "test_data/bad_dat_1";
-		assertTrue(new File(Data.DATA_FOLDER + "/" + testFile).exists());
-		Data data = Data.readMetaFile(testFile);
-		data.readMatrices();
+		assertTrue(new File(GeneExpressionDatabase.Loader.DATA_FOLDER + "/" + testFile).exists());
+		GeneExpressionDatabase data = GeneExpressionDatabase.Loader.readMetaFile(testFile);
+		GeneExpressionDatabase.Loader.readMatrices(data);
 	}
 
 	@Test(expected = NumberFormatException.class)
 	public void badFormatTest() throws NumberFormatException, UnknownMetaDataFileVersion, IOException {
 		String testFile = "test_data/bad_dat_2";
-		Data.readMetaFile(testFile);
+		GeneExpressionDatabase.Loader.readMetaFile(testFile);
 	}
-
-	// (expected = FileNotFoundException.class)
 }

@@ -15,7 +15,7 @@ public class MatrixFetcherTest {
 	@Test
 	public void test() {
 		String testFile = "test_data/correct_1";
-		Data data = Data.readDataSet(testFile);
+		GeneExpressionDatabaseI data = GeneExpressionDatabase.Loader.loadDataSet(testFile);
 		assertEquals(1, data.getBatchSize());
 		MatrixDatasetIterator di = new MatrixDatasetIterator(data, 0.0, 1.0);
 		read(di);
@@ -44,7 +44,7 @@ public class MatrixFetcherTest {
 	@Test(expected = IllegalStateException.class)
 	public void emptyFetchTest() {
 		String testFile = "test_data/correct_1";
-		Data data = Data.readDataSet(testFile);
+		GeneExpressionDatabaseI data = GeneExpressionDatabase.Loader.loadDataSet(testFile);
 		MatrixDataFetcher df = new MatrixDataFetcher(data, 0.0, 1.0);
 		MatrixDatasetIterator di = new MatrixDatasetIterator(data, df);
 		df.fetch(4);
