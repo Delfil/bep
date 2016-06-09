@@ -57,9 +57,9 @@ for t = 1:numRuns
         
         %Select four correlating points
         fourpoints = sortedIndex(1:4);
-        %four_randompoints = randperm(size(column),4);
+        four_randompoints = randperm(size(column,1),4);
         avg_act = mean(geneAct(:,fourpoints),2);
-        g1_act = geneAct(:,sortedIndex(1));
+        g1_act = mean(geneAct(:,four_randompoints),2);
         %Array to pass on to easily split in groups
         temp = [g1_act,avg_act,label(:,randperm(size(label,2),1))];
         %Arrays containing all the maximum accuracies for each group
