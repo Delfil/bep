@@ -6,9 +6,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class NearestNeighbors {
-
+public final class NearestNeighbors {
+	
 	private static final int NEIGHBORS_STRIP = 8;
+	
+	/**
+	 * Utility-classes should not be initialized.
+	 */
+	private NearestNeighbors() {
+	}
 
 	/**
 	 * Helper function which finds the cluster in an array based on its ID.
