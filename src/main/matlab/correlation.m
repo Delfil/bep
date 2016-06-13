@@ -56,9 +56,11 @@ for t = 1:numRuns
         
         %Select four correlating points
         fourpoints = sortedIndex(1:4);
+        %Commented code for testing pooling theory
         %four_randompoints = randperm(size(column,1),4);
         avg_act = mean(geneAct(:,fourpoints),2);
         g1_act = geneAct(:,sortedIndex(1));
+        %Commented code for testing pooling theory
         %g1_act = mean(geneAct(:,four_randompoints),2);
         %g1_act = max(geneAct(:,four_randompoints),[],2);
         %Array to pass on to easily split in groups. Here is also the
