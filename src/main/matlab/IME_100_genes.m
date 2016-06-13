@@ -6,9 +6,7 @@ if ~exist('Gene_Expression','var') || ~exist('CancerTypeIndex','var')
     load('GE.mat');
 end
 
-    ges = std(Gene_Expression);
-    select = ges >1.2982;
-    GE = Gene_Expression(:,select);
+    GE = selectNGenes(100,Gene_Expression);
     corrs = corr(GE);
     P = tsne_p(corrs);
     
