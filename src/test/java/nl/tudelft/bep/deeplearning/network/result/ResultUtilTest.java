@@ -17,10 +17,8 @@ import org.junit.Test;
 
 import nl.tudelft.bep.deeplearning.network.builder.CNN;
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
-import nl.tudelft.bep.deeplearning.network.data.Data;
-import nl.tudelft.bep.deeplearning.network.result.EvaluationFileUtil;
-import nl.tudelft.bep.deeplearning.network.result.ResultUtil;
-import nl.tudelft.bep.deeplearning.network.result.Tester;
+import nl.tudelft.bep.deeplearning.network.data.LoadedGeneExpressionDatabase;
+import nl.tudelft.bep.deeplearning.network.data.GeneExpressionDatabase;
 import nl.tudelft.bep.deeplearning.network.result.csv.CSVFiller;
 import nl.tudelft.bep.deeplearning.network.result.csv.ComputeAverageAccuracyFiller;
 
@@ -28,11 +26,11 @@ public class ResultUtilTest {
 
 	private List<String> toRemove = new ArrayList<>();
 	private FNNCBuilder builder;
-	private Data data;
+	private GeneExpressionDatabase data;
 
 	@Before
 	public void before() {
-		this.data = Data.readDataSet("test_data/correct_1");
+		this.data = LoadedGeneExpressionDatabase.Loader.load("test_data/correct_1");
 		this.builder = CNN.buildExampleCNN(new ConvolutionLayer.Builder().kernelSize(1, 1).stride(1, 1).nOut(2).build(),
 				new OutputLayer.Builder().nOut(2).build()).finish();
 		this.toRemove.add(this.builder.getPathName());
@@ -53,20 +51,6 @@ public class ResultUtilTest {
 		assertEquals(dataSets, countFiller.getDataSets());
 		assertEquals(1, countFiller.getEpochs().size());
 		assertEquals(epochs, countFiller.getEpochs().iterator().next().intValue());
-	}
-
-	@Test
-	public void getTTestTest() {
-		new Tester(this.builder.getFileName(), this.data.getName()).start(4, 1);
-		assertEquals(Double.NaN, ResultUtil.getTTest(this.builder.getFileName(), this.data.getName(), 1), 0.0);
-
-		Data data2 = Data.readDataSet("test_data/correct_2");
-		this.toRemove.add(EvaluationFileUtil.getEvalPathName(data2, this.builder));
-
-		new Tester(this.builder.getFileName(), data2.getName()).start(2, 1);
-
-		assertEquals(Double.NaN, ResultUtil.getTTest(this.builder.getFileName(), this.data.getName(), 1,
-				this.builder.getFileName(), data2.getName(), 1), 0.0);
 	}
 
 	@Test

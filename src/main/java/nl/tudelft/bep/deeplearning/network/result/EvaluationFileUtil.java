@@ -13,7 +13,8 @@ import java.util.List;
 import org.deeplearning4j.eval.Evaluation;
 
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
-import nl.tudelft.bep.deeplearning.network.data.Data;
+import nl.tudelft.bep.deeplearning.network.data.GeneExpressionDatabase;
+import nl.tudelft.bep.deeplearning.network.data.LoadedGeneExpressionDatabase;
 
 public final class EvaluationFileUtil {
 	protected static final DecimalFormat SEED_FORMATER = new DecimalFormat(
@@ -34,7 +35,7 @@ public final class EvaluationFileUtil {
 				.toString();
 	}
 
-	public static String getEvalPathName(final Data data, final FNNCBuilder builder) {
+	public static String getEvalPathName(final GeneExpressionDatabase data, final FNNCBuilder builder) {
 		return new StringBuilder(builder.getPathName()).append(F).append(data.getTimeStamp()).append(F).toString();
 	}
 
@@ -52,7 +53,7 @@ public final class EvaluationFileUtil {
 	 * @return the requested evaluation file if it exists<br>
 	 *         {@code null} if it doesn't exists
 	 */
-	public static Evaluation<Double> load(final long seed, final int epoch, final Data data,
+	public static Evaluation<Double> load(final long seed, final int epoch, final GeneExpressionDatabase data,
 			final FNNCBuilder builder) {
 		File file = new File(getEvalPathName(data, builder) + getEvalFileName(seed, epoch));
 		if (file.exists()) {
@@ -86,7 +87,7 @@ public final class EvaluationFileUtil {
 	 * @return a list of all saved evaluations which satisfy the given
 	 *         conditions
 	 */
-	public static List<Evaluation<Double>> load(final int epoch, final Data data, final FNNCBuilder builder) {
+	public static List<Evaluation<Double>> load(final int epoch, final GeneExpressionDatabase data, final FNNCBuilder builder) {
 		File folder = new File(getEvalPathName(data, builder));
 		if (!folder.exists() || folder.isFile()) {
 			return new ArrayList<>();
@@ -111,7 +112,7 @@ public final class EvaluationFileUtil {
 		return results;
 	}
 
-	public static boolean evalExistst(final long seed, final int epoch, final Data data, final FNNCBuilder builder) {
+	public static boolean evalExistst(final long seed, final int epoch, final GeneExpressionDatabase data, final FNNCBuilder builder) {
 		return new File(getEvalPathName(data, builder) + getEvalFileName(seed, epoch)).exists();
 	}
 
@@ -130,7 +131,7 @@ public final class EvaluationFileUtil {
 	 *            the network configuration used to compute this evaluation
 	 * 
 	 */
-	public static void save(final Evaluation<Double> eval, final long seed, final int epoch, final Data data,
+	public static void save(final Evaluation<Double> eval, final long seed, final int epoch, final GeneExpressionDatabase data,
 			final FNNCBuilder builder) {
 		String pathName = getEvalPathName(data, builder);
 		File file = new File(pathName);
@@ -149,6 +150,6 @@ public final class EvaluationFileUtil {
 	}
 
 	public static List<Evaluation<Double>> load(final int epochs, final String data, final String network) {
-		return load(epochs, Data.readDataSet(data), FNNCBuilder.load(network));
+		return load(epochs, LoadedGeneExpressionDatabase.Loader.load(data), FNNCBuilder.load(network));
 	}
 }

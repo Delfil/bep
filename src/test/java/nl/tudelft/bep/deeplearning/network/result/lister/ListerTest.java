@@ -1,6 +1,5 @@
 package nl.tudelft.bep.deeplearning.network.result.lister;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -20,20 +19,20 @@ import org.junit.Test;
 
 import nl.tudelft.bep.deeplearning.network.builder.CNN;
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
-import nl.tudelft.bep.deeplearning.network.data.Data;
+import nl.tudelft.bep.deeplearning.network.data.LoadedGeneExpressionDatabase;
+import nl.tudelft.bep.deeplearning.network.data.GeneExpressionDatabase;
 import nl.tudelft.bep.deeplearning.network.result.EvaluationFileUtil;
 import nl.tudelft.bep.deeplearning.network.result.ResultUtil;
-import nl.tudelft.bep.deeplearning.network.result.lister.ListAccuracy;
 
 public class ListerTest {
 
 	private List<String> toRemove = new ArrayList<>();
 	private FNNCBuilder builder;
-	private Data data;
+	private GeneExpressionDatabase data;
 
 	@Before
 	public void before() {
-		this.data = Data.readDataSet("test_data/correct_1");
+		this.data = LoadedGeneExpressionDatabase.Loader.load("test_data/correct_1");
 		this.builder = CNN.buildExampleCNN(new ConvolutionLayer.Builder().kernelSize(1, 1).stride(1, 1).nOut(2).build(),
 				new OutputLayer.Builder().nOut(2).build()).finish();
 		this.toRemove.add(this.builder.getPathName());

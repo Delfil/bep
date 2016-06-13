@@ -28,13 +28,13 @@ public class MatrixDataFetcher extends BaseDataFetcher {
 	 * Initialize a MatrixDataFetcher.
 	 * 
 	 * @param data
-	 *            The {@link Data} instance to fetch from
+	 *            The {@link GeneExpressionDatabase} instance to fetch from
 	 * @param start
 	 *            The percentage of examples to skip from the left
 	 * @param end
 	 *            The percentage of examples to skip from the right
 	 */
-	public MatrixDataFetcher(final Data data, final double start, final double end) {
+	public MatrixDataFetcher(final GeneExpressionDatabase data, final double start, final double end) {
 		List<DataSet> dataList = data.getSubset(start, end);
 
 		this.data = dataList.toArray(new DataSet[dataList.size()]);

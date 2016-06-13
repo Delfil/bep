@@ -15,7 +15,6 @@ import org.junit.Test;
 import nl.tudelft.bep.deeplearning.network.builder.CNN;
 import nl.tudelft.bep.deeplearning.network.builder.FNNCBuilder;
 import nl.tudelft.bep.deeplearning.network.builder.NNCBuilder;
-import nl.tudelft.bep.deeplearning.network.result.Tester;
 
 public class TesterTest {
 
