@@ -11,8 +11,8 @@ title('-log(p) of the total runs');
 
 %Plot of the standard deviation for both distributions as histogram. 
 figure;
-histogram(total_mean_1, 24);
-hold on; histogram(total_mean_avg, 24);
+histogram(total_mean_1, 10);
+hold on; histogram(total_mean_avg, 10);
 title('Means standard deviation of the 100 runs');
 legend('Single gene', '4 correlating genes');
 

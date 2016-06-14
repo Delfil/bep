@@ -3,21 +3,27 @@
 
 %Here we select our 100 genes
 ges = std(Gene_Expression);
-select = ges >1.2982;
+select = ges > 1;
 geneAct = Gene_Expression(:,select);
-%This is our label array with 1 being label 3 and 0 being not 3.
-label = CancerTypeIndex == 3;
+%This is our label matrix with each column representing a label or the negation of it.
+label1 = CancerTypeIndex == 1;
+label2 = CancerTypeIndex == 2;
+label3 = CancerTypeIndex == 3;
+label4 = CancerTypeIndex == 4;
+label5 = CancerTypeIndex == 5;
+label = [label1,label2,label3,label4,label5];
+
 %Calculate the absolute correlations
-absCorr = abs(corr(geneAct));
+absCorr = corr(geneAct);
 
 %Number of times we would like to run this algorithm
 numRuns = 100;
 %The number of genes each run
-numGenes = 100;
+numGenes = 334;
 %Size of the group of patients
-numPatients = 16;
+numPatients = 100;
 %Number of groups each gene.
-numGroupPatients = 101;
+numGroupPatients = 100;
 
 %Arrays for keeping track of h and p values of t-test
 h_array = zeros(1,numRuns);
@@ -40,7 +46,6 @@ for t = 1:numRuns
     acc_avg = zeros(1,numGenes);
     %Random order of the genes.
     genes = randperm(size(absCorr,1),numGenes);
-    runLabel = label(:,randperm(size(label,2),1));
     
     for i = 1:numGenes    
         point = genes(i);
@@ -51,10 +56,16 @@ for t = 1:numRuns
         
         %Select four correlating points
         fourpoints = sortedIndex(1:4);
+        %Commented code for testing pooling theory
+        %four_randompoints = randperm(size(column,1),4);
         avg_act = mean(geneAct(:,fourpoints),2);
         g1_act = geneAct(:,sortedIndex(1));
-        %Array to pass on to easily split in groups
-        temp = [g1_act,avg_act,label];
+        %Commented code for testing pooling theory
+        %g1_act = mean(geneAct(:,four_randompoints),2);
+        %g1_act = max(geneAct(:,four_randompoints),[],2);
+        %Array to pass on to easily split in groups. Here is also the
+        %random label selected.
+        temp = [g1_act,avg_act,label(:,randperm(size(label,2),1))];
         %Arrays containing all the maximum accuracies for each group
         group_acc_1 = zeros(1,numGroupPatients);
         group_acc_avg = zeros(1,numGroupPatients);
@@ -99,6 +110,7 @@ end
 
 %Easy output
 t_test_correct = sum(h_array)/100
+t_test_acc_correct = sum(hacc_array)/100
 TOTAL_MEAN_ONE_GENE = mean(total_mean_1)
 TOTAL_MEAN_AVG_GENE = mean(total_mean_avg)
 TOTAL_ACC_ONE_GENE = mean(total_acc_1)
